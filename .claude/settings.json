@@ -1,0 +1,18 @@
+{
+  "enabledPlugins": {
+    "gemba-code@gemba": true,
+    "gemba@gemba": true
+  },
+  "attribution": {
+    "commit": "",
+    "sessionUrl": false
+  },
+  "extraKnownMarketplaces": {
+    "gemba": {
+      "source": {
+        "source": "git",
+        "url": "git@github.com:deducoder/gemba.git"
+      }
+    }
+  }
+}
