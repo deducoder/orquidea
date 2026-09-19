@@ -1,8 +1,7 @@
 import re
 
-from fastapi.routing import APIRoute
-
 from orquidea.web.app import app
+from tests.fabricas import rutas_registradas
 
 RUTAS = [
     ("GET", "/"),
@@ -24,12 +23,7 @@ RUTAS = [
 
 
 def _registradas() -> list[tuple[str, str]]:
-    return [
-        (metodo, ruta.path)
-        for ruta in app.routes
-        if isinstance(ruta, APIRoute)
-        for metodo in sorted(ruta.methods or set())
-    ]
+    return rutas_registradas(app.routes)
 
 
 def test_el_mapa_de_rutas_es_el_declarado() -> None:
