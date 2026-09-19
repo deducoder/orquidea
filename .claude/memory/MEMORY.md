@@ -2,3 +2,4 @@
 - [Mutaciones sin bytecode; ruff formatea .md](mutation-checks-stale-bytecode.md) — falsos supervivientes
 - [Cuidados por género en la AOS](aos-genus-care-cards.md) — fuente del catálogo semilla y sus límites
 - [Criterios stated que dependen del humano](epic-stated-criteria-external.md) — preverlos como stop desde el diseño
+- [ASVS al diseñar, no al revisar](asvs-checklist-at-design.md) — recorrer ASVS L2 en el design.md de historias de seguridad
