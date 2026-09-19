@@ -9,8 +9,10 @@
 <body{% if request.state.sesion %} hx-headers='{"X-CSRF-Token": "{{ request.state.sesion.csrf }}"}'{% endif %}>
   {% if request.state.sesion %}
   <header>
+    <a href="/especies">Catálogo</a>
+    <a href="/coleccion">Mi colección</a>
     <form method="post" action="/salir">
-      <input type="hidden" name="csrf" value="{{ request.state.sesion.csrf }}">
+      {% include "_csrf.html" %}
       <button type="submit">Salir</button>
     </form>
   </header>

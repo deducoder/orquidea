@@ -8,6 +8,12 @@
 {% endif %}
 <p>{{ especie.descripcion }}</p>
 
+<form method="post" action="/coleccion">
+  {% include "_csrf.html" %}
+  <input type="hidden" name="especie_id" value="{{ especie.id }}">
+  <button type="submit">Agregar a mi colección</button>
+</form>
+
 <h2>Cuidados</h2>
 <dl>
   {% for etiqueta, cuidado in [
