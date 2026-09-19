@@ -173,7 +173,8 @@ diagnosis mid-flow; `version-plan`, which declares the next version and the
 epics it contains before they are built; `orchestrate`, which walks one
 epic unattended under the human's supervision once the project has turned
 unattended mode on; and `release`, which promotes `{dev-branch}` to
-`{production-branch}` on demand and never from a close.
+`{production-branch}` on demand and never from a close, save the hotfix
+`bug-close` promotes from its own branch.
 
 **Orphaned tests are a defect.** A test file that imports what a work item
 changed, and that the work item never touched, is either stale or the only
