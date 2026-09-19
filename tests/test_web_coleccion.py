@@ -4,9 +4,10 @@ from datetime import UTC, datetime
 
 import pytest
 from fastapi.testclient import TestClient
+from httpx2 import Response
 
 from orquidea.datos.base import conectar
-from orquidea.datos.ejemplares import agregar, listar
+from orquidea.datos.ejemplares import agregar, agregar_sin_especie, listar
 from orquidea.datos.sesiones import Sesion
 from orquidea.web.app import app
 from tests.fabricas import especie
@@ -158,3 +159,162 @@ def test_la_lista_no_trae_javascript_nuevo(client: TestClient) -> None:
     html = client.get("/coleccion").text
 
     assert html.count("<script") == 1  # solo htmx, de la plantilla base
+
+
+def guardar_propio(nombre: str, notas: str = "") -> None:
+    conexion = conectar(app.state.ruta_base)
+    try:
+        agregar_sin_especie(conexion, nombre, notas, 1_780_000_000)
+    finally:
+        conexion.close()
+
+
+def ejemplares_propios() -> list[tuple[str | None, str, str]]:
+    conexion = conectar(app.state.ruta_base)
+    try:
+        return [(e.especie_id, e.nombre, e.notas) for e in listar(conexion)]
+    finally:
+        conexion.close()
+
+
+def enviar_propio(client: TestClient, sesion: Sesion, nombre: str, notas: str = "") -> Response:
+    return client.post(
+        "/coleccion/nuevo",
+        data={"nombre": nombre, "notas": notas, "csrf": sesion.csrf},
+        follow_redirects=False,
+    )
+
+
+def test_mi_coleccion_enlaza_al_formulario_de_plantas_fuera_del_catalogo(
+    client: TestClient,
+) -> None:
+    assert 'href="/coleccion/nuevo"' in client.get("/coleccion").text
+
+
+def test_el_formulario_de_planta_propia_trae_los_campos_y_el_token(
+    client: TestClient, sesion: Sesion
+) -> None:
+    html = client.get("/coleccion/nuevo").text
+
+    formulario = re.search(r'<form method="post" action="/coleccion/nuevo">.*?</form>', html, re.S)
+    assert formulario is not None
+    assert 'name="nombre"' in formulario.group()
+    assert 'name="notas"' in formulario.group()
+    assert f'name="csrf" value="{sesion.csrf}"' in formulario.group()
+    assert html.count("<script") == 1
+
+
+def test_una_planta_fuera_del_catalogo_se_guarda_recortada_y_redirige(
+    client: TestClient, sesion: Sesion
+) -> None:
+    respuesta = enviar_propio(
+        client, sesion, "  Cattleya de mi abuela ", "Regalo de 2019; florece en enero"
+    )
+
+    assert respuesta.status_code == 303
+    assert respuesta.headers["location"] == "/coleccion"
+    assert ejemplares_propios() == [
+        (None, "Cattleya de mi abuela", "Regalo de 2019; florece en enero")
+    ]
+
+
+def test_la_planta_propia_se_lista_sin_enlace_y_con_sus_notas(client: TestClient) -> None:
+    guardar_propio("Cattleya de mi abuela", "Regalo de 2019\nflorece en enero")
+
+    html = client.get("/coleccion").text
+
+    assert "Cattleya de mi abuela" in html
+    assert "Regalo de 2019\nflorece en enero" in html
+    assert 'style="white-space: pre-line"' in html
+    assert "/especies/" not in html
+
+
+def test_un_ejemplar_sin_notas_no_trae_bloque_de_notas(client: TestClient) -> None:
+    guardar_propio("Sin notas")
+
+    assert "pre-line" not in client.get("/coleccion").text
+
+
+def test_un_ejemplar_del_catalogo_con_notas_las_muestra(client: TestClient) -> None:
+    app.state.catalogo = [especie()]
+    conexion = conectar(app.state.ruta_base)
+    agregar(conexion, RADICANS, 1_780_000_000)
+    conexion.execute("UPDATE ejemplares SET notas = 'Nota del ejemplar'")
+    conexion.close()
+
+    assert "Nota del ejemplar" in client.get("/coleccion").text
+
+
+def test_nombre_y_notas_con_html_se_escapan(client: TestClient) -> None:
+    guardar_propio("<b>negrita</b>", "<img src=x onerror=alert(1)>")
+
+    html = client.get("/coleccion").text
+
+    assert "<b>negrita</b>" not in html
+    assert "<img" not in html
+    assert "&lt;b&gt;negrita&lt;/b&gt;" in html
+
+
+@pytest.mark.parametrize("nombre", ["", "   "])
+def test_un_nombre_vacio_da_422_conserva_lo_escrito_y_no_guarda(
+    client: TestClient, sesion: Sesion, nombre: str
+) -> None:
+    respuesta = enviar_propio(client, sesion, nombre, "mis notas")
+
+    assert respuesta.status_code == 422
+    assert "El nombre es obligatorio." in respuesta.text
+    assert "mis notas" in respuesta.text
+    assert ejemplares_propios() == []
+
+
+def test_el_formulario_conserva_el_nombre_al_fallar_por_las_notas(
+    client: TestClient, sesion: Sesion
+) -> None:
+    respuesta = enviar_propio(client, sesion, "Mi rara", "n" * 2001)
+
+    assert respuesta.status_code == 422
+    assert "Las notas no pueden pasar de 2000 caracteres." in respuesta.text
+    assert 'value="Mi rara"' in respuesta.text
+    assert ejemplares_propios() == []
+
+
+def test_un_nombre_de_121_caracteres_da_422(client: TestClient, sesion: Sesion) -> None:
+    respuesta = enviar_propio(client, sesion, "x" * 121)
+
+    assert respuesta.status_code == 422
+    assert ejemplares_propios() == []
+
+
+def test_lo_escrito_se_escapa_al_volver_a_mostrar_el_formulario(
+    client: TestClient, sesion: Sesion
+) -> None:
+    respuesta = enviar_propio(client, sesion, '"><script>alert(1)</script>', "n" * 2001)
+
+    assert respuesta.status_code == 422
+    assert "<script>alert(1)</script>" not in respuesta.text
+    assert "&lt;script&gt;alert(1)&lt;/script&gt;" in respuesta.text
+
+
+def test_planta_propia_sin_token_da_403_y_no_guarda(client: TestClient) -> None:
+    respuesta = client.post("/coleccion/nuevo", data={"nombre": "Mi rara"})
+
+    assert respuesta.status_code == 403
+    assert ejemplares_propios() == []
+
+
+def test_planta_propia_sin_sesion_redirige_al_acceso_y_no_guarda(anonimo: TestClient) -> None:
+    respuesta = anonimo.post("/coleccion/nuevo", data={"nombre": "Mi rara"}, follow_redirects=False)
+
+    assert respuesta.status_code == 303
+    assert respuesta.headers["location"] == "/acceso"
+    assert ejemplares_propios() == []
+
+
+def test_las_notas_se_escapan_al_volver_a_mostrar_el_formulario(
+    client: TestClient, sesion: Sesion
+) -> None:
+    respuesta = enviar_propio(client, sesion, "", "</textarea><script>alert(1)</script>")
+
+    assert respuesta.status_code == 422
+    assert "<script>alert(1)</script>" not in respuesta.text
+    assert "&lt;/textarea&gt;&lt;script&gt;" in respuesta.text

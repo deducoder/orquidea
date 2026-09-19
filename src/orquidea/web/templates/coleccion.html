@@ -1,5 +1,6 @@
 {% extends "base.html" %}
-{% block title %}Mi colección — Orquídea{% endblock %}
+{% block title %}Mi colección — Orquídea<p><a href="/coleccion/nuevo">Agregar una planta que no está en el catálogo</a></p>
+{% endblock %}
 {% block content %}
 <h1>Mi colección</h1>
 {% if ejemplares %}
@@ -10,12 +11,18 @@
     <a href="/especies/{{ item.especie.id }}"><i>{{ item.especie.nombre_cientifico }}</i></a>
     {% elif item.ejemplar.especie_id %}
     {{ item.ejemplar.especie_id }} <small>(esa especie ya no está en el catálogo)</small>
+    {% else %}
+    {{ item.ejemplar.nombre }}
     {% endif %}
     <small>Agregado el {{ item.ejemplar.creado | fecha }}</small>
+    {% if item.ejemplar.notas %}
+    <p style="white-space: pre-line">{{ item.ejemplar.notas }}</p>
+    {% endif %}
   </li>
   {% endfor %}
 </ul>
 {% else %}
 <p>Aún no tienes ejemplares. Explora el <a href="/especies">catálogo</a> y agrega el primero desde la ficha de su especie.</p>
 {% endif %}
+<p><a href="/coleccion/nuevo">Agregar una planta que no está en el catálogo</a></p>
 {% endblock %}
