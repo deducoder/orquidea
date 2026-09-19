@@ -96,7 +96,7 @@ Imprime una línea con el formato `scrypt$N$r$p$sal$hash`; pégala como valor de
 
 | Path | What lives here |
 |------|-----------------|
-| `src/orquidea/` | El código de la aplicación: `catalogo/` y `coleccion/` (dominio), `autenticacion.py` (contraseña e intentos), `datos/` (SQLite con migraciones, sesiones, ejemplares, fotos y los JSON del catálogo) y `web/` (rutas y plantillas) |
+| `src/orquidea/` | El código de la aplicación: `catalogo/` y `coleccion/` (dominio), `autenticacion.py` (contraseña e intentos), `datos/` (SQLite con migraciones, sesiones, ejemplares, fotos y los JSON del catálogo) y `web/` (la aplicación, la sesión, un router por área en `rutas/` y las plantillas) |
 | `tests/` | Pruebas unitarias |
 | `scripts/` | Gate entry points (see Development) y `medir-primera-carga.py` (ver Fotos) |
 | `Dockerfile` | Imagen para desplegar en Dokploy (ver Despliegue con Dokploy) |
