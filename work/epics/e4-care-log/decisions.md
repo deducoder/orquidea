@@ -19,3 +19,8 @@ names it.
 **Decided:** no se espera confirmación; la intención va en el reporte: s4.1 añade la tabla `riegos` (cascada, `CHECK` de forma), la validación estricta de la fecha, el tope de 500 comprobado en el mismo `INSERT` y las funciones `agregar/listar/ultimo/quitar` filtradas por ejemplar y registro.
 **Why:** `stories/s4.1-*/plan.md` línea `> Pause: none (default)` y la propia skill: «unless the plan declares `> Pause: none`, in which case there is no human in the loop and the restatement goes in your report instead».
 **Would have stopped:** P5 si el plan declarara `per task`.
+
+### 2026-09-19 · story-implement (s4.1) step 5 · Acuse del humano tras cada tarea
+**Decided:** se continúa con la tarea siguiente en cuanto el gate está en verde y el commit existe, para T1 a T3.
+**Why:** `stories/s4.1-*/plan.md` línea `> Pause: none (default)`; story-implement paso 5: «unless the plan declares `> Pause: none`, in which case continue to the next task once the gate is green».
+**Would have stopped:** P3 si el gate estuviera en rojo y no supiera arreglarlo.
