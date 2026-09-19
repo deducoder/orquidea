@@ -1,10 +1,13 @@
 import sqlite3
+import threading
+from collections.abc import Callable
+from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 
 import pytest
 
 from orquidea.coleccion.modelo import CUIDADOS_MAXIMO, CuidadoInvalido, Floracion
-from orquidea.datos.base import MIGRACIONES, abrir_base
+from orquidea.datos.base import MIGRACIONES, abrir_base, conectar
 from orquidea.datos.ejemplares import agregar as agregar_ejemplar
 from orquidea.datos.ejemplares import fijar_foto, listar
 from orquidea.datos.ejemplares import quitar as quitar_ejemplar
@@ -239,3 +242,60 @@ def test_la_migracion_conserva_ejemplares_fotos_y_riegos(tmp_path: Path) -> None
     assert nueva.execute("SELECT COUNT(*) FROM riegos").fetchone() == (1,)
     assert nueva.execute("SELECT COUNT(*) FROM floraciones").fetchone() == (0,)
     assert nueva.execute("PRAGMA user_version").fetchone() == (5,)
+
+
+HILOS = 8
+
+
+def _en_paralelo(ruta: Path, accion: Callable[[sqlite3.Connection], object]) -> list[bool]:
+    """Ejecuta `accion` en varios hilos a la vez, cada uno con su conexión."""
+    salida = threading.Barrier(HILOS)
+
+    def uno(_: int) -> bool:
+        conexion = conectar(ruta)
+        try:
+            salida.wait()
+            accion(conexion)
+            return True
+        except CuidadoInvalido:
+            return False
+        finally:
+            conexion.close()
+
+    with ThreadPoolExecutor(max_workers=HILOS) as pool:
+        return list(pool.map(uno, range(HILOS)))
+
+
+def test_altas_simultaneas_no_rebasan_el_tope(tmp_path: Path) -> None:
+    ruta = tmp_path / "o.sqlite3"
+    base = abrir_base(ruta)
+    ejemplar = un_ejemplar(base)
+    base.executemany(
+        "INSERT INTO floraciones (ejemplar_id, inicio) VALUES (?, '2026-01-01')",
+        [(ejemplar,)] * (CUIDADOS_MAXIMO - 1),
+    )
+
+    resultados = _en_paralelo(ruta, lambda c: agregar(c, ejemplar, "2026-03-01", None))
+
+    assert resultados.count(True) == 1
+    assert base.execute("SELECT COUNT(*) FROM floraciones").fetchone() == (CUIDADOS_MAXIMO,)
+
+
+def test_terminar_simultaneo_deja_un_solo_exito_y_un_solo_fin(tmp_path: Path) -> None:
+    ruta = tmp_path / "o.sqlite3"
+    base = abrir_base(ruta)
+    ejemplar = un_ejemplar(base)
+    id = una_floracion(base, ejemplar, "2026-03-01", None)
+    fines = iter(f"2026-03-{dia:02d}" for dia in range(10, 10 + HILOS))
+    turno = threading.Lock()
+
+    def terminar_con_mi_fecha(conexion: sqlite3.Connection) -> None:
+        with turno:
+            fin = next(fines)
+        terminar(conexion, ejemplar, id, fin)
+
+    resultados = _en_paralelo(ruta, terminar_con_mi_fecha)
+
+    assert resultados.count(True) == 1
+    (floracion,) = listar_floraciones(base, ejemplar)
+    assert floracion.fin is not None and floracion.fin.startswith("2026-03-1")
