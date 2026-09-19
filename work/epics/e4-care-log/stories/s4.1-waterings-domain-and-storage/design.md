@@ -30,13 +30,13 @@ from orquidea.coleccion.modelo import CuidadoInvalido, validar_fecha
 from orquidea.datos.riegos import agregar, listar, quitar, ultimo
 
 hoy = date(2026, 9, 19)
-fecha = validar_fecha(" 2026-09-15 ", hoy)   # "2026-09-15"
-riego = agregar(conexion, 1, fecha)          # Riego(id=1, ejemplar_id=1, fecha="2026-09-15")
-agregar(conexion, 999, fecha)                # None: el ejemplar no existe, no se guarda nada
-listar(conexion, 1)                          # [Riego(...)] por fecha, luego id (ascendente)
-ultimo(conexion, 1)                          # el de mayor fecha (a igual fecha, el mayor id) o None
-quitar(conexion, 1, riego.id)                # True
-quitar(conexion, 2, riego.id)                # False: ese riego no es del ejemplar 2
+fecha = validar_fecha(" 2026-09-15 ", hoy)  # "2026-09-15"
+riego = agregar(conexion, 1, fecha)  # Riego(id=1, ejemplar_id=1, fecha="2026-09-15")
+agregar(conexion, 999, fecha)  # None: el ejemplar no existe, no se guarda nada
+listar(conexion, 1)  # [Riego(...)] por fecha, luego id (ascendente)
+ultimo(conexion, 1)  # el de mayor fecha (a igual fecha, el mayor id) o None
+quitar(conexion, 1, riego.id)  # True
+quitar(conexion, 2, riego.id)  # False: ese riego no es del ejemplar 2
 ```
 
 ### Expected output (success + error)
@@ -58,8 +58,10 @@ class Riego(BaseModel):
     ejemplar_id: int
     fecha: str  # "AAAA-MM-DD", ya validada
 
+
 CUIDADOS_MAXIMO = 500
 _FORMATO = re.compile(r"[0-9]{4}-[0-9]{2}-[0-9]{2}")  # solo dígitos ASCII
+
 
 def validar_fecha(texto: str, hoy: date) -> str: ...
 ```
