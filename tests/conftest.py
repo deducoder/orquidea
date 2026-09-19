@@ -38,7 +38,12 @@ def iniciar_sesion(cliente: TestClient, ahora: int | None = None) -> Sesion:
 
 
 @pytest.fixture
-def client(anonimo: TestClient) -> TestClient:
+def sesion(anonimo: TestClient) -> Sesion:
+    """La sesión iniciada por el cliente `client`; trae el token CSRF."""
+    return iniciar_sesion(anonimo)
+
+
+@pytest.fixture
+def client(anonimo: TestClient, sesion: Sesion) -> TestClient:
     """Cliente con una sesión iniciada."""
-    iniciar_sesion(anonimo)
     return anonimo

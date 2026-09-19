@@ -5,6 +5,7 @@ import sqlite3
 import time
 from collections.abc import AsyncIterator, Awaitable, Callable, Iterator
 from contextlib import asynccontextmanager
+from datetime import UTC, datetime
 from pathlib import Path
 from typing import Annotated
 
@@ -15,8 +16,10 @@ from fastapi.templating import Jinja2Templates
 
 from orquidea.autenticacion import LimiteDeIntentos, verificar_contrasena
 from orquidea.catalogo.busqueda import buscar
+from orquidea.coleccion.modelo import resolver
 from orquidea.datos.base import abrir_base, conectar, ruta_de_la_base
 from orquidea.datos.catalogo import DIRECTORIO_CATALOGO, cargar_catalogo
+from orquidea.datos.ejemplares import agregar, listar
 from orquidea.datos.sesiones import ANTIGUEDAD_MAXIMA, cerrar, crear, obtener
 
 BASE_DIR = Path(__file__).parent
@@ -93,6 +96,9 @@ app.state.ruta_base = ruta_de_la_base()
 app.state.limite = LimiteDeIntentos()
 app.mount("/static", StaticFiles(directory=BASE_DIR / "static"), name="static")
 templates = Jinja2Templates(directory=BASE_DIR / "templates")
+templates.env.filters["fecha"] = lambda segundos: (
+    datetime.fromtimestamp(segundos, UTC).date().isoformat()
+)
 
 
 CONTENT_SECURITY_POLICY = (
@@ -192,6 +198,22 @@ def ficha_de_especie(request: Request, id: str) -> HTMLResponse:
     if especie is None:
         raise HTTPException(status_code=404, detail="Especie no encontrada")
     return templates.TemplateResponse(request, "especie.html", {"especie": especie})
+
+
+@app.get("/coleccion", response_class=HTMLResponse)
+def mi_coleccion(request: Request, conexion: Base) -> HTMLResponse:
+    ejemplares = resolver(listar(conexion), request.app.state.catalogo)
+    return templates.TemplateResponse(request, "coleccion.html", {"ejemplares": ejemplares})
+
+
+@app.post("/coleccion")
+def agregar_a_mi_coleccion(
+    request: Request, especie_id: Annotated[str, Form()], conexion: Base
+) -> RedirectResponse:
+    if not any(especie.id == especie_id for especie in request.app.state.catalogo):
+        raise HTTPException(status_code=404, detail="Especie no encontrada")
+    agregar(conexion, especie_id, int(time.time()))
+    return RedirectResponse("/coleccion", status_code=303)
 
 
 @app.get("/salud")

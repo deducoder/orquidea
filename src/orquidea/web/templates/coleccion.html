@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block title %}Mi colección — Orquídea{% endblock %}
+{% block content %}
+<h1>Mi colección</h1>
+{% if ejemplares %}
+<ul>
+  {% for item in ejemplares %}
+  <li>
+    {% if item.especie %}
+    <a href="/especies/{{ item.especie.id }}"><i>{{ item.especie.nombre_cientifico }}</i></a>
+    {% elif item.ejemplar.especie_id %}
+    {{ item.ejemplar.especie_id }} <small>(esa especie ya no está en el catálogo)</small>
+    {% endif %}
+    <small>Agregado el {{ item.ejemplar.creado | fecha }}</small>
+  </li>
+  {% endfor %}
+</ul>
+{% else %}
+<p>Aún no tienes ejemplares. Explora el <a href="/especies">catálogo</a> y agrega el primero desde la ficha de su especie.</p>
+{% endif %}
+{% endblock %}
