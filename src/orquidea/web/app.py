@@ -1,3 +1,4 @@
+import hmac
 import logging
 import os
 import sqlite3
@@ -7,7 +8,7 @@ from contextlib import asynccontextmanager
 from pathlib import Path
 from typing import Annotated
 
-from fastapi import Depends, FastAPI, Form, HTTPException, Request
+from fastapi import Depends, FastAPI, Form, Header, HTTPException, Request
 from fastapi.responses import HTMLResponse, RedirectResponse, Response
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
@@ -27,6 +28,7 @@ class SesionRequerida(Exception):
 
 
 RUTAS_PUBLICAS = frozenset({"/acceso", "/salud"})
+METODOS_SEGUROS = frozenset({"GET", "HEAD", "OPTIONS"})
 
 
 @asynccontextmanager
@@ -55,8 +57,16 @@ def _nombre_de_cookie() -> str:
     return "__Host-sesion" if _cookie_segura() else "sesion"
 
 
-def exigir_sesion(request: Request, conexion: Base) -> None:
-    """Dependencia global: toda ruta la exige salvo las declaradas en `RUTAS_PUBLICAS`."""
+def exigir_sesion(
+    request: Request,
+    conexion: Base,
+    csrf: Annotated[str | None, Form()] = None,
+    x_csrf_token: Annotated[str | None, Header()] = None,
+) -> None:
+    """Dependencia global: toda ruta la exige salvo las declaradas en `RUTAS_PUBLICAS`.
+
+    Los métodos que cambian datos exigen además el token CSRF de la sesión.
+    """
     ruta = request.scope.get("route")
     if ruta is not None and ruta.path in RUTAS_PUBLICAS:
         return
@@ -64,6 +74,10 @@ def exigir_sesion(request: Request, conexion: Base) -> None:
     sesion = obtener(conexion, identificador, int(time.time())) if identificador else None
     if sesion is None:
         raise SesionRequerida
+    if request.method not in METODOS_SEGUROS:
+        enviado = csrf or x_csrf_token or ""
+        if not hmac.compare_digest(enviado.encode(), sesion.csrf.encode()):
+            raise HTTPException(status_code=403, detail="Token CSRF inválido")
     request.state.sesion = sesion
 
 

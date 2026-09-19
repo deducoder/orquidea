@@ -1,3 +1,4 @@
+import hmac
 import sqlite3
 import time
 
@@ -102,3 +103,95 @@ def test_una_ruta_nueva_sin_declararla_publica_queda_protegida(anonimo: TestClie
 @pytest.mark.parametrize("ruta", ["/docs", "/redoc", "/openapi.json"])
 def test_la_documentacion_automatica_no_existe(client: TestClient, ruta: str) -> None:
     assert client.get(ruta, follow_redirects=False).status_code == 404
+
+
+def filas_de_sesion() -> list[tuple[str, str]]:
+    conexion = sqlite3.connect(app.state.ruta_base)
+    try:
+        return conexion.execute("SELECT id_hash, csrf FROM sesiones").fetchall()
+    finally:
+        conexion.close()
+
+
+def test_un_post_sin_token_da_403_y_no_cambia_nada(client: TestClient) -> None:
+    respuesta = client.post("/salir", follow_redirects=False)
+
+    assert respuesta.status_code == 403
+    assert len(filas_de_sesion()) == 1
+
+
+@pytest.mark.parametrize("token", ["", "otro-token"])
+def test_un_post_con_un_token_incorrecto_da_403(client: TestClient, token: str) -> None:
+    for como in ({"data": {"csrf": token}}, {"headers": {"X-CSRF-Token": token}}):
+        respuesta = client.post("/salir", follow_redirects=False, **como)  # type: ignore[arg-type]
+
+        assert respuesta.status_code == 403
+    assert len(filas_de_sesion()) == 1
+
+
+def test_el_token_de_otra_sesion_no_vale(anonimo: TestClient) -> None:
+    iniciar_sesion(anonimo)
+    otra = iniciar_sesion(TestClient(app, base_url="https://testserver"))
+
+    respuesta = anonimo.post("/salir", data={"csrf": otra.csrf}, follow_redirects=False)
+
+    assert respuesta.status_code == 403
+    assert len(filas_de_sesion()) == 2
+
+
+def test_un_post_con_el_token_en_el_formulario_se_procesa(anonimo: TestClient) -> None:
+    sesion = iniciar_sesion(anonimo)
+
+    respuesta = anonimo.post("/salir", data={"csrf": sesion.csrf}, follow_redirects=False)
+
+    assert respuesta.status_code == 303
+    assert respuesta.headers["location"] == "/acceso"
+    assert filas_de_sesion() == []
+
+
+def test_un_post_con_el_token_en_la_cabecera_se_procesa(anonimo: TestClient) -> None:
+    sesion = iniciar_sesion(anonimo)
+
+    respuesta = anonimo.post(
+        "/salir", headers={"X-CSRF-Token": sesion.csrf}, follow_redirects=False
+    )
+
+    assert respuesta.status_code == 303
+    assert filas_de_sesion() == []
+
+
+def test_el_token_se_compara_en_tiempo_constante(
+    anonimo: TestClient, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    sesion = iniciar_sesion(anonimo)
+    llamadas: list[int] = []
+    original = hmac.compare_digest
+
+    def espia(a: bytes, b: bytes) -> bool:
+        llamadas.append(1)
+        return original(a, b)
+
+    monkeypatch.setattr(hmac, "compare_digest", espia)
+
+    anonimo.post("/salir", data={"csrf": sesion.csrf}, follow_redirects=False)
+
+    assert llamadas
+
+
+def test_las_paginas_autenticadas_traen_salir_con_el_token_y_el_de_htmx(
+    anonimo: TestClient,
+) -> None:
+    sesion = iniciar_sesion(anonimo)
+
+    html = anonimo.get("/especies").text
+
+    assert 'action="/salir"' in html
+    assert f'name="csrf" value="{sesion.csrf}"' in html
+    assert f"""hx-headers='{{"X-CSRF-Token": "{sesion.csrf}"}}'""" in html
+
+
+def test_el_formulario_de_acceso_no_trae_token_ni_boton_de_salir(anonimo: TestClient) -> None:
+    html = anonimo.get("/acceso").text
+
+    assert "/salir" not in html
+    assert "csrf" not in html.lower()

@@ -6,7 +6,15 @@
   <script src="/static/htmx.min.js" defer></script>
   <title>{% block title %}Orquídea{% endblock %}</title>
 </head>
-<body>
+<body{% if request.state.sesion %} hx-headers='{"X-CSRF-Token": "{{ request.state.sesion.csrf }}"}'{% endif %}>
+  {% if request.state.sesion %}
+  <header>
+    <form method="post" action="/salir">
+      <input type="hidden" name="csrf" value="{{ request.state.sesion.csrf }}">
+      <button type="submit">Salir</button>
+    </form>
+  </header>
+  {% endif %}
   <main>
     {% block content %}{% endblock %}
   </main>

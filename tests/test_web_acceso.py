@@ -103,8 +103,12 @@ def test_cerrar_la_sesion_borra_la_fila_y_la_cookie(anonimo: TestClient) -> None
     otra = TestClient(app, base_url="https://testserver")
     acceder(otra)
     assert len(hashes_de_sesion()) == 2
+    conexion = sqlite3.connect(app.state.ruta_base)
+    id_hash = hashlib.sha256(anonimo.cookies["__Host-sesion"].encode()).hexdigest()
+    (csrf,) = conexion.execute("SELECT csrf FROM sesiones WHERE id_hash = ?", (id_hash,)).fetchone()
+    conexion.close()
 
-    respuesta = anonimo.post("/salir", follow_redirects=False)
+    respuesta = anonimo.post("/salir", data={"csrf": csrf}, follow_redirects=False)
 
     assert respuesta.status_code == 303
     assert respuesta.headers["location"] == "/acceso"
