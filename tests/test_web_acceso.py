@@ -1,4 +1,5 @@
 import hashlib
+import logging
 import sqlite3
 
 import pytest
@@ -44,7 +45,7 @@ def test_la_contrasena_correcta_crea_la_sesion_y_redirige(client: TestClient) ->
 
     assert respuesta.status_code == 303
     assert respuesta.headers["location"] == "/"
-    identificador = respuesta.cookies["sesion"]
+    identificador = respuesta.cookies["__Host-sesion"]
     assert hashes_de_sesion() == [hashlib.sha256(identificador.encode()).hexdigest()]
     assert identificador not in hashes_de_sesion()
 
@@ -56,6 +57,8 @@ def test_la_cookie_es_httponly_samesite_lax_y_secure(client: TestClient) -> None
     assert "samesite=lax" in cookie
     assert "secure" in cookie
     assert "path=/" in cookie
+    assert "domain" not in cookie
+    assert cookie.startswith("__host-sesion=")
 
 
 def test_la_cookie_sin_secure_solo_si_el_entorno_lo_desactiva(
@@ -65,6 +68,7 @@ def test_la_cookie_sin_secure_solo_si_el_entorno_lo_desactiva(
 
     cookie = acceder(client).headers["set-cookie"].lower()
 
+    assert cookie.startswith("sesion=")
     assert "secure" not in cookie
     assert "httponly" in cookie
 
@@ -104,7 +108,7 @@ def test_cerrar_la_sesion_borra_la_fila_y_la_cookie(client: TestClient) -> None:
 
     assert respuesta.status_code == 303
     assert respuesta.headers["location"] == "/acceso"
-    assert "sesion=" in respuesta.headers["set-cookie"]
+    assert "__Host-sesion=" in respuesta.headers["set-cookie"]
     assert "max-age=0" in respuesta.headers["set-cookie"].lower()
     assert len(hashes_de_sesion()) == 1
 
@@ -144,3 +148,20 @@ def test_el_acceso_no_redirige_a_una_url_dada_por_el_usuario(client: TestClient)
     )
 
     assert respuesta.headers["location"] == "/"
+
+
+def test_los_accesos_se_registran_sin_la_contrasena(
+    client: TestClient, caplog: pytest.LogCaptureFixture
+) -> None:
+    with caplog.at_level(logging.INFO, logger="orquidea.acceso"):
+        acceder(client, "secreto-erroneo")
+        acceder(client)
+        for _ in range(5):
+            acceder(client, "x")
+        acceder(client)
+
+    mensajes = [registro.getMessage() for registro in caplog.records]
+    assert "acceso fallido" in mensajes
+    assert "acceso correcto" in mensajes
+    assert "acceso bloqueado" in mensajes
+    assert not any("secreto-erroneo" in mensaje or CONTRASENA in mensaje for mensaje in mensajes)

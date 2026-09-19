@@ -1,3 +1,4 @@
+import logging
 import os
 import sqlite3
 import time
@@ -18,7 +19,7 @@ from orquidea.datos.catalogo import DIRECTORIO_CATALOGO, cargar_catalogo
 from orquidea.datos.sesiones import ANTIGUEDAD_MAXIMA, cerrar, crear
 
 BASE_DIR = Path(__file__).parent
-COOKIE_SESION = "sesion"
+registro = logging.getLogger("orquidea.acceso")
 
 
 @asynccontextmanager
@@ -50,6 +51,11 @@ def _cookie_segura() -> bool:
     return os.environ.get("ORQUIDEA_COOKIE_SEGURA") != "0"
 
 
+def _nombre_de_cookie() -> str:
+    # El prefijo __Host- exige Secure: solo se usa cuando la cookie lo lleva.
+    return "__Host-sesion" if _cookie_segura() else "sesion"
+
+
 def _formulario_de_acceso(request: Request, estado: int, mensaje: str = "") -> HTMLResponse:
     return templates.TemplateResponse(
         request, "acceso.html", {"mensaje": mensaje}, status_code=estado
@@ -68,15 +74,18 @@ def iniciar_sesion(
     limite: LimiteDeIntentos = request.app.state.limite
     ahora = time.time()
     if limite.bloqueado(ahora):
+        registro.warning("acceso bloqueado")
         return _formulario_de_acceso(request, 429, "Demasiados intentos; espera unos minutos.")
     if not verificar_contrasena(contrasena, os.environ.get("ORQUIDEA_PASSWORD_HASH")):
         limite.fallo(ahora)
+        registro.warning("acceso fallido")
         return _formulario_de_acceso(request, 401, "Contraseña incorrecta.")
     limite.acierto()
+    registro.info("acceso correcto")
     identificador, _ = crear(conexion, int(ahora))
     respuesta = RedirectResponse("/", status_code=303)
     respuesta.set_cookie(
-        COOKIE_SESION,
+        _nombre_de_cookie(),
         identificador,
         max_age=ANTIGUEDAD_MAXIMA,
         httponly=True,
@@ -88,11 +97,13 @@ def iniciar_sesion(
 
 @app.post("/salir")
 def cerrar_sesion(request: Request, conexion: Base) -> RedirectResponse:
-    identificador = request.cookies.get(COOKIE_SESION)
+    identificador = request.cookies.get(_nombre_de_cookie())
     if identificador:
         cerrar(conexion, identificador)
     respuesta = RedirectResponse("/acceso", status_code=303)
-    respuesta.delete_cookie(COOKIE_SESION, httponly=True, samesite="lax", secure=_cookie_segura())
+    respuesta.delete_cookie(
+        _nombre_de_cookie(), httponly=True, samesite="lax", secure=_cookie_segura()
+    )
     return respuesta
 
 
