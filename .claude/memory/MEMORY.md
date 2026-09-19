@@ -1,3 +1,4 @@
+- [Última sesión](session-pointer.md) — 2026-09-19: siguiente, UI con gemba-design
 - [Starlette TestClient usa httpx2](starlette-testclient-httpx2.md) — httpx2 en dev; ids locales s{N}.{M}
 - [Mutaciones sin bytecode; ruff formatea .md](mutation-checks-stale-bytecode.md) — falsos supervivientes
 - [Cuidados por género en la AOS](aos-genus-care-cards.md) — fuente del catálogo semilla y sus límites
@@ -15,3 +16,4 @@
 - [Ids coincidentes ocultan cruces](ids-coincidentes-ocultan-cruces-en-pruebas-idor.md) — desfasar ids con señuelos en pruebas IDOR
 - [Cifras de retrospectiva de la salida del comando](cifras-de-retrospectiva-de-la-salida-del-comando.md) — contar con un comando, no de memoria
 - [Rango de epic-review desde el diseño](rango-de-epic-review-desde-el-disenio.md) — base = padre del commit de diseño, no del brief
+- [Supervisar orchestrate](orchestrate-supervision-mechanics.md) — nombre tras renombre, espera en bucle, push no sale con terminal activa
