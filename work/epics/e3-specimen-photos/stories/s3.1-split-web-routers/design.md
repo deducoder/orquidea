@@ -24,8 +24,9 @@ Mover cada grupo de rutas a un `APIRouter` y la dependencia de sesión a su mód
 ## 3 · Interface / examples
 
 ```python
-from orquidea.web.app import app                      # sin cambio: `uvicorn orquidea.web.app:app`
-from orquidea.web.sesion import RUTAS_PUBLICAS       # frozenset({"/acceso", "/salud"})
+from orquidea.web.app import app  # sin cambio: `uvicorn orquidea.web.app:app`
+from orquidea.web.sesion import RUTAS_PUBLICAS  # frozenset({"/acceso", "/salud"})
+
 sorted((m, r.path) for r in app.routes for m in getattr(r, "methods", []) or [])
 # idéntico antes y después de la división (se captura antes y se compara en la prueba de T1)
 ```
