@@ -12,3 +12,4 @@
 - [Tope atómico en un INSERT...SELECT](tope-atomico-en-un-insert-select.md) — contar aparte deja pasar altas simultáneas
 - [pkill -f mata su propio comando](pkill-f-mata-su-propio-comando.md) — apagar uvicorn por PID y comprobar con curl
 - [Migración sin versión fija](prueba-de-migracion-sin-version-fija.md) — user_version final = número de archivos, no un literal
+- [Ids coincidentes ocultan cruces](ids-coincidentes-ocultan-cruces-en-pruebas-idor.md) — desfasar ids con señuelos en pruebas IDOR
