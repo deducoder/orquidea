@@ -44,7 +44,7 @@ None. s4.3 (`orquidea.datos.floraciones`, `0005`) y s4.5 (`datos.riegos`, `colec
 | Story | Status | Est. | Actual |
 |-------|:------:|:----:|:------:|
 | s4.1 | done | S | S |
-| s4.2 | todo | M | |
+| s4.2 | done | M | M |
 | s4.3 | todo | S | |
 | s4.4 | todo | M | |
 | s4.5 | todo | S | |

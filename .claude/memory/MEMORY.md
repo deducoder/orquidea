@@ -10,3 +10,4 @@
 - [Límite de cuerpo por señal](fastapi-cuerpo-excedido-por-senal.md) — FastAPI vuelve 400/422 toda excepción al leer
 - [Medir recursos al diseñar entradas](medir-recursos-al-disenar-entrada-del-usuario.md) — memoria/peso con el tamaño máximo, desde el diseño
 - [Tope atómico en un INSERT...SELECT](tope-atomico-en-un-insert-select.md) — contar aparte deja pasar altas simultáneas
+- [pkill -f mata su propio comando](pkill-f-mata-su-propio-comando.md) — apagar uvicorn por PID y comprobar con curl

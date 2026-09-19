@@ -1,6 +1,7 @@
 import logging
 import sqlite3
 import time
+from datetime import UTC, date, datetime
 from typing import Annotated
 
 from fastapi import APIRouter, File, Form, HTTPException, Request, UploadFile
@@ -22,6 +23,7 @@ from orquidea.datos.ejemplares import (
     obtener,
 )
 from orquidea.datos.fotos import FotoInvalida, procesar_foto
+from orquidea.datos.riegos import listar as listar_riegos
 from orquidea.web.plantillas import templates
 from orquidea.web.sesion import Base
 
@@ -84,7 +86,7 @@ def _formulario_de_ejemplar_propio(
     )
 
 
-def _ejemplar_o_404(conexion: sqlite3.Connection, id: int) -> Ejemplar:
+def ejemplar_o_404(conexion: sqlite3.Connection, id: int) -> Ejemplar:
     ejemplar = obtener(conexion, id)
     if ejemplar is None:
         raise HTTPException(status_code=404, detail="Ejemplar no encontrado")
@@ -137,16 +139,36 @@ def agregar_ejemplar_propio(
     return RedirectResponse("/coleccion", status_code=303)
 
 
-def _ficha(request: Request, estado: int, ejemplar: Ejemplar, error: str = "") -> HTMLResponse:
+def hoy() -> date:
+    return datetime.now(UTC).date()
+
+
+def ficha(
+    request: Request,
+    conexion: sqlite3.Connection,
+    estado: int,
+    ejemplar: Ejemplar,
+    error: str = "",
+    fecha: str = "",
+) -> HTMLResponse:
     (resuelto,) = resolver([ejemplar], request.app.state.catalogo)
-    contexto = {"item": resuelto, "error": error}
+    dia = hoy().isoformat()
+    riegos = listar_riegos(conexion, ejemplar.id)
+    contexto = {
+        "item": resuelto,
+        "error": error,
+        "hoy": dia,
+        "fecha": fecha or dia,
+        "riegos": riegos[::-1],
+        "ultimo": riegos[-1] if riegos else None,
+    }
     return templates.TemplateResponse(request, "ejemplar_ficha.html", contexto, status_code=estado)
 
 
 # Se registra después de `/coleccion/nuevo`: en el orden inverso, "nuevo" se leería como un id.
 @router.get("/coleccion/{id}", response_class=HTMLResponse)
 def ficha_del_ejemplar(request: Request, id: int, conexion: Base) -> HTMLResponse:
-    return _ficha(request, 200, _ejemplar_o_404(conexion, id))
+    return ficha(request, conexion, 200, ejemplar_o_404(conexion, id))
 
 
 @router.post("/coleccion/{id}/foto", response_model=None)
@@ -156,20 +178,20 @@ def subir_foto(
     conexion: Base,
     foto: Annotated[UploadFile | None, File()] = None,
 ) -> Response:
-    ejemplar = _ejemplar_o_404(conexion, id)
+    ejemplar = ejemplar_o_404(conexion, id)
     # `LimiteDeCuerpo` ya acotó el cuerpo entero; `procesar_foto` rechaza lo que pase de 10 MB.
     datos = foto.file.read() if foto is not None else b""
     if not datos:
-        return _ficha(request, 422, ejemplar, "Elige una foto.")
+        return ficha(request, conexion, 422, ejemplar, "Elige una foto.")
     try:
         procesada = procesar_foto(datos)
     except FotoInvalida as fallo:
-        return _ficha(request, 422, ejemplar, str(fallo))
+        return ficha(request, conexion, 422, ejemplar, str(fallo))
     try:
         guardada = poner_foto(conexion, request.app.state.directorio_fotos, id, procesada)
     except OSError as fallo:
         registro.warning("no se pudo guardar una foto: %s", fallo)
-        return _ficha(request, 500, ejemplar, "No se pudo guardar la foto.")
+        return ficha(request, conexion, 500, ejemplar, "No se pudo guardar la foto.")
     if not guardada:
         raise HTTPException(status_code=404, detail="Ejemplar no encontrado")
     return RedirectResponse(f"/coleccion/{id}", status_code=303)
@@ -208,7 +230,7 @@ def quitar_la_foto(request: Request, id: int, conexion: Base) -> RedirectRespons
 
 @router.get("/coleccion/{id}/editar", response_class=HTMLResponse)
 def formulario_de_edicion(request: Request, id: int, conexion: Base) -> HTMLResponse:
-    ejemplar = _ejemplar_o_404(conexion, id)
+    ejemplar = ejemplar_o_404(conexion, id)
     return _formulario_de_edicion(request, 200, ejemplar, ejemplar.nombre, ejemplar.notas)
 
 
@@ -220,7 +242,7 @@ def editar_ejemplar(
     nombre: Annotated[str, Form()] = "",
     notas: Annotated[str, Form()] = "",
 ) -> Response:
-    ejemplar = _ejemplar_o_404(conexion, id)
+    ejemplar = ejemplar_o_404(conexion, id)
     try:
         nombre_limpio, notas_limpias = validar_ejemplar(
             nombre, notas, con_especie=ejemplar.especie_id is not None
@@ -233,7 +255,7 @@ def editar_ejemplar(
 
 @router.get("/coleccion/{id}/quitar", response_class=HTMLResponse)
 def confirmar_baja(request: Request, id: int, conexion: Base) -> HTMLResponse:
-    ejemplar = _ejemplar_o_404(conexion, id)
+    ejemplar = ejemplar_o_404(conexion, id)
     (resuelto,) = resolver([ejemplar], request.app.state.catalogo)
     return templates.TemplateResponse(request, "confirmar_baja.html", {"item": resuelto})
 
