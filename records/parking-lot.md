@@ -32,6 +32,9 @@ wrote it. Retirement moves an entry to `## Retired` with its reason.
 - **Las cifras de la guía de despliegue están escritas a mano.** El README dice "12 horas", "30 minutos", "cinco intentos" y "cinco minutos"; las pruebas de deriva solo comparan nombres de variables, así que si `datos.sesiones` o `autenticacion` cambian esas constantes, la guía queda vieja sin que nada falle.
   *Origin:* s2.7 (e2), `quality-review`, 2026-09-19.
   *Promotion:* cuando alguien cambie una de esas constantes, o cuando la guía crezca: una prueba que importe las constantes y las busque en el README.
+- **`orquidea/web/app.py` reúne todas las rutas, la sesión, las cabeceras y el ciclo de vida (~390 líneas).** Es legible hoy, pero 0.2 (fotos, riegos y floraciones) añade tres grupos de rutas más.
+  *Origin:* e2, `epic-review` (quality-review a escala de épica), 2026-09-19.
+  *Promotion:* al empezar la primera historia de 0.2 que añada rutas, o cuando `app.py` pase de ~500 líneas: dividir en `APIRouter` por área (acceso, catálogo, colección) y sacar `exigir_sesion` y las cabeceras a su propio módulo.
 
 ## Retired
 
