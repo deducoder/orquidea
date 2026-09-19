@@ -1,6 +1,7 @@
 import logging
 import sqlite3
 import time
+from collections.abc import Mapping
 from datetime import UTC, date, datetime
 from typing import Annotated
 
@@ -22,6 +23,7 @@ from orquidea.datos.ejemplares import (
     listar,
     obtener,
 )
+from orquidea.datos.floraciones import listar as listar_floraciones
 from orquidea.datos.fotos import FotoInvalida, procesar_foto
 from orquidea.datos.riegos import listar as listar_riegos
 from orquidea.web.plantillas import templates
@@ -149,18 +151,23 @@ def ficha(
     estado: int,
     ejemplar: Ejemplar,
     error: str = "",
-    fecha: str = "",
+    valores: Mapping[str, str] | None = None,
 ) -> HTMLResponse:
     (resuelto,) = resolver([ejemplar], request.app.state.catalogo)
     dia = hoy().isoformat()
+    valores = valores or {}
     riegos = listar_riegos(conexion, ejemplar.id)
     contexto = {
         "item": resuelto,
         "error": error,
         "hoy": dia,
-        "fecha": fecha or dia,
+        # Lo escrito en un formulario rechazado; lo demás vuelve a su valor por defecto.
+        "fecha": valores.get("fecha") or dia,
+        "inicio": valores.get("inicio") or dia,
+        "fin": valores.get("fin", ""),
         "riegos": riegos[::-1],
         "ultimo": riegos[-1] if riegos else None,
+        "floraciones": listar_floraciones(conexion, ejemplar.id)[::-1],
     }
     return templates.TemplateResponse(request, "ejemplar_ficha.html", contexto, status_code=estado)
 
