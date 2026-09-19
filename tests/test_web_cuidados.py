@@ -10,6 +10,7 @@ from orquidea.coleccion.modelo import CUIDADOS_MAXIMO
 from orquidea.datos.almacen_fotos import poner_foto
 from orquidea.datos.base import conectar
 from orquidea.datos.ejemplares import agregar_sin_especie
+from orquidea.datos.floraciones import agregar as agregar_floracion
 from orquidea.datos.fotos import procesar_foto
 from orquidea.datos.riegos import agregar as agregar_riego
 from orquidea.datos.sesiones import Sesion
@@ -286,3 +287,380 @@ def test_sin_token_csrf_no_se_registra_ni_se_quita_ningun_riego(client: TestClie
 
     assert (registrar.status_code, quitar.status_code, equivocado.status_code) == (403, 403, 403)
     assert _riegos_guardados(id) == ["2026-09-01"]
+
+
+def _con_floraciones(id: int, *periodos: tuple[str, str | None]) -> None:
+    conexion = _conexion()
+    try:
+        for inicio, fin in periodos:
+            assert agregar_floracion(conexion, id, inicio, fin) is not None
+    finally:
+        conexion.close()
+
+
+def _floraciones_guardadas(id: int) -> list[tuple[str, str | None]]:
+    conexion = _conexion()
+    try:
+        filas = conexion.execute(
+            "SELECT inicio, fin FROM floraciones WHERE ejemplar_id = ? ORDER BY inicio, id", (id,)
+        ).fetchall()
+        return [(fila[0], fila[1]) for fila in filas]
+    finally:
+        conexion.close()
+
+
+def _registrar_floracion(
+    client: TestClient, csrf: str, id: int, inicio: str, fin: str = ""
+) -> Response:
+    return client.post(
+        f"/coleccion/{id}/floraciones",
+        data={"csrf": csrf, "inicio": inicio, "fin": fin},
+        follow_redirects=False,
+    )
+
+
+def test_la_ficha_sin_floraciones_lo_dice_y_ofrece_registrar_una(client: TestClient) -> None:
+    id = _ejemplar()
+
+    texto = client.get(f"/coleccion/{id}").text
+
+    assert "Aún no hay floraciones." in texto
+    assert f'action="/coleccion/{id}/floraciones"' in texto
+    assert 'name="inicio"' in texto and 'name="fin"' in texto
+    assert texto.count('type="date"') >= 3  # fecha del riego, inicio y fin de la floración
+
+
+def test_registrar_una_floracion_sin_fin_la_deja_en_curso(
+    client: TestClient, sesion: Sesion
+) -> None:
+    id = _ejemplar()
+
+    respuesta = _registrar_floracion(client, sesion.csrf, id, "2026-03-01")
+
+    assert respuesta.status_code == 303
+    assert respuesta.headers["location"] == f"/coleccion/{id}"
+    assert _floraciones_guardadas(id) == [("2026-03-01", None)]
+    assert re.search(r"<li>\s*2026-03-01 — en curso", client.get(f"/coleccion/{id}").text)
+
+
+def test_registrar_una_floracion_con_fin_la_deja_terminada(
+    client: TestClient, sesion: Sesion
+) -> None:
+    id = _ejemplar()
+
+    _registrar_floracion(client, sesion.csrf, id, "2026-03-01", "2026-03-20")
+
+    assert _floraciones_guardadas(id) == [("2026-03-01", "2026-03-20")]
+    assert re.search(r"<li>\s*2026-03-01 — 2026-03-20", client.get(f"/coleccion/{id}").text)
+
+
+def test_la_ficha_lista_las_floraciones_de_la_mas_reciente_a_la_mas_antigua(
+    client: TestClient,
+) -> None:
+    id = _ejemplar()
+    _con_floraciones(id, ("2026-03-01", None), ("2025-02-01", "2025-02-20"), ("2026-06-10", None))
+
+    texto = client.get(f"/coleccion/{id}").text
+
+    posiciones = [
+        _posicion(rf"<li>\s*{inicio} —", texto)
+        for inicio in ("2026-06-10", "2026-03-01", "2025-02-01")
+    ]
+    assert posiciones == sorted(posiciones)
+
+
+@pytest.mark.parametrize(
+    ("inicio", "fin", "mensaje"),
+    [
+        ("19/03/2026", "", "formato AAAA-MM-DD"),
+        ("2026-02-30", "", "no existe"),
+        ("", "", "obligatoria"),
+        ((_hoy() + timedelta(days=2)).isoformat(), "", "posterior a hoy"),
+        ("2026-03-01", "20/03/2026", "formato AAAA-MM-DD"),
+        ("2026-03-01", (_hoy() + timedelta(days=2)).isoformat(), "posterior a hoy"),
+        ("2026-03-20", "2026-03-01", "fin no puede ser anterior al inicio"),
+    ],
+)
+def test_una_floracion_rechazada_vuelve_a_la_ficha_sin_guardar_nada(
+    client: TestClient, sesion: Sesion, inicio: str, fin: str, mensaje: str
+) -> None:
+    id = _ejemplar()
+
+    respuesta = _registrar_floracion(client, sesion.csrf, id, inicio, fin)
+
+    assert respuesta.status_code == 422
+    assert mensaje in respuesta.text
+    assert 'role="alert"' in respuesta.text
+    assert _floraciones_guardadas(id) == []
+
+
+@pytest.mark.parametrize("campo", ["inicio", "fin"])
+def test_los_campos_de_la_floracion_rechazada_se_devuelven_escapados(
+    client: TestClient, sesion: Sesion, campo: str
+) -> None:
+    id = _ejemplar()
+    datos = {"inicio": "2026-03-01", "fin": "", "csrf": sesion.csrf}
+    datos[campo] = '"><script>alert(1)</script>'
+
+    respuesta = client.post(f"/coleccion/{id}/floraciones", data=datos)
+
+    assert respuesta.status_code == 422
+    assert "<script>alert(1)" not in respuesta.text
+    assert "&lt;script&gt;alert(1)" in respuesta.text
+
+
+def test_el_tope_de_floraciones_se_rechaza_con_un_mensaje(
+    client: TestClient, sesion: Sesion
+) -> None:
+    id = _ejemplar()
+    conexion = _conexion()
+    try:
+        conexion.executemany(
+            "INSERT INTO floraciones (ejemplar_id, inicio) VALUES (?, '2026-01-01')",
+            [(id,)] * CUIDADOS_MAXIMO,
+        )
+    finally:
+        conexion.close()
+
+    respuesta = _registrar_floracion(client, sesion.csrf, id, "2026-03-01")
+
+    assert respuesta.status_code == 422
+    assert "500 floraciones" in respuesta.text
+    assert len(_floraciones_guardadas(id)) == CUIDADOS_MAXIMO
+
+
+def test_registrar_una_floracion_en_un_ejemplar_inexistente_da_404(
+    client: TestClient, sesion: Sesion
+) -> None:
+    assert _registrar_floracion(client, sesion.csrf, 999, "2026-03-01").status_code == 404
+
+
+def test_un_riego_rechazado_conserva_su_fecha_y_no_altera_el_formulario_de_floraciones(
+    client: TestClient, sesion: Sesion
+) -> None:
+    id = _ejemplar()
+
+    texto = _registrar(client, sesion.csrf, id, "2026-13-45").text
+
+    assert 'name="fecha" type="date" value="2026-13-45"' in texto
+    assert f'name="inicio" type="date" value="{_hoy().isoformat()}"' in texto
+
+
+def test_una_floracion_rechazada_conserva_sus_campos_y_no_altera_el_formulario_de_riegos(
+    client: TestClient, sesion: Sesion
+) -> None:
+    id = _ejemplar()
+
+    texto = _registrar_floracion(client, sesion.csrf, id, "2026-03-20", "2026-03-01").text
+
+    assert 'name="inicio" type="date" value="2026-03-20"' in texto
+    assert 'name="fin" type="date" value="2026-03-01"' in texto
+    assert f'name="fecha" type="date" value="{_hoy().isoformat()}"' in texto
+
+
+def _desfasar_los_ids() -> None:
+    """Que el id de una floración no coincida con el de su ejemplar (así un cruce se nota)."""
+    _con_floraciones(_ejemplar("Señuelo"), *[("2020-01-01", None)] * 5)
+
+
+def _id_de_la_floracion(id: int, inicio: str) -> int:
+    conexion = _conexion()
+    try:
+        fila = conexion.execute(
+            "SELECT id FROM floraciones WHERE ejemplar_id = ? AND inicio = ?", (id, inicio)
+        ).fetchone()
+        return int(fila[0])
+    finally:
+        conexion.close()
+
+
+def _terminar(client: TestClient, csrf: str, id: int, floracion: int, fin: str) -> Response:
+    return client.post(
+        f"/coleccion/{id}/floraciones/{floracion}/fin",
+        data={"csrf": csrf, "fin": fin},
+        follow_redirects=False,
+    )
+
+
+def _quitar_floracion(client: TestClient, csrf: str, id: int, floracion: int) -> Response:
+    return client.post(
+        f"/coleccion/{id}/floraciones/{floracion}/quitar",
+        data={"csrf": csrf},
+        follow_redirects=False,
+    )
+
+
+def test_terminar_una_floracion_en_curso_la_deja_terminada(
+    client: TestClient, sesion: Sesion
+) -> None:
+    _desfasar_los_ids()
+    id = _ejemplar()
+    _con_floraciones(id, ("2026-03-01", None))
+
+    respuesta = _terminar(
+        client, sesion.csrf, id, _id_de_la_floracion(id, "2026-03-01"), "2026-03-20"
+    )
+
+    assert respuesta.status_code == 303
+    assert respuesta.headers["location"] == f"/coleccion/{id}"
+    assert _floraciones_guardadas(id) == [("2026-03-01", "2026-03-20")]
+    assert re.search(r"<li>\s*2026-03-01 — 2026-03-20", client.get(f"/coleccion/{id}").text)
+
+
+def test_solo_las_floraciones_en_curso_ofrecen_terminar_y_todas_ofrecen_quitar(
+    client: TestClient,
+) -> None:
+    id = _ejemplar()
+    _con_floraciones(id, ("2026-03-01", None), ("2025-02-01", "2025-02-20"))
+    en_curso = _id_de_la_floracion(id, "2026-03-01")
+    terminada = _id_de_la_floracion(id, "2025-02-01")
+
+    texto = client.get(f"/coleccion/{id}").text
+
+    assert f'action="/coleccion/{id}/floraciones/{en_curso}/fin"' in texto
+    assert f'action="/coleccion/{id}/floraciones/{terminada}/fin"' not in texto
+    assert f'action="/coleccion/{id}/floraciones/{en_curso}/quitar"' in texto
+    assert f'action="/coleccion/{id}/floraciones/{terminada}/quitar"' in texto
+
+
+@pytest.mark.parametrize(
+    ("fin", "mensaje"),
+    [
+        ("2026-02-01", "fin no puede ser anterior al inicio"),
+        ("20/03/2026", "formato AAAA-MM-DD"),
+        ("2026-02-30", "no existe"),
+        ("", "obligatoria"),
+        ((_hoy() + timedelta(days=2)).isoformat(), "posterior a hoy"),
+    ],
+)
+def test_un_fin_rechazado_vuelve_a_la_ficha_y_la_floracion_sigue_en_curso(
+    client: TestClient, sesion: Sesion, fin: str, mensaje: str
+) -> None:
+    id = _ejemplar()
+    _con_floraciones(id, ("2026-03-01", None))
+
+    respuesta = _terminar(client, sesion.csrf, id, _id_de_la_floracion(id, "2026-03-01"), fin)
+
+    assert respuesta.status_code == 422
+    assert mensaje in respuesta.text
+    assert _floraciones_guardadas(id) == [("2026-03-01", None)]
+
+
+def test_terminar_una_ya_terminada_se_rechaza_y_no_cambia(
+    client: TestClient, sesion: Sesion
+) -> None:
+    id = _ejemplar()
+    _con_floraciones(id, ("2026-03-01", "2026-03-20"))
+
+    respuesta = _terminar(
+        client, sesion.csrf, id, _id_de_la_floracion(id, "2026-03-01"), "2026-03-25"
+    )
+
+    assert respuesta.status_code == 422
+    assert "ya terminó" in respuesta.text
+    assert _floraciones_guardadas(id) == [("2026-03-01", "2026-03-20")]
+
+
+def test_terminar_la_floracion_de_otro_ejemplar_da_404_y_no_la_cambia(
+    client: TestClient, sesion: Sesion
+) -> None:
+    _desfasar_los_ids()
+    uno, otro = _ejemplar("Uno"), _ejemplar("Otro")
+    _con_floraciones(otro, ("2026-03-01", None))
+
+    respuesta = _terminar(
+        client, sesion.csrf, uno, _id_de_la_floracion(otro, "2026-03-01"), "2026-03-20"
+    )
+
+    assert respuesta.status_code == 404
+    assert _floraciones_guardadas(otro) == [("2026-03-01", None)]
+
+
+def test_terminar_una_floracion_o_un_ejemplar_inexistentes_da_404(
+    client: TestClient, sesion: Sesion
+) -> None:
+    id = _ejemplar()
+
+    assert _terminar(client, sesion.csrf, id, 999, "2026-03-20").status_code == 404
+    assert _terminar(client, sesion.csrf, 999, 1, "2026-03-20").status_code == 404
+
+
+def test_quitar_una_floracion_la_borra_y_deja_las_demas(client: TestClient, sesion: Sesion) -> None:
+    _desfasar_los_ids()
+    id = _ejemplar()
+    _con_floraciones(id, ("2026-03-01", None), ("2025-02-01", "2025-02-20"))
+
+    respuesta = _quitar_floracion(client, sesion.csrf, id, _id_de_la_floracion(id, "2026-03-01"))
+
+    assert respuesta.status_code == 303
+    assert respuesta.headers["location"] == f"/coleccion/{id}"
+    assert _floraciones_guardadas(id) == [("2025-02-01", "2025-02-20")]
+
+
+def test_quitar_la_floracion_de_otro_ejemplar_da_404_y_no_la_borra(
+    client: TestClient, sesion: Sesion
+) -> None:
+    _desfasar_los_ids()
+    uno, otro = _ejemplar("Uno"), _ejemplar("Otro")
+    _con_floraciones(otro, ("2026-03-01", None))
+
+    respuesta = _quitar_floracion(client, sesion.csrf, uno, _id_de_la_floracion(otro, "2026-03-01"))
+
+    assert respuesta.status_code == 404
+    assert _floraciones_guardadas(otro) == [("2026-03-01", None)]
+
+
+def test_quitar_una_floracion_o_un_ejemplar_inexistentes_da_404(
+    client: TestClient, sesion: Sesion
+) -> None:
+    id = _ejemplar()
+
+    assert _quitar_floracion(client, sesion.csrf, id, 999).status_code == 404
+    assert _quitar_floracion(client, sesion.csrf, 999, 1).status_code == 404
+
+
+def test_tocar_las_floraciones_no_cambia_los_riegos(client: TestClient, sesion: Sesion) -> None:
+    id = _ejemplar()
+    _con_riegos(id, "2026-09-01")
+    _con_floraciones(id, ("2026-03-01", None))
+    floracion = _id_de_la_floracion(id, "2026-03-01")
+
+    _terminar(client, sesion.csrf, id, floracion, "2026-03-20")
+    _quitar_floracion(client, sesion.csrf, id, floracion)
+
+    assert _riegos_guardados(id) == ["2026-09-01"]
+
+
+def _rutas_de_floraciones(id: int, floracion: int) -> list[tuple[str, dict[str, str]]]:
+    return [
+        (f"/coleccion/{id}/floraciones", {"inicio": "2026-03-01", "fin": ""}),
+        (f"/coleccion/{id}/floraciones/{floracion}/fin", {"fin": "2026-03-20"}),
+        (f"/coleccion/{id}/floraciones/{floracion}/quitar", {}),
+    ]
+
+
+def test_sin_sesion_no_se_registra_termina_ni_quita_ninguna_floracion(
+    anonimo: TestClient,
+) -> None:
+    id = _ejemplar()
+    _con_floraciones(id, ("2026-03-01", None))
+    floracion = _id_de_la_floracion(id, "2026-03-01")
+
+    for ruta, datos in _rutas_de_floraciones(id, floracion):
+        respuesta = anonimo.post(ruta, data=datos, follow_redirects=False)
+
+        assert (respuesta.status_code, respuesta.headers["location"]) == (303, "/acceso"), ruta
+    assert _floraciones_guardadas(id) == [("2026-03-01", None)]
+
+
+def test_sin_token_csrf_no_cambia_ninguna_floracion(client: TestClient) -> None:
+    id = _ejemplar()
+    _con_floraciones(id, ("2026-03-01", None))
+    floracion = _id_de_la_floracion(id, "2026-03-01")
+
+    for ruta, datos in _rutas_de_floraciones(id, floracion):
+        sin_token = client.post(ruta, data=datos, follow_redirects=False)
+        equivocado = client.post(ruta, data={**datos, "csrf": "otro"}, follow_redirects=False)
+
+        assert (sin_token.status_code, equivocado.status_code) == (403, 403), ruta
+    assert _floraciones_guardadas(id) == [("2026-03-01", None)]
