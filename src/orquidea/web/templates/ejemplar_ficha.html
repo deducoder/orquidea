@@ -52,7 +52,13 @@
   {% if riegos %}
   <ul>
     {% for riego in riegos %}
-    <li>{{ riego.fecha }}</li>
+    <li>
+      {{ riego.fecha }}
+      <form method="post" action="/coleccion/{{ item.ejemplar.id }}/riegos/{{ riego.id }}/quitar" style="display: inline">
+        {% include "_csrf.html" %}
+        <button type="submit">Quitar</button>
+      </form>
+    </li>
     {% endfor %}
   </ul>
   {% endif %}

@@ -1,10 +1,10 @@
 from typing import Annotated
 
-from fastapi import APIRouter, Form, Request
+from fastapi import APIRouter, Form, HTTPException, Request
 from fastapi.responses import RedirectResponse, Response
 
 from orquidea.coleccion.modelo import CuidadoInvalido, validar_fecha
-from orquidea.datos.riegos import agregar
+from orquidea.datos.riegos import agregar, quitar
 from orquidea.web.rutas.coleccion import ejemplar_o_404, ficha, hoy
 from orquidea.web.sesion import Base
 
@@ -20,4 +20,11 @@ def registrar_riego(
         agregar(conexion, id, validar_fecha(fecha, hoy()))
     except CuidadoInvalido as fallo:
         return ficha(request, conexion, 422, ejemplar, str(fallo), fecha)
+    return RedirectResponse(f"/coleccion/{id}", status_code=303)
+
+
+@router.post("/coleccion/{id}/riegos/{riego}/quitar")
+def quitar_riego(id: int, riego: int, conexion: Base) -> RedirectResponse:
+    if not quitar(conexion, id, riego):
+        raise HTTPException(status_code=404, detail="Riego no encontrado")
     return RedirectResponse(f"/coleccion/{id}", status_code=303)

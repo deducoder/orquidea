@@ -51,6 +51,12 @@ def _riegos_guardados(id: int) -> list[str]:
         conexion.close()
 
 
+def _posicion(patron: str, texto: str) -> int:
+    coincidencia = re.search(patron, texto)
+    assert coincidencia is not None, patron
+    return coincidencia.start()
+
+
 def _hoy() -> date:
     return datetime.now(UTC).date()
 
@@ -95,7 +101,7 @@ def test_la_ficha_lista_los_riegos_del_mas_reciente_al_mas_antiguo(client: TestC
     texto = client.get(f"/coleccion/{id}").text
 
     posiciones = [
-        texto.index(f"<li>{fecha}") for fecha in ("2026-09-15", "2026-09-10", "2026-09-01")
+        _posicion(rf"<li>\s*{fecha}", texto) for fecha in ("2026-09-15", "2026-09-10", "2026-09-01")
     ]
     assert posiciones == sorted(posiciones)
     assert "Último riego: <strong>2026-09-15</strong>" in texto
@@ -177,3 +183,72 @@ def test_registrar_un_riego_deja_intacta_la_foto(client: TestClient, sesion: Ses
     assert f'src="/coleccion/{id}/foto"' in texto
     assert f'action="/coleccion/{id}/foto/quitar"' in texto
     assert re.search(r"Último riego: <strong>2026-09-15</strong>", texto)
+
+
+def _id_del_riego(id: int, fecha: str) -> int:
+    conexion = _conexion()
+    try:
+        fila = conexion.execute(
+            "SELECT id FROM riegos WHERE ejemplar_id = ? AND fecha = ?", (id, fecha)
+        ).fetchone()
+        return int(fila[0])
+    finally:
+        conexion.close()
+
+
+def _quitar(client: TestClient, csrf: str, id: int, riego: int) -> Response:
+    return client.post(
+        f"/coleccion/{id}/riegos/{riego}/quitar", data={"csrf": csrf}, follow_redirects=False
+    )
+
+
+def test_quitar_un_riego_lo_borra_y_recalcula_el_ultimo(client: TestClient, sesion: Sesion) -> None:
+    id = _ejemplar()
+    _con_riegos(id, "2026-09-01", "2026-09-15")
+
+    respuesta = _quitar(client, sesion.csrf, id, _id_del_riego(id, "2026-09-15"))
+
+    assert respuesta.status_code == 303
+    assert respuesta.headers["location"] == f"/coleccion/{id}"
+    assert _riegos_guardados(id) == ["2026-09-01"]
+    assert "Último riego: <strong>2026-09-01</strong>" in client.get(f"/coleccion/{id}").text
+
+
+def test_la_ficha_ofrece_quitar_cada_riego(client: TestClient) -> None:
+    id = _ejemplar()
+    _con_riegos(id, "2026-09-01")
+
+    texto = client.get(f"/coleccion/{id}").text
+
+    assert f'action="/coleccion/{id}/riegos/{_id_del_riego(id, "2026-09-01")}/quitar"' in texto
+
+
+def test_quitar_el_riego_de_otro_ejemplar_da_404_y_no_lo_borra(
+    client: TestClient, sesion: Sesion
+) -> None:
+    uno, otro = _ejemplar("Uno"), _ejemplar("Otro")
+    _con_riegos(otro, "2026-09-01")
+
+    respuesta = _quitar(client, sesion.csrf, uno, _id_del_riego(otro, "2026-09-01"))
+
+    assert respuesta.status_code == 404
+    assert _riegos_guardados(otro) == ["2026-09-01"]
+
+
+def test_quitar_un_riego_inexistente_da_404(client: TestClient, sesion: Sesion) -> None:
+    assert _quitar(client, sesion.csrf, _ejemplar(), 999).status_code == 404
+
+
+def test_quitar_en_un_ejemplar_inexistente_da_404(client: TestClient, sesion: Sesion) -> None:
+    assert _quitar(client, sesion.csrf, 999, 1).status_code == 404
+
+
+def test_quitar_un_riego_no_cambia_los_de_otro_ejemplar(client: TestClient, sesion: Sesion) -> None:
+    uno, otro = _ejemplar("Uno"), _ejemplar("Otro")
+    _con_riegos(uno, "2026-09-01")
+    _con_riegos(otro, "2026-09-01", "2026-09-02")
+
+    _quitar(client, sesion.csrf, uno, _id_del_riego(uno, "2026-09-01"))
+
+    assert _riegos_guardados(uno) == []
+    assert _riegos_guardados(otro) == ["2026-09-01", "2026-09-02"]
