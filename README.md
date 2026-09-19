@@ -49,11 +49,12 @@ No hay variables de entorno ni secretos: el catálogo viaja dentro de la imagen.
 
 | Path | What lives here |
 |------|-----------------|
-| `src/orquidea/` | El código de la aplicación |
+| `src/orquidea/` | El código de la aplicación: `catalogo/` (dominio), `datos/` (carga y los JSON del catálogo) y `web/` (rutas y plantillas) |
 | `tests/` | Pruebas unitarias |
 | `scripts/` | Gate entry points (see Development) |
+| `Dockerfile` | Imagen para desplegar en Dokploy (ver Despliegue con Dokploy) |
 | `governance/` | Vision, requirements, guardrails, architecture (see below) |
-| `conventions/` | Bindings de esta instancia (notificaciones) |
+| `conventions/` | Bindings de esta instancia (autonomía, notificaciones, seguridad) |
 | `work/` | Work in progress — one directory per epic / story / bug / spike |
 | `records/decisions/` | ADRs — the decisions and their rationale |
 | `records/parking-lot.md` | Hallazgos nombrados y aplazados |

@@ -8,5 +8,5 @@ Permite crear el catálogo, mostrar la información de cada especie, iniciar ses
 
 | Epic | Status |
 |---|---|
-| e1 | open |
+| e1 | closed |
 | e2 | open |
