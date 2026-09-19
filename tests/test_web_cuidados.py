@@ -252,3 +252,37 @@ def test_quitar_un_riego_no_cambia_los_de_otro_ejemplar(client: TestClient, sesi
 
     assert _riegos_guardados(uno) == []
     assert _riegos_guardados(otro) == ["2026-09-01", "2026-09-02"]
+
+
+def test_sin_sesion_no_se_registra_ni_se_quita_ningun_riego(anonimo: TestClient) -> None:
+    id = _ejemplar()
+    _con_riegos(id, "2026-09-01")
+    riego = _id_del_riego(id, "2026-09-01")
+
+    registrar = anonimo.post(
+        f"/coleccion/{id}/riegos", data={"fecha": "2026-09-15"}, follow_redirects=False
+    )
+    quitar = anonimo.post(f"/coleccion/{id}/riegos/{riego}/quitar", follow_redirects=False)
+
+    assert (registrar.status_code, registrar.headers["location"]) == (303, "/acceso")
+    assert (quitar.status_code, quitar.headers["location"]) == (303, "/acceso")
+    assert _riegos_guardados(id) == ["2026-09-01"]
+
+
+def test_sin_token_csrf_no_se_registra_ni_se_quita_ningun_riego(client: TestClient) -> None:
+    id = _ejemplar()
+    _con_riegos(id, "2026-09-01")
+    riego = _id_del_riego(id, "2026-09-01")
+
+    registrar = client.post(
+        f"/coleccion/{id}/riegos", data={"fecha": "2026-09-15"}, follow_redirects=False
+    )
+    quitar = client.post(f"/coleccion/{id}/riegos/{riego}/quitar", follow_redirects=False)
+    equivocado = client.post(
+        f"/coleccion/{id}/riegos",
+        data={"fecha": "2026-09-15", "csrf": "otro"},
+        follow_redirects=False,
+    )
+
+    assert (registrar.status_code, quitar.status_code, equivocado.status_code) == (403, 403, 403)
+    assert _riegos_guardados(id) == ["2026-09-01"]
