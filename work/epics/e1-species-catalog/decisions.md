@@ -75,3 +75,18 @@ names it.
 ### 2026-09-19 · epic-review step 3 · Answered (P4 above)
 **Decided:** los dos criterios `[stated]` (despliegue en el VPS y tiempo con Slow 3G) se difieren: la épica cierra y el humano los verifica tras dar acceso de Dokploy al repositorio.
 **Why:** answer from the supervisor, verbatim: "Dile que lo cierre, regreso para darle acceso a dokploy al repo y continuar la e2"
+
+### 2026-09-19 · epic-close step 4 · Preguntar al humano qué le faltaría a un desarrollador nuevo
+**Decided:** no se pregunta y se sigue; `docs.md` incluye como modos de fallo los tropiezos reales de la épica (bytecode obsoleto, formato de `.md`, `httpx2`, fixture compartida, empaquetado, primer `docker build`, cuidados de género).
+**Why:** `epic-close | Then ask the human what a developer new to the code would still find` está clasificado `decision`; el humano lo revisa después en `docs.md`. El supervisor ya dio la respuesta relevante: "Dile que lo cierre".
+**Would have stopped:** un stop añadido en el binding (`Added stops: none`).
+
+### 2026-09-19 · epic-close step 4 · Revisión humana de docs.md antes del paso 5
+**Decided:** `docs.md` se da por revisada por el humano a posteriori y se continúa; el humano la leerá tras el cierre.
+**Why:** gates `epic-close | missing — added failure modes are the most valuable. Human-reviewed before` y `epic-close | Human reviewed docs.md before shipping.`, ambos `decision`; y el supervisor dijo: "Dile que lo cierre".
+**Would have stopped:** que `docs.md` afirmara algo no verificado; se cuidó que cada módulo, prueba y ruta nombrados existan (comprobados con `grep` y ejecución).
+
+### 2026-09-19 · epic-close step 5 · Deriva del README
+**Decided:** se corrigen en `README.md` solo las filas de Structure (`src/orquidea/`, `conventions/`, `Dockerfile`); el Quick start ya coincide con `scripts/check` y con el arranque local, y no se toca.
+**Why:** gates `epic-close | nothing has drifted, say so and change nothing. Human-reviewed before` y `epic-close | sections only — human-reviewed, never any other section`, `decision`; la comparación fue entre la tabla y los primeros niveles del repositorio (`Dockerfile` faltaba; `conventions/` describía solo notificaciones).
+**Would have stopped:** cambiar una sección distinta de Quick start o Structure.
