@@ -22,11 +22,13 @@ import time
 from collections.abc import Iterator
 from contextlib import contextmanager
 from dataclasses import dataclass
+from datetime import date, timedelta
 from pathlib import Path
 
 from fastapi.testclient import TestClient
 from PIL import Image, ImageChops
 
+from orquidea.coleccion.modelo import CUIDADOS_MAXIMO
 from orquidea.datos.almacen_fotos import poner_foto, preparar_directorio
 from orquidea.datos.base import abrir_base, conectar
 from orquidea.datos.ejemplares import agregar_sin_especie
@@ -49,6 +51,20 @@ class Medicion:
     @property
     def total(self) -> int:
         return self.html + self.javascript + self.miniaturas
+
+
+@dataclass(frozen=True)
+class MedicionDeFicha:
+    riegos: int
+    floraciones: int
+    filas: int  # filas del historial que la página trae (una por registro)
+    html_sin_comprimir: int
+    html: int
+    javascript: int
+
+    @property
+    def total(self) -> int:
+        return self.html + self.javascript
 
 
 def foto_con_detalle(ancho: int = 1600, alto: int = 1200) -> bytes:
@@ -109,6 +125,32 @@ def medir(fotos: list[bytes] | None = None, n: int = 25) -> Medicion:
         )
 
 
+def medir_ficha(riegos: int, floraciones: int) -> MedicionDeFicha:
+    """Monta un ejemplar con `riegos` riegos y `floraciones` floraciones en curso (el caso más
+    pesado: cada una lleva su formulario de «Terminar») y mide la primera carga de su ficha."""
+    with coleccion_temporal() as (cliente, conexion, ahora):
+        ejemplar = agregar_sin_especie(conexion, "Ejemplar de prueba", "", ahora).id
+        dias = [(date(2025, 1, 1) + timedelta(days=i)).isoformat() for i in range(riegos)]
+        conexion.executemany(
+            "INSERT INTO riegos (ejemplar_id, fecha) VALUES (?, ?)", [(ejemplar, d) for d in dias]
+        )
+        dias = [(date(2025, 1, 1) + timedelta(days=i)).isoformat() for i in range(floraciones)]
+        conexion.executemany(
+            "INSERT INTO floraciones (ejemplar_id, inicio) VALUES (?, ?)",
+            [(ejemplar, d) for d in dias],
+        )
+        pagina = cliente.get(f"/coleccion/{ejemplar}")
+        estaticos = sorted(set(re.findall(r'(?:src|href)="(/static/[^"]+)"', pagina.text)))
+        return MedicionDeFicha(
+            riegos=riegos,
+            floraciones=floraciones,
+            filas=pagina.text.count("<li>"),
+            html_sin_comprimir=len(pagina.content),
+            html=len(gzip.compress(pagina.content)),
+            javascript=sum(len(gzip.compress(cliente.get(u).content)) for u in estaticos),
+        )
+
+
 def _kb(octetos: int) -> str:
     return f"{octetos / 1024:6.1f} KB"
 
@@ -133,7 +175,24 @@ def main(argumentos: list[str] | None = None) -> int:
         f"  Total              {_kb(m.total)}   presupuesto {parametros.presupuesto} KB", end="  "
     )
     print("OK" if dentro else "PASA DEL PRESUPUESTO")
-    return 0 if dentro else 1
+    todo_dentro = dentro
+    for riegos, floraciones, nota in (
+        (50, 50, ""),
+        (CUIDADOS_MAXIMO, CUIDADOS_MAXIMO, " (el tope)"),
+    ):
+        f = medir_ficha(riegos, floraciones)
+        print(f"Primera carga de la ficha con {riegos} riegos y {floraciones} floraciones{nota}:")
+        crudo = _kb(f.html_sin_comprimir).strip()
+        print(f"  HTML (gzip)        {_kb(f.html)}   ({crudo} sin comprimir)")
+        print(f"  JavaScript (gzip)  {_kb(f.javascript)}")
+        print(
+            f"  Total              {_kb(f.total)}   presupuesto {parametros.presupuesto} KB",
+            end="  ",
+        )
+        ficha_dentro = f.total <= presupuesto
+        print("OK" if ficha_dentro else "PASA DEL PRESUPUESTO")
+        todo_dentro = todo_dentro and ficha_dentro
+    return 0 if todo_dentro else 1
 
 
 if __name__ == "__main__":
