@@ -39,3 +39,18 @@ names it.
 **Decided:** se continúa con la tarea siguiente en cuanto el gate está en verde y el commit existe, para T1 a T4.
 **Why:** `stories/s4.2-*/plan.md` línea `> Pause: none (default)`; story-implement paso 5: «in which case continue to the next task once the gate is green».
 **Would have stopped:** P3 si el gate estuviera en rojo y no supiera arreglarlo.
+
+### 2026-09-19 · story-implement (s4.3) step 1 · Ofrecer el envío a un ejecutor
+**Decided:** no se envía; la sesión implementa s4.3 ella misma.
+**Why:** `plan.md` del épico, `## Delegation`, fila s4.3: Block `—`, Mode `—`; orchestrate paso 6: una fila con `—` → esta sesión corre las skills de la historia.
+**Would have stopped:** P5 si la fila designara un bloque y `delegate` no pudiera correrlo.
+
+### 2026-09-19 · story-implement (s4.3) step 2 · Confirmar con el humano la intención del diseño
+**Decided:** no se espera confirmación; la intención va en el reporte: s4.3 añade la tabla `floraciones` (cascada, `CHECK` de forma y de orden), `validar_floracion` y `datos.floraciones` con `agregar`, `terminar` (una sola sentencia condicionada a propia, en curso y con inicio no posterior), `listar` y `quitar`, con tope de 500 atómico.
+**Why:** `stories/s4.3-*/plan.md` línea `> Pause: none (default)` y la propia skill: «in which case there is no human in the loop and the restatement goes in your report instead».
+**Would have stopped:** P5 si el plan declarara `per task`.
+
+### 2026-09-19 · story-implement (s4.3) step 5 · Acuse del humano tras cada tarea
+**Decided:** se continúa con la tarea siguiente en cuanto el gate está en verde y el commit existe, para T1 a T3.
+**Why:** `stories/s4.3-*/plan.md` línea `> Pause: none (default)`; story-implement paso 5: «in which case continue to the next task once the gate is green».
+**Would have stopped:** P3 si el gate estuviera en rojo y no supiera arreglarlo.

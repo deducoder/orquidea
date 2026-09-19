@@ -62,6 +62,13 @@ class Riego(BaseModel):
     fecha: str
 
 
+class Floracion(BaseModel):
+    id: int
+    ejemplar_id: int
+    inicio: str
+    fin: str | None = None
+
+
 class CuidadoInvalido(ValueError):
     pass
 
@@ -79,3 +86,13 @@ def validar_fecha(texto: str, hoy: date) -> str:
     if fecha > hoy:
         raise CuidadoInvalido("La fecha no puede ser posterior a hoy.")
     return texto
+
+
+def validar_floracion(inicio: str, fin: str, hoy: date) -> tuple[str, str | None]:
+    inicio = validar_fecha(inicio, hoy)
+    if not fin.strip():
+        return inicio, None
+    fin = validar_fecha(fin, hoy)
+    if fin < inicio:
+        raise CuidadoInvalido("El fin no puede ser anterior al inicio.")
+    return inicio, fin

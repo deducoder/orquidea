@@ -11,3 +11,4 @@
 - [Medir recursos al diseñar entradas](medir-recursos-al-disenar-entrada-del-usuario.md) — memoria/peso con el tamaño máximo, desde el diseño
 - [Tope atómico en un INSERT...SELECT](tope-atomico-en-un-insert-select.md) — contar aparte deja pasar altas simultáneas
 - [pkill -f mata su propio comando](pkill-f-mata-su-propio-comando.md) — apagar uvicorn por PID y comprobar con curl
+- [Migración sin versión fija](prueba-de-migracion-sin-version-fija.md) — user_version final = número de archivos, no un literal
