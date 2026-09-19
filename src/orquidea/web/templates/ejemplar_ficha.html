@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block title %}Ejemplar — Orquídea{% endblock %}
+{% block content %}
+<p><a href="/coleccion">Mi colección</a></p>
+<h1>
+  {% if item.especie %}<i>{{ item.especie.nombre_cientifico }}</i>{% elif item.ejemplar.especie_id %}{{ item.ejemplar.especie_id }} <small>(esa especie ya no está en el catálogo)</small>{% endif %}
+  {% if item.ejemplar.especie_id and item.ejemplar.nombre %}«{{ item.ejemplar.nombre }}»{% elif not item.ejemplar.especie_id %}{{ item.ejemplar.nombre }}{% endif %}
+</h1>
+{% if item.especie %}<p><a href="/especies/{{ item.especie.id }}">Ver la ficha de la especie</a></p>{% endif %}
+<p><small>Agregado el {{ item.ejemplar.creado | fecha }}</small></p>
+{% if item.ejemplar.notas %}
+<p style="white-space: pre-line">{{ item.ejemplar.notas }}</p>
+{% endif %}
+{% if error %}<p role="alert">{{ error }}</p>{% endif %}
+<section>
+  <h2>Foto</h2>
+  {% if item.ejemplar.foto %}
+  <p><img src="/coleccion/{{ item.ejemplar.id }}/foto" alt="Foto de {{ item.ejemplar.nombre or (item.especie.nombre_cientifico if item.especie else 'este ejemplar') }}" style="max-width: 100%; height: auto"></p>
+  {% else %}
+  <p>Aún no tiene foto.</p>
+  {% endif %}
+  <form method="post" action="/coleccion/{{ item.ejemplar.id }}/foto" enctype="multipart/form-data">
+    {% include "_csrf.html" %}
+    <p>
+      <label for="foto">{% if item.ejemplar.foto %}Cambiar la foto{% else %}Subir una foto{% endif %}</label>
+      <input id="foto" name="foto" type="file" accept="image/jpeg,image/png,image/webp" required>
+    </p>
+    <button type="submit">Subir foto</button>
+  </form>
+</section>
+<p>
+  <a href="/coleccion/{{ item.ejemplar.id }}/editar">Editar</a>
+  <a href="/coleccion/{{ item.ejemplar.id }}/quitar">Quitar</a>
+</p>
+{% endblock %}
