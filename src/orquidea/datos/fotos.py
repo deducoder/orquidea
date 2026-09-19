@@ -6,7 +6,7 @@ from PIL import Image, ImageOps
 TAMANO_MAXIMO = 10 * 1024 * 1024
 PIXELES_MAXIMOS = 64_000_000
 ANCHO_MAXIMO = 1600
-LADO_MINIATURA = 320
+LADO_MINIATURA = 192
 FORMATOS = frozenset({"JPEG", "PNG", "WEBP"})
 
 # Pillow avisa a partir de este tope y lanza `DecompressionBombError` al doble.
@@ -77,4 +77,4 @@ def _reconstruir(origen: Image.Image) -> FotoProcesada:
         imagen = imagen.resize((ANCHO_MAXIMO, alto), Image.Resampling.LANCZOS)
     miniatura = plana.copy()
     miniatura.thumbnail((LADO_MINIATURA, LADO_MINIATURA), Image.Resampling.LANCZOS)
-    return FotoProcesada(imagen=_jpeg(imagen, 85), miniatura=_jpeg(miniatura, 80))
+    return FotoProcesada(imagen=_jpeg(imagen, 85), miniatura=_jpeg(miniatura, 75))
