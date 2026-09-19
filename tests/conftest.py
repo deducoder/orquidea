@@ -6,6 +6,7 @@ import pytest
 from fastapi.testclient import TestClient
 
 from orquidea.autenticacion import LimiteDeIntentos
+from orquidea.datos.almacen_fotos import preparar_directorio
 from orquidea.datos.base import abrir_base, conectar
 from orquidea.datos.sesiones import Sesion, crear
 from orquidea.web.app import app
@@ -17,13 +18,17 @@ def anonimo(tmp_path: Path) -> Iterator[TestClient]:
     catalogo = app.state.catalogo
     ruta_base = app.state.ruta_base
     limite = app.state.limite
+    directorio_fotos = app.state.directorio_fotos
     app.state.ruta_base = tmp_path / "orquidea.sqlite3"
+    app.state.directorio_fotos = tmp_path / "fotos"
     app.state.limite = LimiteDeIntentos()
     abrir_base(app.state.ruta_base).close()
+    preparar_directorio(app.state.directorio_fotos)
     yield TestClient(app, base_url="https://testserver")
     app.state.catalogo = catalogo
     app.state.ruta_base = ruta_base
     app.state.limite = limite
+    app.state.directorio_fotos = directorio_fotos
 
 
 def iniciar_sesion(cliente: TestClient, ahora: int | None = None) -> Sesion:

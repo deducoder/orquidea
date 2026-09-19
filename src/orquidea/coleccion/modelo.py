@@ -1,4 +1,6 @@
+import re
 from dataclasses import dataclass
+from datetime import date
 
 from pydantic import BaseModel
 
@@ -11,6 +13,7 @@ class Ejemplar(BaseModel):
     nombre: str
     notas: str
     creado: int
+    foto: str | None = None
 
 
 @dataclass(frozen=True)
@@ -45,3 +48,51 @@ def validar_ejemplar(nombre: str, notas: str, con_especie: bool = False) -> tupl
     if len(notas) > NOTAS_MAXIMO:
         raise EjemplarInvalido(f"Las notas no pueden pasar de {NOTAS_MAXIMO} caracteres.")
     return nombre, notas
+
+
+CUIDADOS_MAXIMO = 500
+
+# Solo dígitos ASCII: `fromisoformat` también acepta `20260919`, `2026-W38-3` y otros alfabetos.
+_FORMATO_DE_FECHA = re.compile(r"[0-9]{4}-[0-9]{2}-[0-9]{2}")
+
+
+class Riego(BaseModel):
+    id: int
+    ejemplar_id: int
+    fecha: str
+
+
+class Floracion(BaseModel):
+    id: int
+    ejemplar_id: int
+    inicio: str
+    fin: str | None = None
+
+
+class CuidadoInvalido(ValueError):
+    pass
+
+
+def validar_fecha(texto: str, hoy: date) -> str:
+    texto = texto.strip()
+    if not texto:
+        raise CuidadoInvalido("La fecha es obligatoria.")
+    if _FORMATO_DE_FECHA.fullmatch(texto) is None:
+        raise CuidadoInvalido("La fecha debe tener el formato AAAA-MM-DD.")
+    try:
+        fecha = date.fromisoformat(texto)
+    except ValueError:
+        raise CuidadoInvalido("Esa fecha no existe en el calendario.") from None
+    if fecha > hoy:
+        raise CuidadoInvalido("La fecha no puede ser posterior a hoy.")
+    return texto
+
+
+def validar_floracion(inicio: str, fin: str, hoy: date) -> tuple[str, str | None]:
+    inicio = validar_fecha(inicio, hoy)
+    if not fin.strip():
+        return inicio, None
+    fin = validar_fecha(fin, hoy)
+    if fin < inicio:
+        raise CuidadoInvalido("El fin no puede ser anterior al inicio.")
+    return inicio, fin

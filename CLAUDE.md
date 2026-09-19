@@ -173,13 +173,67 @@ diagnosis mid-flow; `version-plan`, which declares the next version and the
 epics it contains before they are built; `orchestrate`, which walks one
 epic unattended under the human's supervision once the project has turned
 unattended mode on; and `release`, which promotes `{dev-branch}` to
-`{production-branch}` on demand and never from a close.
+`{production-branch}` on demand and never from a close, save the hotfix
+`bug-close` promotes from its own branch.
 
 **Orphaned tests are a defect.** A test file that imports what a work item
 changed, and that the work item never touched, is either stale or the only
 thing still covering a behaviour. Read it and resolve it before finishing;
 never leave it unresolved.
 <!-- /gemba:fragment gemba-code -->
+
+<!-- gemba:fragment gemba-design -->
+## Visual identity
+
+What this addon adds to the method, for work whose product is a visual
+identity — a palette, a typeface system, a logotype. The core above governs
+everything; this section governs how that method is practised when the thing
+being built is looked at rather than run.
+
+**The criterion comes first.** Before anything visual is produced, the
+criterion it will be judged against is written down and committed. Not a
+justification assembled afterwards: the commit is the control, because any
+later change to the criterion is then a visible diff, and that diff is the
+only thing separating a criterion committed in advance from one trimmed to
+fit the result. Almost nothing published in this craft carries that record —
+the guidelines that exist say how to use a mark and rarely why the mark came
+out that way, and the one celebrated exception was news precisely for being
+one — which is why it is the thing this addon insists on.
+
+**The criterion comes in two classes, and the split is the point.** Together
+they are what keeps a criterion from being written to fit what was going to be
+made anyway:
+
+- **Survival** — what a piece has to withstand whoever commissioned it, and so
+  not negotiable per commission: the questions a third party could settle
+  without knowing the brand. This addon ships them as a closed catalogue, in
+  its `survival-criteria` convention, and **that page is the list** — nothing
+  here and nothing in a technique restates it, because a second copy is a
+  second thing to keep in sync. The agent does **not** propose these, because
+  they are not its to propose. It applies them.
+- **Fitness** — the criteria of this commission. The agent proposes them and a
+  human approves them **before anything is produced**.
+
+**The four movements are vocabulary, not a cycle.** Research, strategy, design
+and implementation are what the published processes of this craft converge on;
+they converge on nothing about the order, the count runs from three to ten, and
+the most senior sources disown their own linearity outright. So the four names
+are shared language here and nothing more — no skill is named after them and
+nothing requires walking them in order. They name two concrete things: the
+**preconditions** a technique declares before it runs, and the **deliverables**
+it produces, which the craft has already named (brand audit, creative brief,
+territory board, type specimen, brand book). The precedent is the software
+addon's own three-movement skeleton: universally recognised in its trade,
+executed by the cycles from inside their own phases, and owning neither a
+skill nor a work-item kind.
+
+**The pieces are invocable on their own.** Colour and typography are not phases
+of anything — they are asked for singly and delivered singly, and asking for
+only a typeface must never mean opening a whole commission. This addon adds no
+work-item kind: the four the core declares above are all there are. A
+commission that does want the whole sequence would be one of those four
+instantiated for this domain — never a fifth.
+<!-- /gemba:fragment gemba-design -->
 
 ## Project declarations
 

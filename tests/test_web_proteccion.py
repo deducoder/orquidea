@@ -3,21 +3,20 @@ import sqlite3
 import time
 
 import pytest
-from fastapi.routing import APIRoute
 from fastapi.testclient import TestClient
 
 from orquidea.datos.sesiones import INACTIVIDAD_MAXIMA
-from orquidea.web.app import RUTAS_PUBLICAS, app
+from orquidea.web.app import app
+from orquidea.web.sesion import RUTAS_PUBLICAS
 from tests.conftest import iniciar_sesion
+from tests.fabricas import rutas_registradas
 
 
 def rutas_de_la_aplicacion() -> list[tuple[str, str]]:
-    rutas: list[tuple[str, str]] = []
-    for ruta in app.routes:
-        if isinstance(ruta, APIRoute):
-            path = ruta.path.replace("{id}", "epidendrum-radicans")
-            rutas.extend((metodo, path) for metodo in sorted(ruta.methods or set()))
-    return rutas
+    return [
+        (metodo, path.replace("{id}", "epidendrum-radicans"))
+        for metodo, path in rutas_registradas(app.routes)
+    ]
 
 
 def test_la_enumeracion_de_rutas_no_esta_vacia() -> None:

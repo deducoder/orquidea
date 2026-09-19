@@ -4,3 +4,14 @@
 - [Criterios stated que dependen del humano](epic-stated-criteria-external.md) — preverlos como stop desde el diseño
 - [ASVS al diseñar, no al revisar](asvs-checklist-at-design.md) — recorrer ASVS L2 en el design.md de historias de seguridad
 - [Concurrencia y proceso real en historias de seguridad](concurrency-and-real-process-in-security-stories.md) — hilos (scrypt) y registros bajo uvicorn, no solo lógica
+- [Pillow guarda el comentario JPEG](pillow-guarda-comentario-jpeg.md) — reconstruir desde píxeles; probar bytes, no API
+- [include_router anida las rutas](fastapi-include-router-anida-rutas.md) — enumerar con rutas_registradas, no con app.routes
+- [Pruebas con azar en bucle; gate encadenado](prueba-con-azar-se-corre-en-bucle.md) — 15 corridas; check && commit
+- [Límite de cuerpo por señal](fastapi-cuerpo-excedido-por-senal.md) — FastAPI vuelve 400/422 toda excepción al leer
+- [Medir recursos al diseñar entradas](medir-recursos-al-disenar-entrada-del-usuario.md) — memoria/peso con el tamaño máximo, desde el diseño
+- [Tope atómico en un INSERT...SELECT](tope-atomico-en-un-insert-select.md) — contar aparte deja pasar altas simultáneas
+- [pkill -f mata su propio comando](pkill-f-mata-su-propio-comando.md) — apagar uvicorn por PID y comprobar con curl
+- [Migración sin versión fija](prueba-de-migracion-sin-version-fija.md) — user_version final = número de archivos, no un literal
+- [Ids coincidentes ocultan cruces](ids-coincidentes-ocultan-cruces-en-pruebas-idor.md) — desfasar ids con señuelos en pruebas IDOR
+- [Cifras de retrospectiva de la salida del comando](cifras-de-retrospectiva-de-la-salida-del-comando.md) — contar con un comando, no de memoria
+- [Rango de epic-review desde el diseño](rango-de-epic-review-desde-el-disenio.md) — base = padre del commit de diseño, no del brief

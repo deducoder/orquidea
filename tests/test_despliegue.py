@@ -3,6 +3,15 @@
 import re
 from pathlib import Path
 
+import pytest
+
+from orquidea.autenticacion import LimiteDeIntentos
+from orquidea.coleccion.modelo import CUIDADOS_MAXIMO
+from orquidea.datos.almacen_fotos import directorio_de_fotos
+from orquidea.datos.fotos import ANCHO_MAXIMO, LADO_MINIATURA, TAMANO_MAXIMO
+from orquidea.datos.sesiones import ANTIGUEDAD_MAXIMA, INACTIVIDAD_MAXIMA
+from orquidea.web.app import LIMITE_DE_CUERPO
+
 RAIZ = Path(__file__).parent.parent
 DOCKERFILE = RAIZ / "Dockerfile"
 
@@ -109,3 +118,69 @@ def test_el_readme_explica_el_hash_el_volumen_y_la_cookie() -> None:
 
 def test_el_readme_no_contiene_un_hash_real() -> None:
     assert not re.search(r"scrypt\$\d+\$\d+\$\d+\$[A-Za-z0-9+/=]{16,}", README.read_text("utf-8"))
+
+
+def test_las_fotos_viven_dentro_del_volumen_sin_configurar_nada(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.delenv("ORQUIDEA_FOTOS", raising=False)
+    instrucciones = lineas()
+    base = Path(valor(instrucciones, r"ENV\s+ORQUIDEA_DB="))
+    volumen = Path(valor(instrucciones, r"VOLUME\s+"))
+
+    assert volumen in directorio_de_fotos(base).parents
+
+
+def test_el_dockerfile_no_saca_las_fotos_del_volumen() -> None:
+    instrucciones = lineas()
+    volumen = Path(valor(instrucciones, r"VOLUME\s+"))
+    fotos = [i for i in instrucciones if re.match(r"ENV\s+ORQUIDEA_FOTOS=", i)]
+
+    for instruccion in fotos:
+        assert volumen in Path(re.sub(r"ENV\s+ORQUIDEA_FOTOS=", "", instruccion)).parents
+
+
+def _numero_en_palabras(numero: int) -> str:
+    palabras = {5: "cinco"}
+    assert numero in palabras, f"añade {numero} a las palabras de la prueba y revisa la guía"
+    return palabras[numero]
+
+
+def test_cada_cifra_de_la_guia_es_la_de_su_constante() -> None:
+    texto = README.read_text(encoding="utf-8")
+    esperadas = {
+        "foto máxima": f"{TAMANO_MAXIMO // 1024**2} MB",
+        "ancho de la imagen": f"{ANCHO_MAXIMO} px",
+        "lado de la miniatura": f"{LADO_MINIATURA} px",
+        "cuerpo máximo": f"{LIMITE_DE_CUERPO // 1024**2} MiB",
+        "tope del historial": f"{CUIDADOS_MAXIMO} riegos y {CUIDADOS_MAXIMO} floraciones",
+        "antigüedad de la sesión": f"{ANTIGUEDAD_MAXIMA // 3600} horas",
+        "inactividad de la sesión": f"{INACTIVIDAD_MAXIMA // 60} minutos",
+        "intentos": f"{_numero_en_palabras(LimiteDeIntentos.MAXIMO)} intentos",
+        "bloqueo": f"{_numero_en_palabras(int(LimiteDeIntentos.BLOQUEO) // 60)} minutos",
+    }
+
+    faltantes = {nombre: cifra for nombre, cifra in esperadas.items() if cifra not in texto}
+
+    assert faltantes == {}
+
+
+def test_la_guia_dice_que_el_volumen_guarda_las_fotos_y_como_respaldarlas() -> None:
+    texto = README.read_text(encoding="utf-8")
+
+    assert "/data/fotos" in texto
+    assert "respalda" in texto.lower()
+    assert "sin metadatos" in texto and "ubicación" in texto
+    assert "proxy" in texto
+    assert "medir-primera-carga" in texto
+
+
+def test_la_guia_explica_el_historial_de_cuidados_y_su_peso() -> None:
+    texto = README.read_text(encoding="utf-8")
+
+    assert "## Historial de cuidados" in texto
+    assert "riegos" in texto and "floraciones" in texto
+    assert "AAAA-MM-DD" in texto and "UTC" in texto
+    assert "misma base" in texto  # se respalda con /data, junto con las fotos
+    assert "no comprime" in texto and "gzip" in texto
+    assert "Slow 3G" in texto

@@ -29,14 +29,25 @@ wrote it. Retirement moves an entry to `## Retired` with its reason.
 - **`docker build` y `docker run` sin verificar (dos épicas seguidas).** El cliente de Docker existe en esta máquina pero el daemon no responde, así que ni el `Dockerfile` de e1 ni el volumen de e2 se han construido. El wheel sí se verificó en un entorno limpio.
   *Origin:* s2.7 (e2), `story-review`, 2026-09-19 — prueba manual del empaquetado.
   *Promotion:* la primera sesión con Docker Desktop en marcha, o el primer despliegue del humano: construir la imagen, arrancarla con `-v` y `ORQUIDEA_PASSWORD_HASH`, y comprobar `/salud`, el acceso y que la colección sobrevive a recrear el contenedor.
-- **Las cifras de la guía de despliegue están escritas a mano.** El README dice "12 horas", "30 minutos", "cinco intentos" y "cinco minutos"; las pruebas de deriva solo comparan nombres de variables, así que si `datos.sesiones` o `autenticacion` cambian esas constantes, la guía queda vieja sin que nada falle.
-  *Origin:* s2.7 (e2), `quality-review`, 2026-09-19.
-  *Promotion:* cuando alguien cambie una de esas constantes, o cuando la guía crezca: una prueba que importe las constantes y las busque en el README.
-- **`orquidea/web/app.py` reúne todas las rutas, la sesión, las cabeceras y el ciclo de vida (~390 líneas).** Es legible hoy, pero 0.2 (fotos, riegos y floraciones) añade tres grupos de rutas más.
-  *Origin:* e2, `epic-review` (quality-review a escala de épica), 2026-09-19.
-  *Promotion:* al empezar la primera historia de 0.2 que añada rutas, o cuando `app.py` pase de ~500 líneas: dividir en `APIRouter` por área (acceso, catálogo, colección) y sacar `exigir_sesion` y las cabeceras a su propio módulo.
+- **Varias subidas simultáneas del tamaño máximo pueden agotar la memoria de un VPS pequeño.** Con el arreglo de `procesar_foto` (reducir antes de copiar) una foto de 48 MP pica en ~280 MB (JPEG, PNG RGB) y ~430 MB (PNG RGBA); una de 64 MP (el tope), ~360 y ~570 MB. Un solo usuario rara vez sube en paralelo, pero tres PNG RGBA grandes a la vez pasarían de 1,5 GB.
+  *Origin:* e3, `epic-review` (medición del pico de memoria con un proceso aparte), 2026-09-19.
+  *Promotion:* al desplegar en un VPS de 1 GB o menos, o si el proceso muere por OOM: bajar `PIXELES_MAXIMOS` o serializar `procesar_foto` con un semáforo (una foto a la vez).
+- **Las miniaturas no se cachean y se piden en cada visita a "Mi colección".** El middleware pone `Cache-Control: no-store` a todo salvo `/static`; con 25 fotos son ~130 KB en cada visita, y la URL por id no cambia aunque cambie la foto.
+  *Origin:* e3, `epic-review`, 2026-09-19 — resultado de `scripts/medir-primera-carga.py`.
+  *Promotion:* si la lista se siente lenta con la colección real: servir las imágenes con `Cache-Control: private, max-age` y una URL que incluya el nombre aleatorio de la foto (cambia al reemplazarla).
+- **La aplicación no comprime sus respuestas: el presupuesto de peso depende del proxy.** La ficha con 500 riegos y 500 floraciones en curso pesa 500 476 bytes sin comprimir y 14 459 en gzip (medido con `uvicorn` real); `must-perf-001` se cuenta en gzip "como lo serviría un proxy" (decisión de e3), pero la aplicación no lleva `GZipMiddleware` y no se ha verificado que el proxy de Dokploy comprima.
+  *Origin:* e4, `story-implement` de s4.4 (medición de la ficha llena), 2026-09-19; documentado en el README por s4.6.
+  *Promotion:* al verificar el despliegue real (mismo momento que la entrada de `docker build`): si el proxy no comprime, añadir `GZipMiddleware` (o la compresión del proxy) con un ADR; o si la lista o la ficha se sienten lentas con datos reales.
 
 ## Retired
+
+### 2026-09-19 · s3.6 (e3) · Las cifras de la guía de despliegue estaban escritas a mano
+**Why:** la promoción se cumplió ("cuando la guía crezca"): s3.6 amplió la guía con las fotos y añadió en `tests/test_despliegue.py` una prueba que importa las constantes (foto máxima, ancho, lado de la miniatura, cuerpo máximo, duración y inactividad de la sesión, intentos y bloqueo) y falla si la guía ya no dice la misma cifra; con una constante cambiada a propósito, la prueba se pone en rojo.
+**Swept:** `work/epics/e2-personal-collection-with-login/stories/s2.7-deployment-persistence-config/retrospective.md` la cita como recomendación ("también en el parking lot"); es un registro histórico y no se reescribe. El scope y el diseño de s3.6 la citan como resuelta por esa historia. Nada más la cita.
+
+### 2026-09-19 · s3.1 (e3) · `orquidea/web/app.py` reunía todas las rutas, la sesión, las cabeceras y el ciclo de vida
+**Why:** la promoción se cumplió: s3.1 fue la primera historia de 0.2 que tocó las rutas y dividió `app.py` en `web/sesion.py`, `web/plantillas.py` y un `APIRouter` por área en `web/rutas/`; `app.py` quedó en 74 líneas.
+**Swept:** `work/epics/e3-specimen-photos/brief.md` (Appetite) la cita como parte de la épica y sigue siendo válida; el brief no se reescribe (lo escribió `epic-start`). El scope y el diseño de la épica y de s3.1 la citan como resuelta por s3.1. `work/epics/e2-personal-collection-with-login/retrospective.md` y `docs.md` describen la estructura de e2, cuando `app.py` reunía todo; son registros históricos y no se reescriben; la documentación de desarrollador al día es de `epic-close`. Nada más la cita.
 
 ### 2026-09-19 · direct fix (resuelto al preparar la orquestación de 0.1.0, antes de que existiera la historia de e1 que iba a llevarlo) · Binding de seguridad sin definir
 **Why:** la entrada se unió a la versión 0.1.0 y se resolvió de inmediato: el humano eligió Bandit y `conventions/security/instance.md` quedó escrito y verificado en vivo.

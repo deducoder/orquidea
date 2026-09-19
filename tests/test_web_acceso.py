@@ -10,8 +10,8 @@ from fastapi.testclient import TestClient
 from httpx2 import Response
 
 from orquidea.autenticacion import hashear_contrasena
-from orquidea.web import app as app_modulo
 from orquidea.web.app import app
+from orquidea.web.rutas import acceso as acceso_modulo
 
 CONTRASENA = "orquidea-2026"
 
@@ -234,7 +234,7 @@ def test_las_verificaciones_de_contrasena_no_corren_en_paralelo(
             activas -= 1
         return False
 
-    monkeypatch.setattr(app_modulo, "verificar_contrasena", lenta)
+    monkeypatch.setattr(acceso_modulo, "verificar_contrasena", lenta)
 
     def intento(_: int) -> int:
         cliente = TestClient(app, base_url="https://testserver")
