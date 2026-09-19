@@ -107,3 +107,8 @@ names it.
 ### 2026-09-19 · epic-review step 3 · Answered (P4 above)
 **Decided:** el peso se da por cumplido con la medición por script (ficha 50+50 = 18,2 KB y con el tope = 29,8 KB en gzip, contra 200 KB); la medición con "Slow 3G" en el navegador queda **pendiente del humano** y se anota así en la retrospectiva; las dos listas (riegos y floraciones), cada una del más reciente al más antiguo, cumplen «orden cronológico».
 **Why:** answer from the supervisor, verbatim: "(1) el peso se da por cumplido con la medición por script y la de Slow 3G queda pendiente del humano; (2) las dos listas del más reciente al más antiguo cumplen «orden cronológico»."
+
+### 2026-09-19 · epic-close step 4 · Preguntar al humano qué le faltaría a un desarrollador nuevo
+**Decided:** no se pregunta; `docs.md` se escribe con los modos de fallo de las retrospectivas de las historias y de `epic-review`, y el humano puede añadir los que falten al leerlo.
+**Why:** el gate `epic-close | Then ask the human what a developer new to the code would still find` está clasificado `decision` en `### The gates`; las fuentes que la habilidad manda usar (retrospectivas de las seis historias y de la épica) cubren cada módulo mayor (dominio, datos, rutas, plantilla, medición) con al menos un modo de fallo y su diagnóstico. Precedente: la misma decisión de e3 en este mismo archivo de la épica anterior.
+**Would have stopped:** un módulo mayor sin ningún modo de fallo documentado, o un stop añadido en el binding (`Added stops: none`); ninguno ocurre.
