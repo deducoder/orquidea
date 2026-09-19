@@ -171,7 +171,9 @@ def test_la_migracion_conserva_los_ejemplares_y_sus_fotos(tmp_path: Path) -> Non
     (conservado,) = listar(nueva)
     assert (conservado.id, conservado.foto) == (ejemplar, "Xq3vT")
     assert nueva.execute("SELECT COUNT(*) FROM riegos").fetchone() == (0,)
-    assert nueva.execute("PRAGMA user_version").fetchone() == (4,)
+    assert nueva.execute("PRAGMA user_version").fetchone() == (
+        len(list(MIGRACIONES.glob("*.sql"))),
+    )
 
 
 def test_altas_simultaneas_no_rebasan_el_tope(tmp_path: Path) -> None:
