@@ -12,6 +12,17 @@ def agregar(conexion: sqlite3.Connection, especie_id: str, ahora: int) -> Ejempl
     )
 
 
+def agregar_sin_especie(
+    conexion: sqlite3.Connection, nombre: str, notas: str, ahora: int
+) -> Ejemplar:
+    cursor = conexion.execute(
+        "INSERT INTO ejemplares (nombre, notas, creado) VALUES (?, ?, ?)", (nombre, notas, ahora)
+    )
+    return Ejemplar(
+        id=int(cursor.lastrowid or 0), especie_id=None, nombre=nombre, notas=notas, creado=ahora
+    )
+
+
 def listar(conexion: sqlite3.Connection) -> list[Ejemplar]:
     filas = conexion.execute(
         "SELECT id, especie_id, nombre, notas, creado FROM ejemplares ORDER BY id"

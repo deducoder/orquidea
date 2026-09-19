@@ -16,10 +16,10 @@ from fastapi.templating import Jinja2Templates
 
 from orquidea.autenticacion import LimiteDeIntentos, verificar_contrasena
 from orquidea.catalogo.busqueda import buscar
-from orquidea.coleccion.modelo import resolver
+from orquidea.coleccion.modelo import EjemplarInvalido, resolver, validar_ejemplar_propio
 from orquidea.datos.base import abrir_base, conectar, ruta_de_la_base
 from orquidea.datos.catalogo import DIRECTORIO_CATALOGO, cargar_catalogo
-from orquidea.datos.ejemplares import agregar, listar
+from orquidea.datos.ejemplares import agregar, agregar_sin_especie, listar
 from orquidea.datos.sesiones import ANTIGUEDAD_MAXIMA, cerrar, crear, obtener
 
 BASE_DIR = Path(__file__).parent
@@ -213,6 +213,33 @@ def agregar_a_mi_coleccion(
     if not any(especie.id == especie_id for especie in request.app.state.catalogo):
         raise HTTPException(status_code=404, detail="Especie no encontrada")
     agregar(conexion, especie_id, int(time.time()))
+    return RedirectResponse("/coleccion", status_code=303)
+
+
+def _formulario_de_ejemplar_propio(
+    request: Request, estado: int, nombre: str = "", notas: str = "", error: str = ""
+) -> HTMLResponse:
+    contexto = {"nombre": nombre, "notas": notas, "error": error}
+    return templates.TemplateResponse(request, "nuevo_ejemplar.html", contexto, status_code=estado)
+
+
+@app.get("/coleccion/nuevo", response_class=HTMLResponse)
+def formulario_de_ejemplar_propio(request: Request) -> HTMLResponse:
+    return _formulario_de_ejemplar_propio(request, 200)
+
+
+@app.post("/coleccion/nuevo", response_model=None)
+def agregar_ejemplar_propio(
+    request: Request,
+    conexion: Base,
+    nombre: Annotated[str, Form()] = "",
+    notas: Annotated[str, Form()] = "",
+) -> Response:
+    try:
+        nombre_limpio, notas_limpias = validar_ejemplar_propio(nombre, notas)
+    except EjemplarInvalido as fallo:
+        return _formulario_de_ejemplar_propio(request, 422, nombre, notas, str(fallo))
+    agregar_sin_especie(conexion, nombre_limpio, notas_limpias, int(time.time()))
     return RedirectResponse("/coleccion", status_code=303)
 
 

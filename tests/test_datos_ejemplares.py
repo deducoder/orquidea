@@ -5,7 +5,7 @@ import pytest
 
 from orquidea.coleccion.modelo import Ejemplar
 from orquidea.datos.base import abrir_base
-from orquidea.datos.ejemplares import agregar, listar
+from orquidea.datos.ejemplares import agregar, agregar_sin_especie, listar
 
 AHORA = 1_780_000_000
 
@@ -79,3 +79,25 @@ def test_la_base_acepta_un_ejemplar_solo_con_nombre(conexion: sqlite3.Connection
     (ejemplar,) = listar(conexion)
     assert ejemplar.especie_id is None
     assert ejemplar.nombre == "Mi rara"
+
+
+def test_agregar_sin_especie_guarda_nombre_y_notas(conexion: sqlite3.Connection) -> None:
+    ejemplar = agregar_sin_especie(conexion, "Cattleya de mi abuela", "Regalo de 2019", AHORA)
+
+    assert ejemplar == Ejemplar(
+        id=ejemplar.id,
+        especie_id=None,
+        nombre="Cattleya de mi abuela",
+        notas="Regalo de 2019",
+        creado=AHORA,
+    )
+    assert listar(conexion) == [ejemplar]
+
+
+def test_agregar_sin_especie_usa_parametros(conexion: sqlite3.Connection) -> None:
+    raro = "x'); DROP TABLE ejemplares; --"
+
+    agregar_sin_especie(conexion, raro, raro, AHORA)
+
+    (ejemplar,) = listar(conexion)
+    assert (ejemplar.nombre, ejemplar.notas) == (raro, raro)
