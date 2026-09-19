@@ -9,3 +9,8 @@ names it.
 **Decided:** el plan se da por presentado con este registro y con el reporte final del supervisor; la sesión sigue con s4.1 sin esperar una respuesta.
 **Why:** `conventions/autonomy` (`### The gates`): epic-plan «Present it to the human before starting the first story.» → `decision`; el plan está en `plan.md` (commit `chore(e4): plan`) y el humano lo lee después aquí y allá.
 **Would have stopped:** P5 si el plan no pudiera escribirse por falta de `scope.md` o `design.md`; P4 si un criterio `[stated]` del brief lo contradijera (ninguno lo hace: la medición con "Slow 3G" queda prevista como stop P4 en `epic-review`).
+
+### 2026-09-19 · story-implement (s4.1) step 1 · Ofrecer el envío a un ejecutor
+**Decided:** no se envía; la sesión implementa s4.1 ella misma.
+**Why:** `plan.md` del épico, `## Delegation`, fila s4.1: Block `—`, Mode `—` («The designation is the plan's, never the executor's»); orchestrate paso 6: una fila con `—` → esta sesión corre las skills de la historia.
+**Would have stopped:** P5 si la fila designara un bloque y `delegate` no pudiera correrlo.
