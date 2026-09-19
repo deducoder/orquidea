@@ -10,6 +10,7 @@ from orquidea.coleccion.modelo import (
     resolver,
     validar_ejemplar,
     validar_fecha,
+    validar_floracion,
 )
 from tests.fabricas import especie
 
@@ -142,3 +143,37 @@ def test_una_fecha_posterior_a_hoy_se_rechaza() -> None:
 def test_la_fecha_es_obligatoria(texto: str) -> None:
     with pytest.raises(CuidadoInvalido, match="obligatoria"):
         validar_fecha(texto, HOY)
+
+
+def test_una_floracion_sin_fin_esta_en_curso() -> None:
+    assert validar_floracion(" 2026-03-01 ", "", HOY) == ("2026-03-01", None)
+    assert validar_floracion("2026-03-01", "   ", HOY) == ("2026-03-01", None)
+
+
+def test_una_floracion_con_inicio_y_fin() -> None:
+    assert validar_floracion("2026-03-01", " 2026-03-20 ", HOY) == ("2026-03-01", "2026-03-20")
+
+
+def test_una_floracion_de_un_solo_dia_es_valida() -> None:
+    assert validar_floracion("2026-03-01", "2026-03-01", HOY) == ("2026-03-01", "2026-03-01")
+
+
+def test_un_fin_anterior_al_inicio_se_rechaza() -> None:
+    with pytest.raises(CuidadoInvalido, match="fin no puede ser anterior al inicio"):
+        validar_floracion("2026-03-20", "2026-03-01", HOY)
+
+
+def test_el_inicio_es_obligatorio() -> None:
+    with pytest.raises(CuidadoInvalido, match="obligatoria"):
+        validar_floracion("", "2026-03-01", HOY)
+
+
+@pytest.mark.parametrize("fin", ["20/03/2026", "2026-02-30", "2026-09-20"])
+def test_un_fin_invalido_se_rechaza_como_cualquier_fecha(fin: str) -> None:
+    with pytest.raises(CuidadoInvalido):
+        validar_floracion("2026-01-01", fin, HOY)
+
+
+def test_un_inicio_posterior_a_hoy_se_rechaza() -> None:
+    with pytest.raises(CuidadoInvalido, match="posterior a hoy"):
+        validar_floracion("2026-09-20", "", HOY)
