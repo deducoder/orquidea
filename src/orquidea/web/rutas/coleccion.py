@@ -1,12 +1,18 @@
+import logging
 import sqlite3
 import time
 from typing import Annotated
 
-from fastapi import APIRouter, Form, HTTPException, Request
+from fastapi import APIRouter, File, Form, HTTPException, Request, UploadFile
 from fastapi.responses import FileResponse, HTMLResponse, RedirectResponse, Response
 
 from orquidea.coleccion.modelo import Ejemplar, EjemplarInvalido, resolver, validar_ejemplar
-from orquidea.datos.almacen_fotos import NombreDeFotoInvalido, quitar_con_foto, ruta_de_foto
+from orquidea.datos.almacen_fotos import (
+    NombreDeFotoInvalido,
+    poner_foto,
+    quitar_con_foto,
+    ruta_de_foto,
+)
 from orquidea.datos.ejemplares import (
     actualizar,
     agregar,
@@ -14,10 +20,12 @@ from orquidea.datos.ejemplares import (
     listar,
     obtener,
 )
+from orquidea.datos.fotos import FotoInvalida, procesar_foto
 from orquidea.web.plantillas import templates
 from orquidea.web.sesion import Base
 
 router = APIRouter()
+registro = logging.getLogger("orquidea.fotos")
 
 
 @router.get("/coleccion", response_class=HTMLResponse)
@@ -128,12 +136,42 @@ def agregar_ejemplar_propio(
     return RedirectResponse("/coleccion", status_code=303)
 
 
+def _ficha(request: Request, estado: int, ejemplar: Ejemplar, error: str = "") -> HTMLResponse:
+    (resuelto,) = resolver([ejemplar], request.app.state.catalogo)
+    contexto = {"item": resuelto, "error": error}
+    return templates.TemplateResponse(request, "ejemplar_ficha.html", contexto, status_code=estado)
+
+
 # Se registra después de `/coleccion/nuevo`: en el orden inverso, "nuevo" se leería como un id.
 @router.get("/coleccion/{id}", response_class=HTMLResponse)
 def ficha_del_ejemplar(request: Request, id: int, conexion: Base) -> HTMLResponse:
+    return _ficha(request, 200, _ejemplar_o_404(conexion, id))
+
+
+@router.post("/coleccion/{id}/foto", response_model=None)
+def subir_foto(
+    request: Request,
+    id: int,
+    conexion: Base,
+    foto: Annotated[UploadFile | None, File()] = None,
+) -> Response:
     ejemplar = _ejemplar_o_404(conexion, id)
-    (resuelto,) = resolver([ejemplar], request.app.state.catalogo)
-    return templates.TemplateResponse(request, "ejemplar_ficha.html", {"item": resuelto})
+    # `LimiteDeCuerpo` ya acotó el cuerpo entero; `procesar_foto` rechaza lo que pase de 10 MB.
+    datos = foto.file.read() if foto is not None else b""
+    if not datos:
+        return _ficha(request, 422, ejemplar, "Elige una foto.")
+    try:
+        procesada = procesar_foto(datos)
+    except FotoInvalida as fallo:
+        return _ficha(request, 422, ejemplar, str(fallo))
+    try:
+        guardada = poner_foto(conexion, request.app.state.directorio_fotos, id, procesada)
+    except OSError as fallo:
+        registro.warning("no se pudo guardar una foto: %s", fallo)
+        return _ficha(request, 500, ejemplar, "No se pudo guardar la foto.")
+    if not guardada:
+        raise HTTPException(status_code=404, detail="Ejemplar no encontrado")
+    return RedirectResponse(f"/coleccion/{id}", status_code=303)
 
 
 def _imagen(request: Request, id: int, conexion: sqlite3.Connection, miniatura: bool) -> Response:
