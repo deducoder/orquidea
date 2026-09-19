@@ -98,8 +98,9 @@ def test_un_png_con_transparencia_se_aplana_sobre_blanco() -> None:
 
     foto = procesar_foto(entrada.getvalue())
 
-    imagen = _abrir(foto.imagen).convert("RGB")
-    assert all(canal >= 250 for canal in imagen.getpixel((50, 50)))  # type: ignore[union-attr]
+    pixel = _abrir(foto.imagen).convert("RGB").getpixel((50, 50))
+    assert isinstance(pixel, tuple)
+    assert all(canal >= 250 for canal in pixel)
     assert _abrir(foto.imagen).format == "JPEG"
 
 
