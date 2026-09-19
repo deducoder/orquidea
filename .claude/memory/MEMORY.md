@@ -13,3 +13,5 @@
 - [pkill -f mata su propio comando](pkill-f-mata-su-propio-comando.md) — apagar uvicorn por PID y comprobar con curl
 - [Migración sin versión fija](prueba-de-migracion-sin-version-fija.md) — user_version final = número de archivos, no un literal
 - [Ids coincidentes ocultan cruces](ids-coincidentes-ocultan-cruces-en-pruebas-idor.md) — desfasar ids con señuelos en pruebas IDOR
+- [Cifras de retrospectiva de la salida del comando](cifras-de-retrospectiva-de-la-salida-del-comando.md) — contar con un comando, no de memoria
+- [Rango de epic-review desde el diseño](rango-de-epic-review-desde-el-disenio.md) — base = padre del commit de diseño, no del brief
