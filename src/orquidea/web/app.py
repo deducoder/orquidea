@@ -16,7 +16,7 @@ from fastapi.templating import Jinja2Templates
 
 from orquidea.autenticacion import LimiteDeIntentos, verificar_contrasena
 from orquidea.catalogo.busqueda import buscar
-from orquidea.coleccion.modelo import EjemplarInvalido, resolver, validar_ejemplar_propio
+from orquidea.coleccion.modelo import EjemplarInvalido, resolver, validar_ejemplar
 from orquidea.datos.base import abrir_base, conectar, ruta_de_la_base
 from orquidea.datos.catalogo import DIRECTORIO_CATALOGO, cargar_catalogo
 from orquidea.datos.ejemplares import agregar, agregar_sin_especie, listar
@@ -236,7 +236,7 @@ def agregar_ejemplar_propio(
     notas: Annotated[str, Form()] = "",
 ) -> Response:
     try:
-        nombre_limpio, notas_limpias = validar_ejemplar_propio(nombre, notas)
+        nombre_limpio, notas_limpias = validar_ejemplar(nombre, notas)
     except EjemplarInvalido as fallo:
         return _formulario_de_ejemplar_propio(request, 422, nombre, notas, str(fallo))
     agregar_sin_especie(conexion, nombre_limpio, notas_limpias, int(time.time()))
