@@ -3,7 +3,7 @@ import logging
 import os
 import sqlite3
 import time
-from collections.abc import AsyncIterator, Iterator
+from collections.abc import AsyncIterator, Awaitable, Callable, Iterator
 from contextlib import asynccontextmanager
 from pathlib import Path
 from typing import Annotated
@@ -93,6 +93,28 @@ app.state.ruta_base = ruta_de_la_base()
 app.state.limite = LimiteDeIntentos()
 app.mount("/static", StaticFiles(directory=BASE_DIR / "static"), name="static")
 templates = Jinja2Templates(directory=BASE_DIR / "templates")
+
+
+CONTENT_SECURITY_POLICY = (
+    "default-src 'self'; style-src 'self' 'unsafe-inline'; "
+    "frame-ancestors 'none'; base-uri 'none'; form-action 'self'"
+)
+
+
+@app.middleware("http")
+async def cabeceras_de_seguridad(
+    request: Request, call_next: Callable[[Request], Awaitable[Response]]
+) -> Response:
+    respuesta = await call_next(request)
+    respuesta.headers["X-Content-Type-Options"] = "nosniff"
+    respuesta.headers["Referrer-Policy"] = "same-origin"
+    respuesta.headers["X-Frame-Options"] = "DENY"
+    respuesta.headers["Content-Security-Policy"] = CONTENT_SECURITY_POLICY
+    if not request.url.path.startswith("/static"):
+        respuesta.headers["Cache-Control"] = "no-store"
+    if _cookie_segura():
+        respuesta.headers["Strict-Transport-Security"] = "max-age=31536000"
+    return respuesta
 
 
 @app.exception_handler(SesionRequerida)

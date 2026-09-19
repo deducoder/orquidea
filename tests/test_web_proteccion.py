@@ -195,3 +195,55 @@ def test_el_formulario_de_acceso_no_trae_token_ni_boton_de_salir(anonimo: TestCl
 
     assert "/salir" not in html
     assert "csrf" not in html.lower()
+
+
+RUTAS_PARA_CABECERAS = ["/acceso", "/salud", "/static/htmx.min.js", "/no-existe", "/especies", "/"]
+
+
+@pytest.mark.parametrize("ruta", RUTAS_PARA_CABECERAS)
+def test_toda_respuesta_trae_las_cabeceras_de_seguridad(anonimo: TestClient, ruta: str) -> None:
+    cabeceras = anonimo.get(ruta, follow_redirects=False).headers
+
+    assert cabeceras["x-content-type-options"] == "nosniff"
+    assert cabeceras["referrer-policy"] == "same-origin"
+    assert cabeceras["x-frame-options"] == "DENY"
+    assert "default-src 'self'" in cabeceras["content-security-policy"]
+    assert "frame-ancestors 'none'" in cabeceras["content-security-policy"]
+
+
+def test_las_respuestas_de_htmx_y_las_autenticadas_tambien(client: TestClient) -> None:
+    assert "x-frame-options" in client.get("/").headers
+    assert "x-frame-options" in client.get("/", headers={"HX-Request": "true"}).headers
+    assert "x-frame-options" in client.post("/salir", follow_redirects=False).headers  # 403
+
+
+def test_la_csp_no_permite_scripts_en_linea(anonimo: TestClient) -> None:
+    csp = anonimo.get("/acceso").headers["content-security-policy"]
+    directivas = {d.split()[0]: d for d in (parte.strip() for parte in csp.split(";")) if d}
+
+    assert "unsafe-inline" not in directivas["default-src"]
+    assert "script-src" not in directivas or "unsafe-inline" not in directivas["script-src"]
+    assert "'unsafe-inline'" in directivas["style-src"]
+    assert "form-action 'self'" in csp
+    assert "base-uri 'none'" in csp
+
+
+@pytest.mark.parametrize("ruta", ["/acceso", "/salud", "/especies", "/no-existe"])
+def test_las_paginas_y_las_redirecciones_no_se_guardan_en_cache(
+    anonimo: TestClient, ruta: str
+) -> None:
+    assert anonimo.get(ruta, follow_redirects=False).headers["cache-control"] == "no-store"
+
+
+def test_los_estaticos_se_pueden_guardar_en_cache(anonimo: TestClient) -> None:
+    assert "no-store" not in anonimo.get("/static/htmx.min.js").headers.get("cache-control", "")
+
+
+def test_hsts_solo_cuando_la_cookie_es_secure(
+    anonimo: TestClient, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    assert anonimo.get("/salud").headers["strict-transport-security"] == "max-age=31536000"
+
+    monkeypatch.setenv("ORQUIDEA_COOKIE_SEGURA", "0")
+
+    assert "strict-transport-security" not in anonimo.get("/salud").headers
