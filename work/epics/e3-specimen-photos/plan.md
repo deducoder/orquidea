@@ -48,7 +48,7 @@ None. s3.1 (`orquidea.web`) y s3.2 (`orquidea.datos.fotos`, `pyproject.toml`) to
 | s3.3 | done | M | M |
 | s3.4 | done | M | M |
 | s3.5 | done | S | S |
-| s3.6 | todo | S | |
+| s3.6 | done | S | S |
 
 ## Sequencing risks
 

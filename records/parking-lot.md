@@ -29,11 +29,12 @@ wrote it. Retirement moves an entry to `## Retired` with its reason.
 - **`docker build` y `docker run` sin verificar (dos épicas seguidas).** El cliente de Docker existe en esta máquina pero el daemon no responde, así que ni el `Dockerfile` de e1 ni el volumen de e2 se han construido. El wheel sí se verificó en un entorno limpio.
   *Origin:* s2.7 (e2), `story-review`, 2026-09-19 — prueba manual del empaquetado.
   *Promotion:* la primera sesión con Docker Desktop en marcha, o el primer despliegue del humano: construir la imagen, arrancarla con `-v` y `ORQUIDEA_PASSWORD_HASH`, y comprobar `/salud`, el acceso y que la colección sobrevive a recrear el contenedor.
-- **Las cifras de la guía de despliegue están escritas a mano.** El README dice "12 horas", "30 minutos", "cinco intentos" y "cinco minutos"; las pruebas de deriva solo comparan nombres de variables, así que si `datos.sesiones` o `autenticacion` cambian esas constantes, la guía queda vieja sin que nada falle.
-  *Origin:* s2.7 (e2), `quality-review`, 2026-09-19.
-  *Promotion:* cuando alguien cambie una de esas constantes, o cuando la guía crezca: una prueba que importe las constantes y las busque en el README.
 
 ## Retired
+
+### 2026-09-19 · s3.6 (e3) · Las cifras de la guía de despliegue estaban escritas a mano
+**Why:** la promoción se cumplió ("cuando la guía crezca"): s3.6 amplió la guía con las fotos y añadió en `tests/test_despliegue.py` una prueba que importa las constantes (foto máxima, ancho, lado de la miniatura, cuerpo máximo, duración y inactividad de la sesión, intentos y bloqueo) y falla si la guía ya no dice la misma cifra; con una constante cambiada a propósito, la prueba se pone en rojo.
+**Swept:** `work/epics/e2-personal-collection-with-login/stories/s2.7-deployment-persistence-config/retrospective.md` la cita como recomendación ("también en el parking lot"); es un registro histórico y no se reescribe. El scope y el diseño de s3.6 la citan como resuelta por esa historia. Nada más la cita.
 
 ### 2026-09-19 · s3.1 (e3) · `orquidea/web/app.py` reunía todas las rutas, la sesión, las cabeceras y el ciclo de vida
 **Why:** la promoción se cumplió: s3.1 fue la primera historia de 0.2 que tocó las rutas y dividió `app.py` en `web/sesion.py`, `web/plantillas.py` y un `APIRouter` por área en `web/rutas/`; `app.py` quedó en 74 líneas.

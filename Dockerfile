@@ -15,6 +15,7 @@ RUN uv sync --frozen --no-dev \
     && mkdir /data \
     && chown app /data
 
+# La base y, sin ORQUIDEA_FOTOS, las fotos (/data/fotos) viven dentro del volumen.
 ENV ORQUIDEA_DB=/data/orquidea.sqlite3
 
 VOLUME /data

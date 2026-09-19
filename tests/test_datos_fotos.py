@@ -64,7 +64,7 @@ def test_la_foto_con_gps_sale_reducida_y_sin_metadatos() -> None:
     foto = procesar_foto(_jpeg(4000, 3000))
 
     assert _abrir(foto.imagen).size == (ANCHO_MAXIMO, 1200)
-    assert _abrir(foto.miniatura).size == (LADO_MINIATURA, 240)
+    assert _abrir(foto.miniatura).size == (192, 144)
     _sin_rastro(foto.imagen)
     _sin_rastro(foto.miniatura)
 
@@ -73,7 +73,7 @@ def test_una_imagen_pequena_no_se_amplia() -> None:
     foto = procesar_foto(_jpeg(800, 600))
 
     assert _abrir(foto.imagen).size == (800, 600)
-    assert _abrir(foto.miniatura).size == (320, 240)
+    assert _abrir(foto.miniatura).size == (192, 144)
 
 
 def test_una_imagen_vertical_respeta_el_lado_mayor_de_la_miniatura() -> None:
@@ -170,3 +170,11 @@ def test_una_bomba_de_descompresion_se_rechaza_igual() -> None:
 
     with pytest.raises(FotoInvalida, match="demasiado grande en píxeles"):
         procesar_foto(entrada.getvalue())
+
+
+def test_la_miniatura_mide_como_maximo_192_px_por_lado_segun_el_adr_007() -> None:
+    assert LADO_MINIATURA == 192
+    for ancho, alto in ((4000, 3000), (3000, 4000), (5000, 5000)):
+        miniatura = _abrir(procesar_foto(_jpeg(ancho, alto, con_metadatos=False)).miniatura)
+
+        assert max(miniatura.size) == 192
