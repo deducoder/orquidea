@@ -12,7 +12,7 @@ from orquidea.datos.base import abrir_base, ruta_de_la_base
 from orquidea.datos.catalogo import DIRECTORIO_CATALOGO, cargar_catalogo
 from orquidea.datos.fotos import TAMANO_MAXIMO
 from orquidea.web.limite import LimiteDeCuerpo
-from orquidea.web.rutas import acceso, catalogo, coleccion
+from orquidea.web.rutas import acceso, catalogo, coleccion, cuidados
 from orquidea.web.sesion import SesionRequerida, cookie_segura, exigir_sesion
 
 BASE_DIR = Path(__file__).parent
@@ -75,6 +75,7 @@ app.add_middleware(LimiteDeCuerpo, maximo=LIMITE_DE_CUERPO)
 app.include_router(acceso.router)
 app.include_router(catalogo.router)
 app.include_router(coleccion.router)
+app.include_router(cuidados.router)
 
 
 @app.get("/salud")

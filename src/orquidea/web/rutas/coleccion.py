@@ -1,6 +1,7 @@
 import logging
 import sqlite3
 import time
+from datetime import UTC, date, datetime
 from typing import Annotated
 
 from fastapi import APIRouter, File, Form, HTTPException, Request, UploadFile
@@ -22,6 +23,7 @@ from orquidea.datos.ejemplares import (
     obtener,
 )
 from orquidea.datos.fotos import FotoInvalida, procesar_foto
+from orquidea.datos.riegos import listar as listar_riegos
 from orquidea.web.plantillas import templates
 from orquidea.web.sesion import Base
 
@@ -137,11 +139,29 @@ def agregar_ejemplar_propio(
     return RedirectResponse("/coleccion", status_code=303)
 
 
+def hoy() -> date:
+    return datetime.now(UTC).date()
+
+
 def ficha(
-    request: Request, conexion: sqlite3.Connection, estado: int, ejemplar: Ejemplar, error: str = ""
+    request: Request,
+    conexion: sqlite3.Connection,
+    estado: int,
+    ejemplar: Ejemplar,
+    error: str = "",
+    fecha: str = "",
 ) -> HTMLResponse:
     (resuelto,) = resolver([ejemplar], request.app.state.catalogo)
-    contexto = {"item": resuelto, "error": error}
+    dia = hoy().isoformat()
+    riegos = listar_riegos(conexion, ejemplar.id)
+    contexto = {
+        "item": resuelto,
+        "error": error,
+        "hoy": dia,
+        "fecha": fecha or dia,
+        "riegos": riegos[::-1],
+        "ultimo": riegos[-1] if riegos else None,
+    }
     return templates.TemplateResponse(request, "ejemplar_ficha.html", contexto, status_code=estado)
 
 
