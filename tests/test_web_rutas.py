@@ -21,6 +21,7 @@ RUTAS = [
     ("POST", "/coleccion/nuevo"),
     ("POST", "/coleccion/{id}/editar"),
     ("POST", "/coleccion/{id}/foto"),
+    ("POST", "/coleccion/{id}/foto/quitar"),
     ("POST", "/coleccion/{id}/quitar"),
     ("POST", "/salir"),
 ]

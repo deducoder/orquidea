@@ -11,6 +11,7 @@ from orquidea.datos.almacen_fotos import (
     NombreDeFotoInvalido,
     poner_foto,
     quitar_con_foto,
+    quitar_foto,
     ruta_de_foto,
 )
 from orquidea.datos.ejemplares import (
@@ -196,6 +197,13 @@ def imagen_del_ejemplar(request: Request, id: int, conexion: Base) -> Response:
 @router.get("/coleccion/{id}/foto/miniatura")
 def miniatura_del_ejemplar(request: Request, id: int, conexion: Base) -> Response:
     return _imagen(request, id, conexion, miniatura=True)
+
+
+@router.post("/coleccion/{id}/foto/quitar")
+def quitar_la_foto(request: Request, id: int, conexion: Base) -> RedirectResponse:
+    if not quitar_foto(conexion, request.app.state.directorio_fotos, id):
+        raise HTTPException(status_code=404, detail="Ejemplar no encontrado")
+    return RedirectResponse(f"/coleccion/{id}", status_code=303)
 
 
 @router.get("/coleccion/{id}/editar", response_class=HTMLResponse)
