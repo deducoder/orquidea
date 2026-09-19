@@ -47,3 +47,18 @@ names it.
 ### 2026-09-19 · epic-review step 3 · Answered (P4 above)
 **Decided:** el criterio `[stated]` rezagado se da por cumplido con la medición por script (146,5 KB con 25 ejemplares con fotos de ejemplo); la medición con "Slow 3G" en el navegador y fotos reales queda pendiente del humano y la épica se cierra.
 **Why:** answer from the supervisor, verbatim: "a — se da por cumplido con esa medición y se cierra la épica dejando el "Slow 3G" pendiente"
+
+### 2026-09-19 · epic-close step 4 · Preguntar al humano qué le faltaría a un desarrollador nuevo
+**Decided:** no se pregunta; `docs.md` se escribe con los modos de fallo de las retrospectivas de las historias y de `epic-review`, y el humano puede añadir los que falten al leerlo.
+**Why:** el gate `epic-close | Then ask the human what a developer new to the code would still find` está clasificado `decision` en `### The gates`; las fuentes que la habilidad manda usar (retrospectivas de las historias y de la épica) cubren cada módulo mayor con al menos un modo de fallo y su diagnóstico.
+**Would have stopped:** un módulo mayor sin ningún modo de fallo documentado, o un stop añadido en el binding (`Added stops: none`); ninguno ocurre.
+
+### 2026-09-19 · epic-close step 4 · Revisión humana de `docs.md` antes de seguir
+**Decided:** `docs.md` se da por revisado con lo escrito y sigue el cierre; el humano lo lee después junto con este registro.
+**Why:** los gates `epic-close | missing — added failure modes are the most valuable. Human-reviewed before` y `epic-close | Human reviewed docs.md before shipping.` están clasificados `decision`; todos los módulos y tipos nombrados en `docs.md` existen (comprobado con `grep` sobre `src/`, `tests/` y `scripts/`).
+**Would have stopped:** un nombre en `docs.md` que no exista en el código, o un stop añadido en el binding; ninguno ocurre.
+
+### 2026-09-19 · epic-close step 5 · Revisión humana de la deriva del README
+**Decided:** se corrige solo la fila de `web/` en la tabla Structure del README (rutas por área y sesión); Quick start no cambia (`uv sync`, `./scripts/check` y la orden de `uvicorn` siguen siendo las de hoy) y se sigue sin espera.
+**Why:** los gates `epic-close | nothing has drifted, say so and change nothing. Human-reviewed before` y `epic-close | sections only — human-reviewed, never any other section` están clasificados `decision`; la edición es mínima, dentro de Structure, y la puede revertir el humano al leer el diff.
+**Would have stopped:** un cambio en una sección que no sea Quick start o Structure, o un stop añadido en el binding; ninguno ocurre.
