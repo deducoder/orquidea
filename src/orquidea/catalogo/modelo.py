@@ -26,7 +26,7 @@ class Especie(BaseModel):
 
     id: str = Field(pattern=r"^[a-z0-9]+(-[a-z0-9]+)*$")
     nombre_cientifico: Texto
-    nombres_comunes: list[str] = []
+    nombres_comunes: list[Texto] = []
     descripcion: Texto
     cuidados: Cuidados
     fuentes: list[Texto] = Field(min_length=1)

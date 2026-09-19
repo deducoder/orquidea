@@ -80,3 +80,11 @@ def test_id_debe_ser_slug(id_invalido: str) -> None:
 
     with pytest.raises(ValidationError, match="id"):
         Especie.model_validate(datos)
+
+
+def test_nombre_comun_en_blanco_se_rechaza() -> None:
+    datos = especie_valida()
+    datos["nombres_comunes"] = [""]
+
+    with pytest.raises(ValidationError, match="nombres_comunes"):
+        Especie.model_validate(datos)
