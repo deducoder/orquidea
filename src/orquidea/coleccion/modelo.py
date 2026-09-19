@@ -11,6 +11,7 @@ class Ejemplar(BaseModel):
     nombre: str
     notas: str
     creado: int
+    foto: str | None = None
 
 
 @dataclass(frozen=True)
