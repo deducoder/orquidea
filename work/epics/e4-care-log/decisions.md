@@ -112,3 +112,8 @@ names it.
 **Decided:** no se pregunta; `docs.md` se escribe con los modos de fallo de las retrospectivas de las historias y de `epic-review`, y el humano puede añadir los que falten al leerlo.
 **Why:** el gate `epic-close | Then ask the human what a developer new to the code would still find` está clasificado `decision` en `### The gates`; las fuentes que la habilidad manda usar (retrospectivas de las seis historias y de la épica) cubren cada módulo mayor (dominio, datos, rutas, plantilla, medición) con al menos un modo de fallo y su diagnóstico. Precedente: la misma decisión de e3 en este mismo archivo de la épica anterior.
 **Would have stopped:** un módulo mayor sin ningún modo de fallo documentado, o un stop añadido en el binding (`Added stops: none`); ninguno ocurre.
+
+### 2026-09-19 · epic-close step 4 · Revisión humana de `docs.md` antes de seguir
+**Decided:** `docs.md` se da por revisado con lo escrito y sigue el cierre; el humano lo lee después junto con este registro.
+**Why:** los gates `epic-close | missing — added failure modes are the most valuable. Human-reviewed before` y `epic-close | Human reviewed docs.md before shipping.` están clasificados `decision`; todos los módulos, funciones, tipos y pruebas nombrados en `docs.md` existen (comprobado con `grep` sobre `src/`, `scripts/` y `tests/`), las cifras salen de las mediciones de las retrospectivas y cada módulo mayor lleva al menos un modo de fallo con su diagnóstico.
+**Would have stopped:** un nombre en `docs.md` que no exista en el código, o un stop añadido en el binding; ninguno ocurre.
