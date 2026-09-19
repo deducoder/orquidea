@@ -41,10 +41,10 @@ scrypt$65536$8$2$Zm9v…$YmFy…                     # se pone en ORQUIDEA_PASSW
 from orquidea.autenticacion import hashear_contrasena, verificar_contrasena
 
 hash_ = hashear_contrasena("orquidea-2026")
-verificar_contrasena("orquidea-2026", hash_)   # True
-verificar_contrasena("otra", hash_)            # False
-verificar_contrasena("orquidea-2026", None)    # False  (sin configurar: cierra)
-verificar_contrasena("x", "basura")            # False  (hash malformado: cierra)
+verificar_contrasena("orquidea-2026", hash_)  # True
+verificar_contrasena("otra", hash_)  # False
+verificar_contrasena("orquidea-2026", None)  # False  (sin configurar: cierra)
+verificar_contrasena("x", "basura")  # False  (hash malformado: cierra)
 ```
 
 ```http
@@ -67,18 +67,23 @@ CREATE TABLE sesiones (
 ```
 
 ```python
-INACTIVIDAD_MAXIMA = 30 * 60        # 30 min (ASVS 3.3.2, L2)
-ANTIGUEDAD_MAXIMA = 12 * 60 * 60    # 12 h
+INACTIVIDAD_MAXIMA = 30 * 60  # 30 min (ASVS 3.3.2, L2)
+ANTIGUEDAD_MAXIMA = 12 * 60 * 60  # 12 h
+
 
 @dataclass(frozen=True)
 class Sesion:
     csrf: str
 
-def crear(conexion, ahora: int) -> tuple[str, Sesion]: ...   # (identificador para la cookie, sesión)
-def obtener(conexion, identificador: str, ahora: int) -> Sesion | None: ...  # renueva ultima_actividad; borra si caducó
+
+def crear(conexion, ahora: int) -> tuple[str, Sesion]: ...  # (identificador para la cookie, sesión)
+def obtener(
+    conexion, identificador: str, ahora: int
+) -> Sesion | None: ...  # renueva ultima_actividad; borra si caducó
 def cerrar(conexion, identificador: str) -> None: ...
 
-class LimiteDeIntentos:   # 5 fallos seguidos -> bloqueo de 5 min; un acierto reinicia
+
+class LimiteDeIntentos:  # 5 fallos seguidos -> bloqueo de 5 min; un acierto reinicia
     def bloqueado(self, ahora: float) -> bool: ...
     def fallo(self, ahora: float) -> None: ...
     def acierto(self) -> None: ...
