@@ -110,3 +110,37 @@ def test_catalogo_invalido_detiene_el_arranque(
 
     with pytest.raises(CatalogoInvalido, match="roto.json"):
         spec.loader.exec_module(modulo)
+
+
+def test_busqueda_filtra_la_lista(client: TestClient) -> None:
+    app.state.catalogo = [especie(), especie("laelia-anceps", "Laelia anceps")]
+
+    html = client.get("/especies", params={"q": "RADICÁNS"}).text
+
+    assert "Epidendrum radicans" in html
+    assert "Laelia anceps" not in html
+
+
+def test_busqueda_sin_coincidencias_muestra_mensaje(client: TestClient) -> None:
+    app.state.catalogo = [especie()]
+
+    respuesta = client.get("/especies", params={"q": "zzz"})
+
+    assert respuesta.status_code == 200
+    assert "No hay especies que coincidan con la búsqueda." in respuesta.text
+    assert "Aún no hay especies en el catálogo." not in respuesta.text
+
+
+def test_formulario_de_busqueda_funciona_sin_javascript_y_con_htmx(
+    client: TestClient,
+) -> None:
+    app.state.catalogo = [especie()]
+
+    html = client.get("/especies", params={"q": "radic"}).text
+
+    assert '<form method="get" action="/especies"' in html
+    assert 'name="q"' in html
+    assert 'value="radic"' in html
+    assert 'hx-get="/especies"' in html
+    assert 'hx-target="#resultados"' in html
+    assert 'id="resultados"' in html

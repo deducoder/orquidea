@@ -34,3 +34,8 @@ names it.
 **Decided:** corrige la entrada anterior ("Re-plan: s1.4 antes que s1.5, s1.5 depende de s1.6"): la secuencia queda s1.4, s1.6, s1.5, porque s1.5 depende de s1.6 y no puede ir antes; la tabla de Progress sigue el mismo orden.
 **Why:** `plan.md`, columna `Depends on` de s1.5: `s1.6 (hard)`; una dependencia dura no puede quedar después de lo que depende de ella. Reversa la parte del orden de la entrada anterior; su razón (agotar primero lo que no espera al humano) sigue en pie.
 **Would have stopped:** nada: es una corrección de coherencia interna del plan.
+
+### 2026-09-19 · story-implement step 1 · s1.4: ofrecer el despacho del bloque
+**Decided:** no despachar; la sesión de épica implementa s1.4 ella misma.
+**Why:** `plan.md` de la épica, `## Delegation`, fila s1.4: `—`; y `delegate`: "never delegate on your own initiative without asking first". El mold T1 de T2 es una tarea de la propia historia.
+**Would have stopped:** una fila de Delegation con bloque para s1.4, o un stop añadido en el binding (`Added stops: none`).

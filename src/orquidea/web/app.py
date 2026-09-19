@@ -5,6 +5,7 @@ from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 
+from orquidea.catalogo.busqueda import buscar
 from orquidea.datos.catalogo import DIRECTORIO_CATALOGO, cargar_catalogo
 
 BASE_DIR = Path(__file__).parent
@@ -21,10 +22,9 @@ def inicio(request: Request) -> HTMLResponse:
 
 
 @app.get("/especies", response_class=HTMLResponse)
-def lista_de_especies(request: Request) -> HTMLResponse:
-    return templates.TemplateResponse(
-        request, "especies.html", {"especies": request.app.state.catalogo}
-    )
+def lista_de_especies(request: Request, q: str = "") -> HTMLResponse:
+    especies = buscar(request.app.state.catalogo, q)
+    return templates.TemplateResponse(request, "especies.html", {"especies": especies, "q": q})
 
 
 @app.get("/especies/{id}", response_class=HTMLResponse)
