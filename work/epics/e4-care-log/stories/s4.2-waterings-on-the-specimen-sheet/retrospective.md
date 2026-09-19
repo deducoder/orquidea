@@ -8,7 +8,7 @@ Router `cuidados` con `POST /coleccion/{id}/riegos` y `POST /coleccion/{id}/rieg
 
 ## Verification (lo que reportó `story-implement`)
 
-- Gate: `./scripts/check` en verde tras cada tarea (399 pruebas al final).
+- Gate: `./scripts/check` en verde tras cada tarea (406 pruebas al final).
 - Huérfanas: `test_web_rutas.py` habría fallado por el mapa de rutas declarado; se actualizó en T2 y T3. Las demás pruebas que importan `web.app` o la ficha y no se tocaron (`test_web_coleccion`, `test_web_fotos`, `test_web_proteccion`, `test_web_acceso`, `test_web_especies`, `test_web_inicio`, `test_web_limite`, `test_medicion`, `test_despliegue`) pasan.
 - Integración manual con `uvicorn` real y `curl`: acceso, alta de un ejemplar, riegos de hoy y de hace una semana (303), fecha futura (422 con «La fecha no puede ser posterior a hoy.»), payload `"><script>` devuelto escapado, ficha con el último riego correcto, `Cache-Control: no-store` y CSP presentes, quitar el de hoy recalcula el último a la fecha de hace una semana, sin sesión redirige (303), sin trazas en el log.
 - Plan sin saltarse: no hubo aprobación de omitirlo.

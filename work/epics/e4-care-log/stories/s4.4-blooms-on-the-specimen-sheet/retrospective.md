@@ -8,7 +8,7 @@ Tres POST en el router `cuidados` (registrar, fijar el fin y quitar una floraci�
 
 ## Verification (lo que reportó `story-implement`)
 
-- Gate: `./scripts/check` en verde tras cada tarea (467 pruebas al final).
+- Gate: `./scripts/check` en verde tras cada tarea (476 pruebas al final).
 - Huérfanas: `test_web_rutas.py` (mapa de rutas declarado) se actualizó en T1 y T2. Las demás pruebas que importan `web.app`, `rutas.coleccion` o la ficha y no se tocaron pasan (`test_web_coleccion`, `test_web_fotos`, `test_web_proteccion`, `test_web_acceso`, `test_web_especies`, `test_web_inicio`, `test_web_limite`, `test_medicion`, `test_despliegue`).
 - Integración manual con `uvicorn` real y `curl`: acceso, alta del ejemplar, floración en curso y terminada (303), fecha futura y fin anterior (422 con su mensaje), payload `"><script>` devuelto escapado, terminar (303) y terminar de nuevo («ya terminó», 422), `Cache-Control: no-store` y CSP presentes, quitar (303), sin sesión redirige (303), sin trazas; servidor apagado por PID.
 - Medición anotada para s4.6: la ficha con 500 riegos y 500 floraciones en curso pesa 500 476 bytes sin comprimir y 14 459 en gzip, y responde en 12 ms.
