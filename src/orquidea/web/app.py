@@ -33,3 +33,8 @@ def ficha_de_especie(request: Request, id: str) -> HTMLResponse:
     if especie is None:
         raise HTTPException(status_code=404, detail="Especie no encontrada")
     return templates.TemplateResponse(request, "especie.html", {"especie": especie})
+
+
+@app.get("/salud")
+def salud() -> dict[str, str]:
+    return {"estado": "ok"}

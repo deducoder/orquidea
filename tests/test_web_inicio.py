@@ -28,3 +28,15 @@ def test_sin_recursos_externos() -> None:
     html = client.get("/").text
 
     assert not re.search(r"""(?:src|href)=["']https?://""", html)
+
+
+def test_salud_responde_ok_sin_depender_del_catalogo() -> None:
+    original = app.state.catalogo
+    app.state.catalogo = []
+    try:
+        respuesta = client.get("/salud")
+    finally:
+        app.state.catalogo = original
+
+    assert respuesta.status_code == 200
+    assert respuesta.json() == {"estado": "ok"}
