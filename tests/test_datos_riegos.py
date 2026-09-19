@@ -10,7 +10,7 @@ from orquidea.datos.base import MIGRACIONES, abrir_base, conectar
 from orquidea.datos.ejemplares import agregar as agregar_ejemplar
 from orquidea.datos.ejemplares import fijar_foto, listar
 from orquidea.datos.ejemplares import quitar as quitar_ejemplar
-from orquidea.datos.riegos import agregar, quitar, ultimo, ultimos
+from orquidea.datos.riegos import agregar, quitar, ultimos
 from orquidea.datos.riegos import listar as listar_riegos
 
 AHORA = 1_780_000_000
@@ -60,28 +60,6 @@ def test_el_historial_es_solo_del_ejemplar(conexion: sqlite3.Connection) -> None
     agregar(conexion, otro, "2026-09-16")
 
     assert [r.fecha for r in listar_riegos(conexion, uno)] == ["2026-09-15"]
-
-
-def test_el_ultimo_es_el_de_mayor_fecha(conexion: sqlite3.Connection) -> None:
-    ejemplar = un_ejemplar(conexion)
-    for fecha in ("2026-09-01", "2026-09-15", "2026-09-10"):
-        agregar(conexion, ejemplar, fecha)
-
-    ultimo_riego = ultimo(conexion, ejemplar)
-
-    assert ultimo_riego is not None and ultimo_riego.fecha == "2026-09-15"
-
-
-def test_a_igual_fecha_el_ultimo_es_el_de_mayor_id(conexion: sqlite3.Connection) -> None:
-    ejemplar = un_ejemplar(conexion)
-    agregar(conexion, ejemplar, "2026-09-15")
-    segundo = agregar(conexion, ejemplar, "2026-09-15")
-
-    assert ultimo(conexion, ejemplar) == segundo
-
-
-def test_sin_riegos_no_hay_ultimo(conexion: sqlite3.Connection) -> None:
-    assert ultimo(conexion, un_ejemplar(conexion)) is None
 
 
 def test_quitar_borra_solo_ese_riego(conexion: sqlite3.Connection) -> None:
@@ -224,7 +202,9 @@ def test_ultimos_da_el_mayor_de_cada_ejemplar_y_omite_a_los_que_no_tienen(
     assert sin_riegos not in ultimos(conexion)
 
 
-def test_ultimos_coincide_con_el_ultimo_de_cada_ejemplar(conexion: sqlite3.Connection) -> None:
+def test_ultimos_coincide_con_el_final_del_historial_de_cada_ejemplar(
+    conexion: sqlite3.Connection,
+) -> None:
     uno, otro = un_ejemplar(conexion), un_ejemplar(conexion)
     for fecha in ("2026-09-15", "2026-09-15", "2026-09-01"):
         agregar(conexion, uno, fecha)
@@ -233,8 +213,7 @@ def test_ultimos_coincide_con_el_ultimo_de_cada_ejemplar(conexion: sqlite3.Conne
     en_lote = ultimos(conexion)
 
     for ejemplar in (uno, otro):
-        riego = ultimo(conexion, ejemplar)
-        assert riego is not None and en_lote[ejemplar] == riego.fecha
+        assert en_lote[ejemplar] == listar_riegos(conexion, ejemplar)[-1].fecha
 
 
 def test_ultimos_es_una_sola_sentencia_aunque_haya_muchos_ejemplares(

@@ -34,15 +34,6 @@ def listar(conexion: sqlite3.Connection, ejemplar_id: int) -> list[Riego]:
     return [_riego(fila) for fila in filas]
 
 
-def ultimo(conexion: sqlite3.Connection, ejemplar_id: int) -> Riego | None:
-    fila = conexion.execute(
-        "SELECT id, ejemplar_id, fecha FROM riegos WHERE ejemplar_id = ? "
-        "ORDER BY fecha DESC, id DESC LIMIT 1",
-        (ejemplar_id,),
-    ).fetchone()
-    return None if fila is None else _riego(fila)
-
-
 def quitar(conexion: sqlite3.Connection, ejemplar_id: int, id: int) -> bool:
     cursor = conexion.execute(
         "DELETE FROM riegos WHERE id = ? AND ejemplar_id = ?", (id, ejemplar_id)
