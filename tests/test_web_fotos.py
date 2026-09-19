@@ -335,3 +335,19 @@ def test_si_el_ejemplar_desaparece_al_guardar_la_respuesta_es_404(
     monkeypatch.setattr(rutas_coleccion, "poner_foto", lambda *_: False)
 
     assert _subir(client, sesion.csrf, id, imagen_jpeg(800, 600)).status_code == 404
+
+
+def test_la_lista_muestra_la_miniatura_enlazada_solo_de_los_ejemplares_con_foto(
+    client: TestClient,
+) -> None:
+    con_foto = _ejemplar_propio("Con foto")
+    sin_foto = _ejemplar_propio("Sin foto")
+    _con_foto(con_foto)
+
+    html = client.get("/coleccion").text
+
+    assert html.count("<img") == 1
+    assert f'href="/coleccion/{con_foto}"><img src="/coleccion/{con_foto}/foto/miniatura"' in html
+    assert 'alt="Foto de Con foto"' in html and 'loading="lazy"' in html
+    assert f"/coleccion/{sin_foto}/foto" not in html
+    assert f'/coleccion/{con_foto}/foto"' not in html  # la lista no pide la imagen completa
