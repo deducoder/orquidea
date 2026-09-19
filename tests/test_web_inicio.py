@@ -4,10 +4,8 @@ from fastapi.testclient import TestClient
 
 from orquidea.web.app import app
 
-client = TestClient(app)
 
-
-def test_inicio_responde_html() -> None:
+def test_inicio_responde_html(client: TestClient) -> None:
     response = client.get("/")
 
     assert response.status_code == 200
@@ -15,7 +13,7 @@ def test_inicio_responde_html() -> None:
     assert "<title>Orquídea" in response.text
 
 
-def test_htmx_se_sirve_localmente() -> None:
+def test_htmx_se_sirve_localmente(client: TestClient) -> None:
     inicio = client.get("/")
     htmx = client.get("/static/htmx.min.js")
 
@@ -24,19 +22,16 @@ def test_htmx_se_sirve_localmente() -> None:
     assert len(htmx.content) > 0
 
 
-def test_sin_recursos_externos() -> None:
+def test_sin_recursos_externos(client: TestClient) -> None:
     html = client.get("/").text
 
     assert not re.search(r"""(?:src|href)=["']https?://""", html)
 
 
-def test_salud_responde_ok_sin_depender_del_catalogo() -> None:
-    original = app.state.catalogo
+def test_salud_responde_ok_sin_depender_del_catalogo(client: TestClient) -> None:
     app.state.catalogo = []
-    try:
-        respuesta = client.get("/salud")
-    finally:
-        app.state.catalogo = original
+
+    respuesta = client.get("/salud")
 
     assert respuesta.status_code == 200
     assert respuesta.json() == {"estado": "ok"}

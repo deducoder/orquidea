@@ -43,7 +43,7 @@ def _aplicar(conexion: sqlite3.Connection, numero: int, archivo: Path) -> None:
 
 
 def conectar(ruta: Path) -> sqlite3.Connection:
-    conexion = sqlite3.connect(ruta, isolation_level=None)
+    conexion = sqlite3.connect(ruta, isolation_level=None, check_same_thread=False)
     conexion.execute("PRAGMA foreign_keys = ON")
     conexion.execute("PRAGMA journal_mode = WAL")
     return conexion
