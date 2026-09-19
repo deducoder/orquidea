@@ -35,6 +35,9 @@ wrote it. Retirement moves an entry to `## Retired` with its reason.
 - **Las miniaturas no se cachean y se piden en cada visita a "Mi colección".** El middleware pone `Cache-Control: no-store` a todo salvo `/static`; con 25 fotos son ~130 KB en cada visita, y la URL por id no cambia aunque cambie la foto.
   *Origin:* e3, `epic-review`, 2026-09-19 — resultado de `scripts/medir-primera-carga.py`.
   *Promotion:* si la lista se siente lenta con la colección real: servir las imágenes con `Cache-Control: private, max-age` y una URL que incluya el nombre aleatorio de la foto (cambia al reemplazarla).
+- **La aplicación no comprime sus respuestas: el presupuesto de peso depende del proxy.** La ficha con 500 riegos y 500 floraciones en curso pesa 500 476 bytes sin comprimir y 14 459 en gzip (medido con `uvicorn` real); `must-perf-001` se cuenta en gzip "como lo serviría un proxy" (decisión de e3), pero la aplicación no lleva `GZipMiddleware` y no se ha verificado que el proxy de Dokploy comprima.
+  *Origin:* e4, `story-implement` de s4.4 (medición de la ficha llena), 2026-09-19; documentado en el README por s4.6.
+  *Promotion:* al verificar el despliegue real (mismo momento que la entrada de `docker build`): si el proxy no comprime, añadir `GZipMiddleware` (o la compresión del proxy) con un ADR; o si la lista o la ficha se sienten lentas con datos reales.
 
 ## Retired
 

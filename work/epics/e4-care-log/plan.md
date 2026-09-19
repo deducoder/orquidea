@@ -48,7 +48,7 @@ None. s4.3 (`orquidea.datos.floraciones`, `0005`) y s4.5 (`datos.riegos`, `colec
 | s4.3 | done | S | S |
 | s4.4 | done | M | M |
 | s4.5 | done | S | S |
-| s4.6 | todo | S | |
+| s4.6 | done | S | S |
 
 ## Sequencing risks
 
