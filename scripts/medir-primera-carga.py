@@ -16,8 +16,11 @@ import argparse
 import gzip
 import io
 import re
+import sqlite3
 import tempfile
 import time
+from collections.abc import Iterator
+from contextlib import contextmanager
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -60,9 +63,12 @@ def foto_con_detalle(ancho: int = 1600, alto: int = 1200) -> bytes:
     return salida.getvalue()
 
 
-def medir(fotos: list[bytes] | None = None, n: int = 25) -> Medicion:
-    """Monta una colección temporal con `n` ejemplares con foto y mide la primera carga."""
-    fotos = fotos or [foto_con_detalle() for _ in range(3)]
+@contextmanager
+def coleccion_temporal() -> Iterator[tuple[TestClient, sqlite3.Connection, int]]:
+    """Base y fotos temporales sobre `app.state`, con una sesión iniciada; restaura al salir.
+
+    Devuelve el cliente con la cookie de sesión, una conexión a la base temporal y la hora usada
+    para crear los registros. La conexión se cierra al salir; la aplicación queda como estaba."""
     ruta_base, directorio = app.state.ruta_base, app.state.directorio_fotos
     with tempfile.TemporaryDirectory() as temporal:
         app.state.ruta_base = Path(temporal) / "orquidea.sqlite3"
@@ -74,26 +80,33 @@ def medir(fotos: list[bytes] | None = None, n: int = 25) -> Medicion:
             try:
                 ahora = int(time.time())
                 identificador, _ = crear(conexion, ahora)
-                for i in range(n):
-                    ejemplar = agregar_sin_especie(conexion, f"Planta {i + 1}", "", ahora)
-                    procesada = procesar_foto(fotos[i % len(fotos)])
-                    poner_foto(conexion, app.state.directorio_fotos, ejemplar.id, procesada)
+                cliente = TestClient(app, base_url="https://testserver")
+                cliente.cookies.set(nombre_de_cookie(), identificador)
+                yield cliente, conexion, ahora
             finally:
                 conexion.close()
-            cliente = TestClient(app, base_url="https://testserver")
-            cliente.cookies.set(nombre_de_cookie(), identificador)
-            pagina = cliente.get("/coleccion")
-            texto = pagina.text
-            estaticos = sorted(set(re.findall(r'(?:src|href)="(/static/[^"]+)"', texto)))
-            miniaturas = re.findall(r'src="(/coleccion/\d+/foto/miniatura)"', texto)
-            return Medicion(
-                cantidad=len(miniaturas),
-                html=len(gzip.compress(pagina.content)),
-                javascript=sum(len(gzip.compress(cliente.get(u).content)) for u in estaticos),
-                miniaturas=sum(len(cliente.get(u).content) for u in miniaturas),
-            )
         finally:
             app.state.ruta_base, app.state.directorio_fotos = ruta_base, directorio
+
+
+def medir(fotos: list[bytes] | None = None, n: int = 25) -> Medicion:
+    """Monta una colección temporal con `n` ejemplares con foto y mide la primera carga."""
+    fotos = fotos or [foto_con_detalle() for _ in range(3)]
+    with coleccion_temporal() as (cliente, conexion, ahora):
+        for i in range(n):
+            ejemplar = agregar_sin_especie(conexion, f"Planta {i + 1}", "", ahora)
+            procesada = procesar_foto(fotos[i % len(fotos)])
+            poner_foto(conexion, app.state.directorio_fotos, ejemplar.id, procesada)
+        pagina = cliente.get("/coleccion")
+        texto = pagina.text
+        estaticos = sorted(set(re.findall(r'(?:src|href)="(/static/[^"]+)"', texto)))
+        miniaturas = re.findall(r'src="(/coleccion/\d+/foto/miniatura)"', texto)
+        return Medicion(
+            cantidad=len(miniaturas),
+            html=len(gzip.compress(pagina.content)),
+            javascript=sum(len(gzip.compress(cliente.get(u).content)) for u in estaticos),
+            miniaturas=sum(len(cliente.get(u).content) for u in miniaturas),
+        )
 
 
 def _kb(octetos: int) -> str:
