@@ -57,24 +57,38 @@ def procesar_foto(datos: bytes) -> FotoProcesada:
         raise FotoInvalida("El archivo no es una imagen válida.") from fallo
 
 
-def _reconstruir(origen: Image.Image) -> FotoProcesada:
-    # La orientación vive en el EXIF: se aplica a los píxeles antes de descartarlo.
-    girada = ImageOps.exif_transpose(origen)
-    if girada.mode in ("RGBA", "LA", "P"):
-        fondo = Image.new("RGB", girada.size, (255, 255, 255))
-        convertida = girada.convert("RGBA")
+ORIENTACION = 0x0112  # etiqueta EXIF de la orientación
+_MODOS_QUE_ESCALAN_BIEN = frozenset({"RGB", "RGBA", "L", "LA"})
+
+
+def _sobre_blanco(imagen: Image.Image) -> Image.Image:
+    if imagen.mode in ("RGBA", "LA"):
+        convertida = imagen.convert("RGBA")
+        fondo = Image.new("RGB", convertida.size, (255, 255, 255))
         fondo.paste(convertida, mask=convertida.getchannel("A"))
-        rgb = fondo
-    else:
-        rgb = girada.convert("RGB")
+        return fondo
+    return imagen.convert("RGB")
+
+
+def _reconstruir(origen: Image.Image) -> FotoProcesada:
+    # Los píxeles de una foto de teléfono (48 MP) son ~150 MB por copia: se reduce antes de
+    # copiar, y solo se copia lo que hace falta (ver `test_datos_fotos_memoria.py`).
+    # La orientación vive en el EXIF: se aplica a los píxeles antes de descartarlo. Sin
+    # orientación no se copia nada (`exif_transpose` siempre copia).
+    orientada = (
+        ImageOps.exif_transpose(origen) if origen.getexif().get(ORIENTACION, 1) != 1 else origen
+    )
+    if orientada.mode not in _MODOS_QUE_ESCALAN_BIEN:
+        orientada = orientada.convert("RGBA")  # paletas y otros modos se escalan mal
+    if orientada.width > ANCHO_MAXIMO:
+        alto = round(orientada.height * ANCHO_MAXIMO / orientada.width)
+        orientada = orientada.resize(
+            (ANCHO_MAXIMO, alto), Image.Resampling.LANCZOS, reducing_gap=2.0
+        )
+    rgb = _sobre_blanco(orientada)
     # `Image.info` viaja con la imagen (Pillow copia de ahí el comentario JPEG al guardar):
     # una imagen nueva hecha solo con los bytes de los píxeles no arrastra nada del archivo.
-    plana = Image.frombytes("RGB", rgb.size, rgb.tobytes())
-
-    imagen = plana.copy()
-    if imagen.width > ANCHO_MAXIMO:
-        alto = round(imagen.height * ANCHO_MAXIMO / imagen.width)
-        imagen = imagen.resize((ANCHO_MAXIMO, alto), Image.Resampling.LANCZOS)
-    miniatura = plana.copy()
+    imagen = Image.frombytes("RGB", rgb.size, rgb.tobytes())
+    miniatura = imagen.copy()
     miniatura.thumbnail((LADO_MINIATURA, LADO_MINIATURA), Image.Resampling.LANCZOS)
     return FotoProcesada(imagen=_jpeg(imagen, 85), miniatura=_jpeg(miniatura, 75))

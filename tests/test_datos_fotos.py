@@ -178,3 +178,18 @@ def test_la_miniatura_mide_como_maximo_192_px_por_lado_segun_el_adr_007() -> Non
         miniatura = _abrir(procesar_foto(_jpeg(ancho, alto, con_metadatos=False)).miniatura)
 
         assert max(miniatura.size) == 192
+
+
+def test_un_png_de_paleta_con_transparencia_se_aplana_sobre_blanco_y_se_reduce() -> None:
+    origen = Image.new("P", (2400, 1600), 0)
+    origen.putpalette([0, 0, 0, 255, 0, 0] + [0] * 762)
+    origen.info["transparency"] = 0
+    entrada = io.BytesIO()
+    origen.save(entrada, "PNG", transparency=0)
+
+    foto = procesar_foto(entrada.getvalue())
+
+    imagen = _abrir(foto.imagen)
+    assert imagen.size == (ANCHO_MAXIMO, 1067)
+    pixel = imagen.convert("RGB").getpixel((800, 500))
+    assert isinstance(pixel, tuple) and all(canal >= 250 for canal in pixel)
