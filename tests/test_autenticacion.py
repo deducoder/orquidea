@@ -5,7 +5,7 @@ from collections.abc import Iterator
 import pytest
 
 from orquidea import autenticacion
-from orquidea.autenticacion import hashear_contrasena, verificar_contrasena
+from orquidea.autenticacion import LimiteDeIntentos, hashear_contrasena, verificar_contrasena
 
 N_BAJO = 2**4  # costo mínimo para que las pruebas sean rápidas
 
@@ -119,3 +119,45 @@ def test_la_orden_rechaza_una_contraseña_vacia(entradas: list[str]) -> None:
 
     with pytest.raises(SystemExit):
         autenticacion.main()
+
+
+def test_cuatro_fallos_no_bloquean_y_el_quinto_si() -> None:
+    limite = LimiteDeIntentos()
+    for _ in range(4):
+        limite.fallo(ahora=100.0)
+
+    assert not limite.bloqueado(ahora=100.0)
+
+    limite.fallo(ahora=100.0)
+
+    assert limite.bloqueado(ahora=100.0)
+
+
+def test_el_bloqueo_expira_a_los_cinco_minutos() -> None:
+    limite = LimiteDeIntentos()
+    for _ in range(5):
+        limite.fallo(ahora=100.0)
+
+    assert limite.bloqueado(ahora=100.0 + 299.9)
+    assert not limite.bloqueado(ahora=100.0 + 300.0)
+
+
+def test_un_acierto_reinicia_el_contador() -> None:
+    limite = LimiteDeIntentos()
+    for _ in range(4):
+        limite.fallo(ahora=100.0)
+    limite.acierto()
+    for _ in range(4):
+        limite.fallo(ahora=100.0)
+
+    assert not limite.bloqueado(ahora=100.0)
+
+
+def test_tras_expirar_el_bloqueo_el_contador_empieza_de_cero() -> None:
+    limite = LimiteDeIntentos()
+    for _ in range(5):
+        limite.fallo(ahora=100.0)
+    despues = 100.0 + 300.0
+    limite.fallo(ahora=despues)
+
+    assert not limite.bloqueado(ahora=despues)

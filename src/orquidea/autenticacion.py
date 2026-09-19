@@ -54,6 +54,29 @@ def verificar_contrasena(contrasena: str, hash_: str | None) -> bool:
         return False
 
 
+class LimiteDeIntentos:
+    """Bloquea temporalmente tras varios fallos seguidos; global porque hay un solo usuario."""
+
+    MAXIMO = 5
+    BLOQUEO = 300.0
+
+    def __init__(self) -> None:
+        self._fallos = 0
+        self._hasta = 0.0
+
+    def bloqueado(self, ahora: float) -> bool:
+        return ahora < self._hasta
+
+    def fallo(self, ahora: float) -> None:
+        self._fallos += 1
+        if self._fallos >= self.MAXIMO:
+            self._fallos = 0
+            self._hasta = ahora + self.BLOQUEO
+
+    def acierto(self) -> None:
+        self._fallos = 0
+
+
 def main() -> None:
     contrasena = getpass.getpass("Contraseña: ")
     if not contrasena:
