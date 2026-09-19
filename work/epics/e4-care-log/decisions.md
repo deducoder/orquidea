@@ -29,3 +29,8 @@ names it.
 **Decided:** no se envía; la sesión implementa s4.2 ella misma.
 **Why:** `plan.md` del épico, `## Delegation`, fila s4.2: Block `—`, Mode `—`; orchestrate paso 6: una fila con `—` → esta sesión corre las skills de la historia.
 **Would have stopped:** P5 si la fila designara un bloque y `delegate` no pudiera correrlo.
+
+### 2026-09-19 · story-implement (s4.2) step 2 · Confirmar con el humano la intención del diseño
+**Decided:** no se espera confirmación; la intención va en el reporte: s4.2 añade el router `cuidados` con dos POST (registrar y quitar un riego), valida la fecha con `validar_fecha` antes de `agregar`, y la ficha carga el historial (más reciente primero) y el último riego, con 422 y mensaje ante fechas inválidas o el tope.
+**Why:** `stories/s4.2-*/plan.md` línea `> Pause: none (default)` y la propia skill: «in which case there is no human in the loop and the restatement goes in your report instead».
+**Would have stopped:** P5 si el plan declarara `per task`.
