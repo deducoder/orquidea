@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block title %}{{ especie.nombre_cientifico }} — Orquídea{% endblock %}
+{% block content %}
+<p><a href="/especies">Todas las especies</a></p>
+<h1><i>{{ especie.nombre_cientifico }}</i></h1>
+{% if especie.nombres_comunes %}
+<p>También conocida como: {{ especie.nombres_comunes | join(", ") }}</p>
+{% endif %}
+<p>{{ especie.descripcion }}</p>
+
+<form method="post" action="/coleccion">
+  {% include "_csrf.html" %}
+  <input type="hidden" name="especie_id" value="{{ especie.id }}">
+  <button type="submit">Agregar a mi colección</button>
+</form>
+
+<h2>Cuidados</h2>
+<dl>
+  {% for etiqueta, cuidado in [
+    ("Luz", especie.cuidados.luz),
+    ("Riego", especie.cuidados.riego),
+    ("Temperatura", especie.cuidados.temperatura),
+    ("Sustrato", especie.cuidados.sustrato),
+  ] %}
+  <dt>{{ etiqueta }}</dt>
+  <dd>{{ cuidado.texto }} <small>Fuente: {{ cuidado.fuente }}</small></dd>
+  {% endfor %}
+</dl>
+
+<h2>Fuentes</h2>
+<ul>
+  {% for fuente in especie.fuentes %}
+  <li>{{ fuente }}</li>
+  {% endfor %}
+</ul>
+{% endblock %}

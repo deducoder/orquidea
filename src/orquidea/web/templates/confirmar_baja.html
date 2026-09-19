@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block title %}Quitar ejemplar — Orquídea{% endblock %}
+{% block content %}
+<p><a href="/coleccion">Mi colección</a></p>
+<h1>Quitar ejemplar</h1>
+<p>
+  ¿Quitar
+  {% if item.especie %}<i>{{ item.especie.nombre_cientifico }}</i>{% elif item.ejemplar.especie_id %}{{ item.ejemplar.especie_id }}{% endif %}
+  {% if item.ejemplar.nombre %}«{{ item.ejemplar.nombre }}»{% endif %}
+  de tu colección? Esta acción no se puede deshacer.
+</p>
+<form method="post" action="/coleccion/{{ item.ejemplar.id }}/quitar">
+  {% include "_csrf.html" %}
+  <button type="submit">Sí, quitar</button>
+  <a href="/coleccion">Cancelar</a>
+</form>
+{% endblock %}

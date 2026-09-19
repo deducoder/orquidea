@@ -1,0 +1,30 @@
+{
+  "id": "lycaste-aromatica",
+  "nombre_cientifico": "Lycaste aromatica",
+  "nombres_comunes": [
+    "Canela"
+  ],
+  "descripcion": "Orquídea del género Lycaste, nativa de Chiapas: iNaturalist la registra 21 veces con grado de investigación en el estado, lo que la ubica entre las 100 más registradas con cuidados documentados. Los cuidados de la ficha son los documentados para el género, no medidos para esta especie.",
+  "cuidados": {
+    "luz": {
+      "texto": "Luz brillante en las especies mesoamericanas.",
+      "fuente": "AOS, página del género Lycaste (Care and Culture Card), https://www.aos.org/explore/lycaste, consultada el 2026-09-19; cuidado del género, no específico de la especie"
+    },
+    "riego": {
+      "texto": "Riego abundante durante el crecimiento; casi sin agua cuando maduran los pseudobulbos.",
+      "fuente": "AOS, página del género Lycaste (Care and Culture Card), https://www.aos.org/explore/lycaste, consultada el 2026-09-19; cuidado del género, no específico de la especie"
+    },
+    "temperatura": {
+      "texto": "Temperaturas intermedias en las especies mesoamericanas.",
+      "fuente": "AOS, página del género Lycaste (Care and Culture Card), https://www.aos.org/explore/lycaste, consultada el 2026-09-19; cuidado del género, no específico de la especie"
+    },
+    "sustrato": {
+      "texto": "En macetas con mezcla de grado medio para epífitas (L. dyeriana, en tablilla).",
+      "fuente": "AOS, página del género Lycaste (Care and Culture Card), https://www.aos.org/explore/lycaste, consultada el 2026-09-19; cuidado del género, no específico de la especie"
+    }
+  },
+  "fuentes": [
+    "iNaturalist, observaciones de grado de investigación de Lycaste aromatica en Chiapas (nativa, no cautiva), https://www.inaturalist.org/observations?place_id=97003&taxon_name=Lycaste%20aromatica&quality_grade=research, consultada el 2026-09-19",
+    "AOS, página del género Lycaste (Care and Culture Card), https://www.aos.org/explore/lycaste, consultada el 2026-09-19; cuidado del género, no específico de la especie"
+  ]
+}

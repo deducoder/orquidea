@@ -1,0 +1,30 @@
+{
+  "id": "epidendrum-stamfordianum",
+  "nombre_cientifico": "Epidendrum stamfordianum",
+  "nombres_comunes": [
+    "Orquídea tropical"
+  ],
+  "descripcion": "Orquídea del género Epidendrum, nativa de Chiapas: iNaturalist la registra 49 veces con grado de investigación en el estado, lo que la ubica entre las 100 más registradas con cuidados documentados. Los cuidados de la ficha son los documentados para el género, no medidos para esta especie.",
+  "cuidados": {
+    "luz": {
+      "texto": "Luz brillante y buena circulación de aire.",
+      "fuente": "AOS, página del género Epidendrum (Care and Culture Card), https://www.aos.org/explore/epidendrum, consultada el 2026-09-19; cuidado del género, no específico de la especie"
+    },
+    "riego": {
+      "texto": "Riego regular durante todo el año, dejando que las raíces se sequen un poco entre riegos.",
+      "fuente": "AOS, página del género Epidendrum (Care and Culture Card), https://www.aos.org/explore/epidendrum, consultada el 2026-09-19; cuidado del género, no específico de la especie"
+    },
+    "temperatura": {
+      "texto": "De frescas a cálidas, según la especie.",
+      "fuente": "AOS, página del género Epidendrum (Care and Culture Card), https://www.aos.org/explore/epidendrum, consultada el 2026-09-19; cuidado del género, no específico de la especie"
+    },
+    "sustrato": {
+      "texto": "Las cespitosas, en macetas o canastas con mezcla de grado medio para epífitas; las colgantes, en tablillas con material que retenga humedad; las miniatura, en maceta o tablilla.",
+      "fuente": "AOS, página del género Epidendrum (Care and Culture Card), https://www.aos.org/explore/epidendrum, consultada el 2026-09-19; cuidado del género, no específico de la especie"
+    }
+  },
+  "fuentes": [
+    "iNaturalist, observaciones de grado de investigación de Epidendrum stamfordianum en Chiapas (nativa, no cautiva), https://www.inaturalist.org/observations?place_id=97003&taxon_name=Epidendrum%20stamfordianum&quality_grade=research, consultada el 2026-09-19",
+    "AOS, página del género Epidendrum (Care and Culture Card), https://www.aos.org/explore/epidendrum, consultada el 2026-09-19; cuidado del género, no específico de la especie"
+  ]
+}

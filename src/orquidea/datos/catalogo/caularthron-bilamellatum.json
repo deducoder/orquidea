@@ -1,0 +1,28 @@
+{
+  "id": "caularthron-bilamellatum",
+  "nombre_cientifico": "Caularthron bilamellatum",
+  "nombres_comunes": [],
+  "descripcion": "Orquídea del género Caularthron, nativa de Chiapas: iNaturalist la registra 11 veces con grado de investigación en el estado, lo que la ubica entre las 100 más registradas con cuidados documentados. Los cuidados de la ficha son los documentados para el género, no medidos para esta especie.",
+  "cuidados": {
+    "luz": {
+      "texto": "Luz de muy brillante a plena.",
+      "fuente": "AOS, página del género Caularthron (Care and Culture Card), https://www.aos.org/explore/caularthron, consultada el 2026-09-19; cuidado del género, no específico de la especie"
+    },
+    "riego": {
+      "texto": "Riego regular durante todo el año, dejando que las raíces se sequen por completo entre riegos.",
+      "fuente": "AOS, página del género Caularthron (Care and Culture Card), https://www.aos.org/explore/caularthron, consultada el 2026-09-19; cuidado del género, no específico de la especie"
+    },
+    "temperatura": {
+      "texto": "Temperaturas cálidas.",
+      "fuente": "AOS, página del género Caularthron (Care and Culture Card), https://www.aos.org/explore/caularthron, consultada el 2026-09-19; cuidado del género, no específico de la especie"
+    },
+    "sustrato": {
+      "texto": "En macetas pequeñas o canastas con mezcla de grado medio para epífitas.",
+      "fuente": "AOS, página del género Caularthron (Care and Culture Card), https://www.aos.org/explore/caularthron, consultada el 2026-09-19; cuidado del género, no específico de la especie"
+    }
+  },
+  "fuentes": [
+    "iNaturalist, observaciones de grado de investigación de Caularthron bilamellatum en Chiapas (nativa, no cautiva), https://www.inaturalist.org/observations?place_id=97003&taxon_name=Caularthron%20bilamellatum&quality_grade=research, consultada el 2026-09-19",
+    "AOS, página del género Caularthron (Care and Culture Card), https://www.aos.org/explore/caularthron, consultada el 2026-09-19; cuidado del género, no específico de la especie"
+  ]
+}

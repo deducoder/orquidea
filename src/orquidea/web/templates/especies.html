@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block title %}Especies — Orquídea{% endblock %}
+{% block content %}
+<h1>Especies</h1>
+<form method="get" action="/especies" role="search">
+  <input type="search" name="q" value="{{ q }}" placeholder="Nombre científico o común"
+         aria-label="Buscar especies"
+         hx-get="/especies" hx-trigger="input changed delay:300ms, search"
+         hx-target="#resultados" hx-select="#resultados" hx-push-url="true">
+  <button type="submit">Buscar</button>
+</form>
+<div id="resultados">
+{% if especies %}
+<ul>
+  {% for especie in especies %}
+  <li><a href="/especies/{{ especie.id }}">{{ especie.nombre_cientifico }}</a></li>
+  {% endfor %}
+</ul>
+{% elif q.strip() %}
+<p>No hay especies que coincidan con la búsqueda.</p>
+{% else %}
+<p>Aún no hay especies en el catálogo.</p>
+{% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block title %}{{ titulo }} — Orquídea{% endblock %}
+{% block content %}
+<p><a href="/coleccion">Mi colección</a></p>
+<h1>{{ titulo }}</h1>
+{% if especie %}<p>Especie: <i>{{ especie }}</i></p>{% endif %}
+{% if error %}<p role="alert">{{ error }}</p>{% endif %}
+<form method="post" action="{{ accion }}">
+  {% include "_csrf.html" %}
+  <p>
+    <label for="nombre">{% if especie %}Nombre propio (opcional){% else %}Nombre{% endif %}</label>
+    <input id="nombre" name="nombre" value="{{ nombre }}" maxlength="120"{% if not especie %} required{% endif %}>
+  </p>
+  <p>
+    <label for="notas">Notas</label>
+    <textarea id="notas" name="notas" rows="5" maxlength="2000">{{ notas }}</textarea>
+  </p>
+  <button type="submit">{{ boton }}</button>
+</form>
+{% endblock %}

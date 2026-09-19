@@ -1,0 +1,28 @@
+{
+  "id": "cuitlauzina-pulchella",
+  "nombre_cientifico": "Cuitlauzina pulchella",
+  "nombres_comunes": [],
+  "descripcion": "Orquídea del género Cuitlauzina, nativa de Chiapas: iNaturalist la registra 45 veces con grado de investigación en el estado, lo que la ubica entre las 100 más registradas con cuidados documentados. Los cuidados de la ficha son los documentados para el género, no medidos para esta especie.",
+  "cuidados": {
+    "luz": {
+      "texto": "Luz brillante y mucho movimiento de aire.",
+      "fuente": "AOS, página del género Cuitlauzina (Care and Culture Card), https://www.aos.org/explore/cuitlauzina, consultada el 2026-09-19; cuidado del género, no específico de la especie"
+    },
+    "riego": {
+      "texto": "Riego regular tras la aparición de nuevo crecimiento; solo de mantenimiento cuando maduran los pseudobulbos.",
+      "fuente": "AOS, página del género Cuitlauzina (Care and Culture Card), https://www.aos.org/explore/cuitlauzina, consultada el 2026-09-19; cuidado del género, no específico de la especie"
+    },
+    "temperatura": {
+      "texto": "De frescas a intermedias.",
+      "fuente": "AOS, página del género Cuitlauzina (Care and Culture Card), https://www.aos.org/explore/cuitlauzina, consultada el 2026-09-19; cuidado del género, no específico de la especie"
+    },
+    "sustrato": {
+      "texto": "En canastas o macetas poco profundas con mezcla de grado medio para epífitas, colgadas.",
+      "fuente": "AOS, página del género Cuitlauzina (Care and Culture Card), https://www.aos.org/explore/cuitlauzina, consultada el 2026-09-19; cuidado del género, no específico de la especie"
+    }
+  },
+  "fuentes": [
+    "iNaturalist, observaciones de grado de investigación de Cuitlauzina pulchella en Chiapas (nativa, no cautiva), https://www.inaturalist.org/observations?place_id=97003&taxon_name=Cuitlauzina%20pulchella&quality_grade=research, consultada el 2026-09-19",
+    "AOS, página del género Cuitlauzina (Care and Culture Card), https://www.aos.org/explore/cuitlauzina, consultada el 2026-09-19; cuidado del género, no específico de la especie"
+  ]
+}

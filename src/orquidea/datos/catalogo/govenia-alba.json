@@ -1,0 +1,28 @@
+{
+  "id": "govenia-alba",
+  "nombre_cientifico": "Govenia alba",
+  "nombres_comunes": [],
+  "descripcion": "Orquídea del género Govenia, nativa de Chiapas: iNaturalist la registra 20 veces con grado de investigación en el estado, lo que la ubica entre las 100 más registradas con cuidados documentados. La AOS describe las plantas del género como terrestres. Los cuidados de la ficha son los documentados para el género, no medidos para esta especie.",
+  "cuidados": {
+    "luz": {
+      "texto": "Luz brillante.",
+      "fuente": "AOS, página del género Govenia (Care and Culture Card), https://www.aos.org/explore/govenia, consultada el 2026-09-19; cuidado del género, no específico de la especie"
+    },
+    "riego": {
+      "texto": "Riego regular durante todo el año.",
+      "fuente": "AOS, página del género Govenia (Care and Culture Card), https://www.aos.org/explore/govenia, consultada el 2026-09-19; cuidado del género, no específico de la especie"
+    },
+    "temperatura": {
+      "texto": "Temperaturas frescas.",
+      "fuente": "AOS, página del género Govenia (Care and Culture Card), https://www.aos.org/explore/govenia, consultada el 2026-09-19; cuidado del género, no específico de la especie"
+    },
+    "sustrato": {
+      "texto": "En macetas con marga arenosa.",
+      "fuente": "AOS, página del género Govenia (Care and Culture Card), https://www.aos.org/explore/govenia, consultada el 2026-09-19; cuidado del género, no específico de la especie"
+    }
+  },
+  "fuentes": [
+    "iNaturalist, observaciones de grado de investigación de Govenia alba en Chiapas (nativa, no cautiva), https://www.inaturalist.org/observations?place_id=97003&taxon_name=Govenia%20alba&quality_grade=research, consultada el 2026-09-19",
+    "AOS, página del género Govenia (Care and Culture Card), https://www.aos.org/explore/govenia, consultada el 2026-09-19; cuidado del género, no específico de la especie"
+  ]
+}

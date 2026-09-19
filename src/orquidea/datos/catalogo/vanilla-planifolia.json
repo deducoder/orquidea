@@ -1,0 +1,30 @@
+{
+  "id": "vanilla-planifolia",
+  "nombre_cientifico": "Vanilla planifolia",
+  "nombres_comunes": [
+    "Vainilla"
+  ],
+  "descripcion": "Orquídea del género Vanilla, nativa de Chiapas: iNaturalist la registra 24 veces con grado de investigación en el estado, lo que la ubica entre las 100 más registradas con cuidados documentados. La AOS describe las plantas del género como lianas hemiepífitas. Los cuidados de la ficha son los documentados para el género, no medidos para esta especie.",
+  "cuidados": {
+    "luz": {
+      "texto": "Luz media.",
+      "fuente": "AOS, página del género Vanilla (Care and Culture Card), https://www.aos.org/explore/vanilla, consultada el 2026-09-19; cuidado del género, no específico de la especie"
+    },
+    "riego": {
+      "texto": "Riego regular; cuando la planta ya es del todo epífita, diario.",
+      "fuente": "AOS, página del género Vanilla (Care and Culture Card), https://www.aos.org/explore/vanilla, consultada el 2026-09-19; cuidado del género, no específico de la especie"
+    },
+    "temperatura": {
+      "texto": "De intermedias a cálidas.",
+      "fuente": "AOS, página del género Vanilla (Care and Culture Card), https://www.aos.org/explore/vanilla, consultada el 2026-09-19; cuidado del género, no específico de la especie"
+    },
+    "sustrato": {
+      "texto": "Se inicia en maceta con medio de grado medio a grueso (por ejemplo, corteza de abeto y carbón vegetal en partes iguales) y un soporte orgánico que absorba agua.",
+      "fuente": "AOS, página del género Vanilla (Care and Culture Card), https://www.aos.org/explore/vanilla, consultada el 2026-09-19; cuidado del género, no específico de la especie"
+    }
+  },
+  "fuentes": [
+    "iNaturalist, observaciones de grado de investigación de Vanilla planifolia en Chiapas (nativa, no cautiva), https://www.inaturalist.org/observations?place_id=97003&taxon_name=Vanilla%20planifolia&quality_grade=research, consultada el 2026-09-19",
+    "AOS, página del género Vanilla (Care and Culture Card), https://www.aos.org/explore/vanilla, consultada el 2026-09-19; cuidado del género, no específico de la especie"
+  ]
+}

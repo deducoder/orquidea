@@ -1,0 +1,30 @@
+{
+  "id": "sacoila-lanceolata",
+  "nombre_cientifico": "Sacoila lanceolata",
+  "nombres_comunes": [
+    "orquidea terciopelo morado"
+  ],
+  "descripcion": "Orquídea del género Sacoila, nativa de Chiapas: iNaturalist la registra 35 veces con grado de investigación en el estado, lo que la ubica entre las 100 más registradas con cuidados documentados. La AOS describe las plantas del género como terrestres. Los cuidados de la ficha son los documentados para el género, no medidos para esta especie.",
+  "cuidados": {
+    "luz": {
+      "texto": "Luz muy brillante.",
+      "fuente": "AOS, página del género Sacoila (Care and Culture Card), https://www.aos.org/explore/sacoila, consultada el 2026-09-19; cuidado del género, no específico de la especie"
+    },
+    "riego": {
+      "texto": "Riego constante durante todo el año; el suelo se mantiene más seco cuando se marchitan las hojas, pero nunca del todo seco.",
+      "fuente": "AOS, página del género Sacoila (Care and Culture Card), https://www.aos.org/explore/sacoila, consultada el 2026-09-19; cuidado del género, no específico de la especie"
+    },
+    "temperatura": {
+      "texto": "De intermedias a cálidas.",
+      "fuente": "AOS, página del género Sacoila (Care and Culture Card), https://www.aos.org/explore/sacoila, consultada el 2026-09-19; cuidado del género, no específico de la especie"
+    },
+    "sustrato": {
+      "texto": "En macetas con compost terrestre muy arenoso.",
+      "fuente": "AOS, página del género Sacoila (Care and Culture Card), https://www.aos.org/explore/sacoila, consultada el 2026-09-19; cuidado del género, no específico de la especie"
+    }
+  },
+  "fuentes": [
+    "iNaturalist, observaciones de grado de investigación de Sacoila lanceolata en Chiapas (nativa, no cautiva), https://www.inaturalist.org/observations?place_id=97003&taxon_name=Sacoila%20lanceolata&quality_grade=research, consultada el 2026-09-19",
+    "AOS, página del género Sacoila (Care and Culture Card), https://www.aos.org/explore/sacoila, consultada el 2026-09-19; cuidado del género, no específico de la especie"
+  ]
+}

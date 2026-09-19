@@ -1,0 +1,30 @@
+{
+  "id": "sarcoglottis-schaffneri",
+  "nombre_cientifico": "Sarcoglottis schaffneri",
+  "nombres_comunes": [
+    "Orquídea Mexicana Terrestre de Lengua Carnosa"
+  ],
+  "descripcion": "Orquídea del género Sarcoglottis, nativa de Chiapas: iNaturalist la registra 16 veces con grado de investigación en el estado, lo que la ubica entre las 100 más registradas con cuidados documentados. La AOS describe las plantas del género como terrestres. Los cuidados de la ficha son los documentados para el género, no medidos para esta especie.",
+  "cuidados": {
+    "luz": {
+      "texto": "Luz media.",
+      "fuente": "AOS, página del género Sarcoglottis (Care and Culture Card), https://www.aos.org/explore/sarcoglottis, consultada el 2026-09-19; cuidado del género, no específico de la especie"
+    },
+    "riego": {
+      "texto": "Riego regular durante todo el año; las especies deciduas se secan algo tras la floración hasta el nuevo crecimiento.",
+      "fuente": "AOS, página del género Sarcoglottis (Care and Culture Card), https://www.aos.org/explore/sarcoglottis, consultada el 2026-09-19; cuidado del género, no específico de la especie"
+    },
+    "temperatura": {
+      "texto": "Temperaturas intermedias.",
+      "fuente": "AOS, página del género Sarcoglottis (Care and Culture Card), https://www.aos.org/explore/sarcoglottis, consultada el 2026-09-19; cuidado del género, no específico de la especie"
+    },
+    "sustrato": {
+      "texto": "En mezcla terrestre de grano fino.",
+      "fuente": "AOS, página del género Sarcoglottis (Care and Culture Card), https://www.aos.org/explore/sarcoglottis, consultada el 2026-09-19; cuidado del género, no específico de la especie"
+    }
+  },
+  "fuentes": [
+    "iNaturalist, observaciones de grado de investigación de Sarcoglottis schaffneri en Chiapas (nativa, no cautiva), https://www.inaturalist.org/observations?place_id=97003&taxon_name=Sarcoglottis%20schaffneri&quality_grade=research, consultada el 2026-09-19",
+    "AOS, página del género Sarcoglottis (Care and Culture Card), https://www.aos.org/explore/sarcoglottis, consultada el 2026-09-19; cuidado del género, no específico de la especie"
+  ]
+}
