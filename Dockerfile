@@ -11,7 +11,13 @@ COPY pyproject.toml uv.lock ./
 COPY src ./src
 
 RUN uv sync --frozen --no-dev \
-    && useradd --system --uid 10001 app
+    && useradd --system --uid 10001 app \
+    && mkdir /data \
+    && chown app /data
+
+ENV ORQUIDEA_DB=/data/orquidea.sqlite3
+
+VOLUME /data
 
 USER app
 
