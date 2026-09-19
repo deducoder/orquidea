@@ -26,6 +26,7 @@ from orquidea.datos.ejemplares import (
 from orquidea.datos.floraciones import listar as listar_floraciones
 from orquidea.datos.fotos import FotoInvalida, procesar_foto
 from orquidea.datos.riegos import listar as listar_riegos
+from orquidea.datos.riegos import ultimos
 from orquidea.web.plantillas import templates
 from orquidea.web.sesion import Base
 
@@ -36,7 +37,8 @@ registro = logging.getLogger("orquidea.fotos")
 @router.get("/coleccion", response_class=HTMLResponse)
 def mi_coleccion(request: Request, conexion: Base) -> HTMLResponse:
     ejemplares = resolver(listar(conexion), request.app.state.catalogo)
-    return templates.TemplateResponse(request, "coleccion.html", {"ejemplares": ejemplares})
+    contexto = {"ejemplares": ejemplares, "ultimos": ultimos(conexion)}
+    return templates.TemplateResponse(request, "coleccion.html", contexto)
 
 
 @router.post("/coleccion")

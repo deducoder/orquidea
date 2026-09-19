@@ -7,6 +7,7 @@ from fastapi.testclient import TestClient
 from httpx2 import Response
 
 from orquidea.coleccion.modelo import CUIDADOS_MAXIMO
+from orquidea.datos import riegos
 from orquidea.datos.almacen_fotos import poner_foto
 from orquidea.datos.base import conectar
 from orquidea.datos.ejemplares import agregar_sin_especie
@@ -15,6 +16,7 @@ from orquidea.datos.fotos import procesar_foto
 from orquidea.datos.riegos import agregar as agregar_riego
 from orquidea.datos.sesiones import Sesion
 from orquidea.web.app import app
+from orquidea.web.rutas import coleccion
 from tests.fabricas import imagen_jpeg
 
 AHORA = 1_780_000_000
@@ -664,3 +666,79 @@ def test_sin_token_csrf_no_cambia_ninguna_floracion(client: TestClient) -> None:
 
         assert (sin_token.status_code, equivocado.status_code) == (403, 403), ruta
     assert _floraciones_guardadas(id) == [("2026-03-01", None)]
+
+
+def _fila(texto: str, nombre: str) -> str:
+    """El `<li>` de "Mi colección" que contiene ese nombre."""
+    filas: list[str] = re.findall(r"<li>.*?</li>", texto, re.S)
+    for fila in filas:
+        if nombre in fila:
+            return fila
+    raise AssertionError(nombre)
+
+
+def test_mi_coleccion_muestra_el_ultimo_riego_de_cada_ejemplar(client: TestClient) -> None:
+    _desfasar_los_ids()
+    con_riegos, sin_riegos, otro = (
+        _ejemplar("Con riegos"),
+        _ejemplar("Sin riegos"),
+        _ejemplar("Otro"),
+    )
+    _con_riegos(con_riegos, "2026-09-01", "2026-09-15", "2026-09-10")
+    _con_riegos(otro, "2026-08-30")
+
+    texto = client.get("/coleccion").text
+
+    assert "Último riego: 2026-09-15" in _fila(texto, "Con riegos")
+    assert "Sin riegos" in _fila(texto, "Sin riegos") and "Último riego" not in _fila(
+        texto, "Sin riegos"
+    )
+    assert "Último riego: 2026-08-30" in _fila(texto, "Otro")
+    assert sin_riegos != con_riegos
+
+
+def test_el_ultimo_riego_de_la_lista_es_el_de_la_ficha(client: TestClient) -> None:
+    id = _ejemplar("Igual")
+    _con_riegos(id, "2026-09-15", "2026-09-15", "2026-09-01")
+
+    en_la_lista = re.search(
+        r"Último riego: (\d{4}-\d{2}-\d{2})", _fila(client.get("/coleccion").text, "Igual")
+    )
+    en_la_ficha = re.search(
+        r"Último riego: <strong>(\d{4}-\d{2}-\d{2})", client.get(f"/coleccion/{id}").text
+    )
+
+    assert en_la_lista is not None and en_la_ficha is not None
+    assert en_la_lista.group(1) == en_la_ficha.group(1)
+
+
+def test_quitar_el_ultimo_riego_actualiza_la_lista(client: TestClient, sesion: Sesion) -> None:
+    id = _ejemplar("Cambia")
+    _con_riegos(id, "2026-09-01", "2026-09-15")
+
+    _quitar(client, sesion.csrf, id, _id_del_riego(id, "2026-09-15"))
+    despues_de_uno = _fila(client.get("/coleccion").text, "Cambia")
+    _quitar(client, sesion.csrf, id, _id_del_riego(id, "2026-09-01"))
+    despues_de_todos = _fila(client.get("/coleccion").text, "Cambia")
+
+    assert "Último riego: 2026-09-01" in despues_de_uno
+    assert "Sin riegos" in despues_de_todos
+
+
+def test_la_lista_pide_los_ultimos_riegos_una_sola_vez(
+    client: TestClient, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    for nombre in ("Uno", "Dos", "Tres"):
+        _con_riegos(_ejemplar(nombre), "2026-09-01")
+    llamadas: list[int] = []
+    original = riegos.ultimos
+
+    def contando(conexion: sqlite3.Connection) -> dict[int, str]:
+        llamadas.append(1)
+        return original(conexion)
+
+    monkeypatch.setattr(coleccion, "ultimos", contando)
+
+    client.get("/coleccion")
+
+    assert llamadas == [1]
