@@ -26,6 +26,12 @@ wrote it. Retirement moves an entry to `## Retired` with its reason.
 - **`orquidea.datos.catalogo` (módulo) y `datos/catalogo/` (directorio de datos) comparten nombre.** No chocan al importar (el módulo tiene prioridad), pero se prestan a confusión.
   *Origin:* e1, `epic-close` (architecture-review a escala de épica), 2026-09-19.
   *Promotion:* si alguien tropieza con ello, o al añadir otro módulo de datos; renombrar el directorio de datos, con un ADR nuevo que sustituya el punto 2 de ADR-002.
+- **`docker build` y `docker run` sin verificar (dos épicas seguidas).** El cliente de Docker existe en esta máquina pero el daemon no responde, así que ni el `Dockerfile` de e1 ni el volumen de e2 se han construido. El wheel sí se verificó en un entorno limpio.
+  *Origin:* s2.7 (e2), `story-review`, 2026-09-19 — prueba manual del empaquetado.
+  *Promotion:* la primera sesión con Docker Desktop en marcha, o el primer despliegue del humano: construir la imagen, arrancarla con `-v` y `ORQUIDEA_PASSWORD_HASH`, y comprobar `/salud`, el acceso y que la colección sobrevive a recrear el contenedor.
+- **Las cifras de la guía de despliegue están escritas a mano.** El README dice "12 horas", "30 minutos", "cinco intentos" y "cinco minutos"; las pruebas de deriva solo comparan nombres de variables, así que si `datos.sesiones` o `autenticacion` cambian esas constantes, la guía queda vieja sin que nada falle.
+  *Origin:* s2.7 (e2), `quality-review`, 2026-09-19.
+  *Promotion:* cuando alguien cambie una de esas constantes, o cuando la guía crezca: una prueba que importe las constantes y las busque en el README.
 
 ## Retired
 

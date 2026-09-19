@@ -51,7 +51,7 @@ None. Todas las historias tocan `orquidea.web.app` y sus plantillas; ninguna cor
 | s2.4 | done | M | M |
 | s2.5 | done | S | S |
 | s2.6 | done | S | M |
-| s2.7 | todo | S | — |
+| s2.7 | done | S | S |
 
 ## Sequencing risks
 
