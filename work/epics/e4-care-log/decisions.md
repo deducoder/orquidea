@@ -44,3 +44,8 @@ names it.
 **Decided:** no se envía; la sesión implementa s4.3 ella misma.
 **Why:** `plan.md` del épico, `## Delegation`, fila s4.3: Block `—`, Mode `—`; orchestrate paso 6: una fila con `—` → esta sesión corre las skills de la historia.
 **Would have stopped:** P5 si la fila designara un bloque y `delegate` no pudiera correrlo.
+
+### 2026-09-19 · story-implement (s4.3) step 2 · Confirmar con el humano la intención del diseño
+**Decided:** no se espera confirmación; la intención va en el reporte: s4.3 añade la tabla `floraciones` (cascada, `CHECK` de forma y de orden), `validar_floracion` y `datos.floraciones` con `agregar`, `terminar` (una sola sentencia condicionada a propia, en curso y con inicio no posterior), `listar` y `quitar`, con tope de 500 atómico.
+**Why:** `stories/s4.3-*/plan.md` línea `> Pause: none (default)` y la propia skill: «in which case there is no human in the loop and the restatement goes in your report instead».
+**Would have stopped:** P5 si el plan declarara `per task`.
