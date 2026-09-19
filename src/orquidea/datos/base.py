@@ -42,12 +42,17 @@ def _aplicar(conexion: sqlite3.Connection, numero: int, archivo: Path) -> None:
         raise MigracionFallida(f"{archivo.name}: {fallo}") from fallo
 
 
+def conectar(ruta: Path) -> sqlite3.Connection:
+    conexion = sqlite3.connect(ruta, isolation_level=None, check_same_thread=False)
+    conexion.execute("PRAGMA foreign_keys = ON")
+    conexion.execute("PRAGMA journal_mode = WAL")
+    return conexion
+
+
 def abrir_base(ruta: Path, migraciones: Path = MIGRACIONES) -> sqlite3.Connection:
     ruta.parent.mkdir(parents=True, exist_ok=True)
-    conexion = sqlite3.connect(ruta, isolation_level=None)
+    conexion = conectar(ruta)
     try:
-        conexion.execute("PRAGMA foreign_keys = ON")
-        conexion.execute("PRAGMA journal_mode = WAL")
         aplicada = int(conexion.execute("PRAGMA user_version").fetchone()[0])
         for numero, archivo in _pendientes(migraciones, aplicada):
             _aplicar(conexion, numero, archivo)

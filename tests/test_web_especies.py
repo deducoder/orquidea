@@ -1,5 +1,4 @@
 import importlib.util
-from collections.abc import Iterator
 from pathlib import Path
 from typing import Any
 
@@ -34,13 +33,6 @@ def especie(id: str = "epidendrum-radicans", nombre: str = "Epidendrum radicans"
         "fuentes": ["Hágsater et al. 2015"],
     }
     return Especie.model_validate(datos)
-
-
-@pytest.fixture
-def client() -> Iterator[TestClient]:
-    original = app.state.catalogo
-    yield TestClient(app)
-    app.state.catalogo = original
 
 
 def test_lista_muestra_nombre_y_enlace_de_cada_especie(client: TestClient) -> None:
