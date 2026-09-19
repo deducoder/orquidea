@@ -1,38 +1,14 @@
 import importlib.util
 from pathlib import Path
-from typing import Any
 
 import pytest
 from fastapi.testclient import TestClient
 
-from orquidea.catalogo.modelo import Especie
 from orquidea.datos import catalogo as catalogo_datos
 from orquidea.datos.catalogo import CatalogoInvalido
 from orquidea.web import app as app_modulo
 from orquidea.web.app import app
-
-
-def especie(id: str = "epidendrum-radicans", nombre: str = "Epidendrum radicans") -> Especie:
-    def cuidado(nombre_cuidado: str) -> dict[str, str]:
-        return {
-            "texto": f"texto de {nombre_cuidado}",
-            "fuente": f"fuente de {nombre_cuidado}",
-        }
-
-    datos: dict[str, Any] = {
-        "id": id,
-        "nombre_cientifico": nombre,
-        "nombres_comunes": ["orquídea de fuego"],
-        "descripcion": "Epífita de flores anaranjadas.",
-        "cuidados": {
-            "luz": cuidado("luz"),
-            "riego": cuidado("riego"),
-            "temperatura": cuidado("temperatura"),
-            "sustrato": cuidado("sustrato"),
-        },
-        "fuentes": ["Hágsater et al. 2015"],
-    }
-    return Especie.model_validate(datos)
+from tests.fabricas import especie
 
 
 def test_lista_muestra_nombre_y_enlace_de_cada_especie(client: TestClient) -> None:
