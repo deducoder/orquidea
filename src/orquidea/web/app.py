@@ -2,6 +2,7 @@ import hmac
 import logging
 import os
 import sqlite3
+import threading
 import time
 from collections.abc import AsyncIterator, Awaitable, Callable, Iterator
 from contextlib import asynccontextmanager
@@ -38,6 +39,7 @@ class SesionRequerida(Exception):
     pass
 
 
+_verificacion = threading.Lock()
 RUTAS_PUBLICAS = frozenset({"/acceso", "/salud"})
 METODOS_SEGUROS = frozenset({"GET", "HEAD", "OPTIONS"})
 
@@ -165,15 +167,18 @@ def iniciar_sesion(
     request: Request, contrasena: Annotated[str, Form()], conexion: Base
 ) -> Response:
     limite: LimiteDeIntentos = request.app.state.limite
-    ahora = time.time()
-    if limite.bloqueado(ahora):
-        registro.warning("acceso bloqueado")
-        return _formulario_de_acceso(request, 429, "Demasiados intentos; espera unos minutos.")
-    if not verificar_contrasena(contrasena, os.environ.get("ORQUIDEA_PASSWORD_HASH")):
-        limite.fallo(ahora)
-        registro.warning("acceso fallido")
-        return _formulario_de_acceso(request, 401, "Contraseña incorrecta.")
-    limite.acierto()
+    # Las rutas síncronas corren en un pool de hilos y scrypt gasta 64 MiB por verificación:
+    # en serie, una ráfaga no multiplica la memoria y el contador de intentos no se pisa.
+    with _verificacion:
+        ahora = time.time()
+        if limite.bloqueado(ahora):
+            registro.warning("acceso bloqueado")
+            return _formulario_de_acceso(request, 429, "Demasiados intentos; espera unos minutos.")
+        if not verificar_contrasena(contrasena, os.environ.get("ORQUIDEA_PASSWORD_HASH")):
+            limite.fallo(ahora)
+            registro.warning("acceso fallido")
+            return _formulario_de_acceso(request, 401, "Contraseña incorrecta.")
+        limite.acierto()
     registro.info("acceso correcto")
     identificador, _ = crear(conexion, int(ahora))
     respuesta = RedirectResponse("/", status_code=303)

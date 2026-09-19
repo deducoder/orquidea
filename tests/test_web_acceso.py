@@ -1,12 +1,16 @@
 import hashlib
 import logging
 import sqlite3
+import threading
+import time
+from concurrent.futures import ThreadPoolExecutor
 
 import pytest
 from fastapi.testclient import TestClient
 from httpx2 import Response
 
 from orquidea.autenticacion import hashear_contrasena
+from orquidea.web import app as app_modulo
 from orquidea.web.app import app
 
 CONTRASENA = "orquidea-2026"
@@ -208,3 +212,38 @@ def test_arrancar_dos_veces_no_duplica_el_manejador(anonimo: TestClient) -> None
         registro.setLevel(logging.NOTSET)
 
     assert len(nuevos) == 1
+
+
+def test_las_verificaciones_de_contrasena_no_corren_en_paralelo(
+    anonimo: TestClient, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """scrypt gasta 64 MiB por verificación: una ráfaga no debe multiplicar la memoria."""
+    activas = 0
+    maximo = 0
+    total = 0
+    cerrojo = threading.Lock()
+
+    def lenta(contrasena: str, hash_: str | None) -> bool:
+        nonlocal activas, maximo, total
+        with cerrojo:
+            activas += 1
+            total += 1
+            maximo = max(maximo, activas)
+        time.sleep(0.05)
+        with cerrojo:
+            activas -= 1
+        return False
+
+    monkeypatch.setattr(app_modulo, "verificar_contrasena", lenta)
+
+    def intento(_: int) -> int:
+        cliente = TestClient(app, base_url="https://testserver")
+        return cliente.post("/acceso", data={"contrasena": "x"}).status_code
+
+    with ThreadPoolExecutor(max_workers=12) as pool:
+        estados = list(pool.map(intento, range(12)))
+
+    assert maximo == 1
+    assert total == 5  # los cinco primeros fallos bloquean; el resto ni se verifica
+    assert estados.count(401) == 5
+    assert estados.count(429) == 7
