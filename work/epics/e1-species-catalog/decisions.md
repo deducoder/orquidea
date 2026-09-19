@@ -19,3 +19,8 @@ names it.
 **Decided:** no despachar; la sesión de épica implementa s1.2 ella misma.
 **Why:** `plan.md` de la épica, `## Delegation`, fila s1.2: `—`; y `delegate`: "never delegate on your own initiative without asking first". Los moldes T1/T2 son tareas de la propia historia.
 **Would have stopped:** una fila de Delegation con bloque para s1.2, o un stop añadido en el binding (`Added stops: none`).
+
+### 2026-09-19 · story-implement step 1 · s1.3: ofrecer el despacho del bloque
+**Decided:** no despachar; la sesión de épica implementa s1.3 ella misma.
+**Why:** `plan.md` de la épica, `## Delegation`, fila s1.3: `—`; y `delegate`: "never delegate on your own initiative without asking first". El mold T1 de T2 es una tarea de la propia historia.
+**Would have stopped:** una fila de Delegation con bloque para s1.3, o un stop añadido en el binding (`Added stops: none`).
