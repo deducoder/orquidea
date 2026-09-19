@@ -43,3 +43,7 @@ names it.
 ### 2026-09-19 · story-start step 4 · Stopped at P5 (s1.6)
 **Question:** s1.6 necesita las especies semilla reales: cuáles (nombre científico y comunes), y para cada una los cuidados de luz, riego, temperatura y sustrato con la fuente de cada dato (`must-data-001`); ningún artefacto los contiene y inventarlos violaría la guardia. Y para s1.5 (despliegue al VPS): host y acceso (SSH), sistema operativo, cómo se debe correr la aplicación (systemd, contenedor, proxy inverso) y dominio o puerto expuesto. ¿Me los das, o me indicas dónde están escritos? Alternativa: decir que s1.5 y s1.6 se difieran y cerrar la épica con s1.1 a s1.4.
 **State:** develop · no stash · s1.1, s1.2, s1.3 y s1.4 mergeadas localmente en `develop` (sin push, como manda el modo de la épica); s1.5 y s1.6 sin empezar, sin rama.
+
+### 2026-09-19 · story-start step 4 · Answered (P5 above)
+**Decided:** s1.6 obtiene los datos por investigación (`research`), con las 100 especies nativas de Chiapas más conocidas y populares; s1.5 despliega a un VPS con Dokploy sobre Debian 13.
+**Why:** answer from the supervisor, verbatim: "Debemos hacer un research para buscar los datos. Tengo un VPS Dokploy debian 13. Pongamos las 100 más conocidas y populares"
