@@ -4,3 +4,4 @@
 - [Criterios stated que dependen del humano](epic-stated-criteria-external.md) — preverlos como stop desde el diseño
 - [ASVS al diseñar, no al revisar](asvs-checklist-at-design.md) — recorrer ASVS L2 en el design.md de historias de seguridad
 - [Concurrencia y proceso real en historias de seguridad](concurrency-and-real-process-in-security-stories.md) — hilos (scrypt) y registros bajo uvicorn, no solo lógica
+- [Pillow guarda el comentario JPEG](pillow-guarda-comentario-jpeg.md) — reconstruir desde píxeles; probar bytes, no API
