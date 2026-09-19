@@ -1,0 +1,67 @@
+from collections.abc import Iterator
+from typing import Any
+
+import pytest
+from fastapi.testclient import TestClient
+
+from orquidea.catalogo.modelo import Especie
+from orquidea.web.app import app
+
+
+def especie(id: str = "epidendrum-radicans", nombre: str = "Epidendrum radicans") -> Especie:
+    def cuidado(nombre_cuidado: str) -> dict[str, str]:
+        return {
+            "texto": f"texto de {nombre_cuidado}",
+            "fuente": f"fuente de {nombre_cuidado}",
+        }
+
+    datos: dict[str, Any] = {
+        "id": id,
+        "nombre_cientifico": nombre,
+        "nombres_comunes": ["orquídea de fuego"],
+        "descripcion": "Epífita de flores anaranjadas.",
+        "cuidados": {
+            "luz": cuidado("luz"),
+            "riego": cuidado("riego"),
+            "temperatura": cuidado("temperatura"),
+            "sustrato": cuidado("sustrato"),
+        },
+        "fuentes": ["Hágsater et al. 2015"],
+    }
+    return Especie.model_validate(datos)
+
+
+@pytest.fixture
+def client() -> Iterator[TestClient]:
+    original = app.state.catalogo
+    yield TestClient(app)
+    app.state.catalogo = original
+
+
+def test_lista_muestra_nombre_y_enlace_de_cada_especie(client: TestClient) -> None:
+    app.state.catalogo = [especie(), especie("laelia-anceps", "Laelia anceps")]
+
+    html = client.get("/especies").text
+
+    assert 'href="/especies/epidendrum-radicans"' in html
+    assert "Epidendrum radicans" in html
+    assert 'href="/especies/laelia-anceps"' in html
+    assert "Laelia anceps" in html
+
+
+def test_lista_vacia_muestra_mensaje(client: TestClient) -> None:
+    app.state.catalogo = []
+
+    respuesta = client.get("/especies")
+
+    assert respuesta.status_code == 200
+    assert "Aún no hay especies en el catálogo." in respuesta.text
+
+
+def test_lista_escapa_el_html_de_los_datos(client: TestClient) -> None:
+    app.state.catalogo = [especie(nombre="<script>alert(1)</script>")]
+
+    html = client.get("/especies").text
+
+    assert "<script>alert(1)</script>" not in html
+    assert "&lt;script&gt;" in html
