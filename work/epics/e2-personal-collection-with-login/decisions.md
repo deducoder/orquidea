@@ -14,3 +14,8 @@ names it.
 **Decided:** no despachar; la sesión de épica implementa s2.1 ella misma. Con `> Pause: none` en el plan, la reformulación del diseño y la confirmación tras cada tarea no esperan al humano: la reformulación va en el reporte y cada tarea continúa con el gate en verde y el commit hecho.
 **Why:** `plan.md` de la épica, `## Delegation`, fila s2.1: `—`; y `delegate`: "never delegate on your own initiative without asking first". El mold de T1 (`datos/catalogo.py`, ADR-003) es un patrón de código existente, no una orden de despachar. Plan de la historia: `> Pause: none (default)`.
 **Would have stopped:** una fila de Delegation con bloque para s2.1 (entonces corre `delegate`), o un stop añadido en el binding (`Added stops: none`).
+
+### 2026-09-19 · story-implement step 1 · s2.2: ofrecer el despacho del bloque
+**Decided:** no despachar; la sesión de épica implementa s2.2 ella misma; con `> Pause: none` la reformulación va en el reporte y las tareas siguen con el gate en verde y el commit hecho.
+**Why:** `plan.md` de la épica, `## Delegation`, fila s2.2: `—`; y `delegate`: "never delegate on your own initiative without asking first". Los moldes de T2 a T4 son tareas de la propia historia o código existente. Plan de la historia: `> Pause: none (default)`.
+**Would have stopped:** una fila de Delegation con bloque para s2.2, o un stop añadido en el binding (`Added stops: none`).
