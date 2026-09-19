@@ -9,3 +9,4 @@
 - [Pruebas con azar en bucle; gate encadenado](prueba-con-azar-se-corre-en-bucle.md) — 15 corridas; check && commit
 - [Límite de cuerpo por señal](fastapi-cuerpo-excedido-por-senal.md) — FastAPI vuelve 400/422 toda excepción al leer
 - [Medir recursos al diseñar entradas](medir-recursos-al-disenar-entrada-del-usuario.md) — memoria/peso con el tamaño máximo, desde el diseño
+- [Tope atómico en un INSERT...SELECT](tope-atomico-en-un-insert-select.md) — contar aparte deja pasar altas simultáneas
