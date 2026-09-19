@@ -89,3 +89,8 @@ names it.
 **Decided:** no se envía; la sesión implementa s4.6 ella misma.
 **Why:** `plan.md` del épico, `## Delegation`, fila s4.6: Block `—`, Mode `—`; orchestrate paso 6: una fila con `—` → esta sesión corre las skills de la historia.
 **Would have stopped:** P5 si la fila designara un bloque y `delegate` no pudiera correrlo.
+
+### 2026-09-19 · story-implement (s4.6) step 2 · Confirmar con el humano la intención del diseño
+**Decided:** no se espera confirmación; la intención va en el reporte: s4.6 saca el montaje de la colección temporal del script de medición, añade la medición de la ficha con 50+50 y con el tope 500+500 (y una prueba del gate que protege el presupuesto de 200 KB en gzip), y documenta el historial de cuidados en el README con su hallazgo de compresión en el parking lot.
+**Why:** `stories/s4.6-*/plan.md` línea `> Pause: none (default)` y la propia skill: «in which case there is no human in the loop and the restatement goes in your report instead».
+**Would have stopped:** P5 si el plan declarara `per task`.
