@@ -1,3 +1,4 @@
 - [Starlette TestClient usa httpx2](starlette-testclient-httpx2.md) — httpx2 en dev; ids locales s{N}.{M}
 - [Mutaciones sin bytecode; ruff formatea .md](mutation-checks-stale-bytecode.md) — falsos supervivientes
 - [Cuidados por género en la AOS](aos-genus-care-cards.md) — fuente del catálogo semilla y sus límites
+- [Criterios stated que dependen del humano](epic-stated-criteria-external.md) — preverlos como stop desde el diseño
