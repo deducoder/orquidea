@@ -5,13 +5,6 @@ wrote it. Retirement moves an entry to `## Retired` with its reason.
 
 ## Open items
 
-- **Binding de seguridad sin definir.** No hay escáner declarado ni forma de
-  pasarle el alcance, así que no existe `conventions/security/instance.md`; el
-  primer `security-review` se detendrá sin él.
-  *Origin:* project-create, 2026-09-19 — el equipo decidió definirlo cuando se
-  necesite.
-  *Promotion:* antes del primer `security-review`: elegir escáner y forma de
-  alcance, o registrar `none` con un ADR aceptado.
 - **Push al teléfono sin verificar.** `conventions/notifications/instance.md`
   declara push por Remote Control, pero la prueba del 2026-09-19 no llegó al
   teléfono porque Remote Control estaba inactivo.
@@ -26,3 +19,7 @@ wrote it. Retirement moves an entry to `## Retired` with its reason.
   entrega.
 
 ## Retired
+
+### 2026-09-19 · direct fix (resuelto al preparar la orquestación de 0.1.0, antes de que existiera la historia de e1 que iba a llevarlo) · Binding de seguridad sin definir
+**Why:** la entrada se unió a la versión 0.1.0 y se resolvió de inmediato: el humano eligió Bandit y `conventions/security/instance.md` quedó escrito y verificado en vivo.
+**Swept:** `work/epics/e1-species-catalog/brief.md` (Appetite) la cita como parte de e1; el apetito sigue siendo válido con una historia menos, y el brief no se reescribe (lo escribió epic-start). Nada más la cita.
