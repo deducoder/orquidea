@@ -351,3 +351,72 @@ def test_la_lista_muestra_la_miniatura_enlazada_solo_de_los_ejemplares_con_foto(
     assert 'alt="Foto de Con foto"' in html and 'loading="lazy"' in html
     assert f"/coleccion/{sin_foto}/foto" not in html
     assert f'/coleccion/{con_foto}/foto"' not in html  # la lista no pide la imagen completa
+
+
+def _quitar_foto(client: TestClient, csrf: str | None, id: int) -> Response:
+    formulario = {"csrf": csrf} if csrf is not None else {}
+    return client.post(f"/coleccion/{id}/foto/quitar", data=formulario, follow_redirects=False)
+
+
+def test_quitar_la_foto_borra_los_archivos_y_conserva_el_ejemplar(
+    client: TestClient, sesion: Sesion
+) -> None:
+    id = _ejemplar_propio("Mi rara", "notas que se quedan")
+    otro = _ejemplar_propio("Otra")
+    _con_foto(id)
+    conservada = _con_foto(otro)
+
+    respuesta = _quitar_foto(client, sesion.csrf, id)
+
+    assert respuesta.status_code == 303
+    assert respuesta.headers["location"] == f"/coleccion/{id}"
+    assert _foto_guardada(id) is None
+    assert [a.name for a in _archivos()] == sorted([f"{conservada}.jpg", f"{conservada}-mini.jpg"])
+    ficha = client.get(f"/coleccion/{id}").text
+    assert "Mi rara" in ficha and "notas que se quedan" in ficha
+    assert "Aún no tiene foto." in ficha
+
+
+def test_quitar_la_foto_de_un_ejemplar_sin_foto_no_falla(
+    client: TestClient, sesion: Sesion
+) -> None:
+    id = _ejemplar_propio()
+
+    assert _quitar_foto(client, sesion.csrf, id).status_code == 303
+    assert _foto_guardada(id) is None
+
+
+def test_quitar_la_foto_de_un_ejemplar_inexistente_da_404(
+    client: TestClient, sesion: Sesion
+) -> None:
+    assert _quitar_foto(client, sesion.csrf, 999).status_code == 404
+
+
+def test_quitar_la_foto_sin_csrf_da_403_y_no_cambia_nada(client: TestClient) -> None:
+    id = _ejemplar_propio()
+    nombre = _con_foto(id)
+
+    assert _quitar_foto(client, None, id).status_code == 403
+    assert _foto_guardada(id) == nombre and len(_archivos()) == 2
+
+
+def test_sin_sesion_quitar_la_foto_redirige_al_acceso_y_no_cambia_nada(
+    anonimo: TestClient,
+) -> None:
+    id = _ejemplar_propio()
+    nombre = _con_foto(id)
+
+    respuesta = _quitar_foto(anonimo, "cualquiera", id)
+
+    assert respuesta.status_code == 303 and respuesta.headers["location"] == "/acceso"
+    assert _foto_guardada(id) == nombre and len(_archivos()) == 2
+
+
+def test_el_boton_de_quitar_la_foto_solo_aparece_si_hay_foto(client: TestClient) -> None:
+    id = _ejemplar_propio()
+    assert f'action="/coleccion/{id}/foto/quitar"' not in client.get(f"/coleccion/{id}").text
+
+    _con_foto(id)
+    html = client.get(f"/coleccion/{id}").text
+
+    assert f'action="/coleccion/{id}/foto/quitar"' in html and 'name="csrf"' in html

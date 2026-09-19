@@ -27,6 +27,12 @@
     </p>
     <button type="submit">Subir foto</button>
   </form>
+  {% if item.ejemplar.foto %}
+  <form method="post" action="/coleccion/{{ item.ejemplar.id }}/foto/quitar">
+    {% include "_csrf.html" %}
+    <button type="submit">Quitar la foto</button>
+  </form>
+  {% endif %}
 </section>
 <p>
   <a href="/coleccion/{{ item.ejemplar.id }}/editar">Editar</a>
