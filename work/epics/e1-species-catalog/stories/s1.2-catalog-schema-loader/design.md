@@ -60,9 +60,10 @@ CatalogoInvalido:
 ### Key data structures (if applicable)
 
 ```python
-class Cuidado(BaseModel):          # extra="forbid"
-    texto: str          # min_length=1
-    fuente: str         # min_length=1
+class Cuidado(BaseModel):  # extra="forbid"
+    texto: str  # min_length=1
+    fuente: str  # min_length=1
+
 
 class Cuidados(BaseModel):
     luz: Cuidado
@@ -70,11 +71,12 @@ class Cuidados(BaseModel):
     temperatura: Cuidado
     sustrato: Cuidado
 
+
 class Especie(BaseModel):
-    id: str             # ^[a-z0-9]+(-[a-z0-9]+)*$ (slug para la URL de la ficha)
-    nombre_cientifico: str   # min_length=1
+    id: str  # ^[a-z0-9]+(-[a-z0-9]+)*$ (slug para la URL de la ficha)
+    nombre_cientifico: str  # min_length=1
     nombres_comunes: list[str] = []
-    descripcion: str    # información general, min_length=1
+    descripcion: str  # información general, min_length=1
     cuidados: Cuidados
     fuentes: list[str]  # min_length=1 — must-data-001; cada str min_length=1
 ```
