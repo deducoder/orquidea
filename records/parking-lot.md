@@ -32,11 +32,12 @@ wrote it. Retirement moves an entry to `## Retired` with its reason.
 - **Las cifras de la guía de despliegue están escritas a mano.** El README dice "12 horas", "30 minutos", "cinco intentos" y "cinco minutos"; las pruebas de deriva solo comparan nombres de variables, así que si `datos.sesiones` o `autenticacion` cambian esas constantes, la guía queda vieja sin que nada falle.
   *Origin:* s2.7 (e2), `quality-review`, 2026-09-19.
   *Promotion:* cuando alguien cambie una de esas constantes, o cuando la guía crezca: una prueba que importe las constantes y las busque en el README.
-- **`orquidea/web/app.py` reúne todas las rutas, la sesión, las cabeceras y el ciclo de vida (~390 líneas).** Es legible hoy, pero 0.2 (fotos, riegos y floraciones) añade tres grupos de rutas más.
-  *Origin:* e2, `epic-review` (quality-review a escala de épica), 2026-09-19.
-  *Promotion:* al empezar la primera historia de 0.2 que añada rutas, o cuando `app.py` pase de ~500 líneas: dividir en `APIRouter` por área (acceso, catálogo, colección) y sacar `exigir_sesion` y las cabeceras a su propio módulo.
 
 ## Retired
+
+### 2026-09-19 · s3.1 (e3) · `orquidea/web/app.py` reunía todas las rutas, la sesión, las cabeceras y el ciclo de vida
+**Why:** la promoción se cumplió: s3.1 fue la primera historia de 0.2 que tocó las rutas y dividió `app.py` en `web/sesion.py`, `web/plantillas.py` y un `APIRouter` por área en `web/rutas/`; `app.py` quedó en 74 líneas.
+**Swept:** `work/epics/e3-specimen-photos/brief.md` (Appetite) la cita como parte de la épica y sigue siendo válida; el brief no se reescribe (lo escribió `epic-start`). El scope y el diseño de la épica y de s3.1 la citan como resuelta por s3.1. `work/epics/e2-personal-collection-with-login/retrospective.md` y `docs.md` describen la estructura de e2, cuando `app.py` reunía todo; son registros históricos y no se reescriben; la documentación de desarrollador al día es de `epic-close`. Nada más la cita.
 
 ### 2026-09-19 · direct fix (resuelto al preparar la orquestación de 0.1.0, antes de que existiera la historia de e1 que iba a llevarlo) · Binding de seguridad sin definir
 **Why:** la entrada se unió a la versión 0.1.0 y se resolvió de inmediato: el humano eligió Bandit y `conventions/security/instance.md` quedó escrito y verificado en vivo.
