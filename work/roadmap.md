@@ -13,7 +13,7 @@ Permite crear el catálogo, mostrar la información de cada especie, iniciar ses
 
 ## v0.2.0
 
-State: planned
+State: released
 
 Permite subir una foto de cada ejemplar y registrar sus riegos y floraciones.
 
