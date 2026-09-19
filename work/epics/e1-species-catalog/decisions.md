@@ -24,3 +24,8 @@ names it.
 **Decided:** no despachar; la sesión de épica implementa s1.3 ella misma.
 **Why:** `plan.md` de la épica, `## Delegation`, fila s1.3: `—`; y `delegate`: "never delegate on your own initiative without asking first". El mold T1 de T2 es una tarea de la propia historia.
 **Would have stopped:** una fila de Delegation con bloque para s1.3, o un stop añadido en el binding (`Added stops: none`).
+
+### 2026-09-19 · epic-plan step 2 · Re-plan: s1.4 antes que s1.5, s1.5 depende de s1.6
+**Decided:** el orden de la secuencia pasa a s1.4, s1.5, s1.6 con s1.5 dependiendo de s1.6 (que a su vez espera datos del humano); `plan.md` re-escrito por `chore(e1): re-plan`.
+**Why:** `plan.md`, "Sequencing risks": los datos del VPS y los datos botánicos con fuentes no están escritos en ningún artefacto; y `scope.md`, criterio `[stated]` del brief: "una especie de ejemplo se ve en su ficha, desplegada en el VPS", que necesita una especie real con fuentes (`must-data-001`), inventarla violaría la guardia. Ordenar así deja s1.4 hecha antes del stop.
+**Would have stopped:** que el reorden contradijera un criterio `[stated]` del brief (P4): no lo hace, el orden no es un criterio.
