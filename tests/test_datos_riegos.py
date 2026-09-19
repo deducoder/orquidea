@@ -10,7 +10,7 @@ from orquidea.datos.base import MIGRACIONES, abrir_base, conectar
 from orquidea.datos.ejemplares import agregar as agregar_ejemplar
 from orquidea.datos.ejemplares import fijar_foto, listar
 from orquidea.datos.ejemplares import quitar as quitar_ejemplar
-from orquidea.datos.riegos import agregar, quitar, ultimo
+from orquidea.datos.riegos import agregar, quitar, ultimo, ultimos
 from orquidea.datos.riegos import listar as listar_riegos
 
 AHORA = 1_780_000_000
@@ -203,3 +203,49 @@ def test_altas_simultaneas_no_rebasan_el_tope(tmp_path: Path) -> None:
 
     assert resultados.count(True) == 1
     assert base.execute("SELECT COUNT(*) FROM riegos").fetchone() == (CUIDADOS_MAXIMO,)
+
+
+def test_sin_riegos_no_hay_ultimos(conexion: sqlite3.Connection) -> None:
+    un_ejemplar(conexion)
+
+    assert ultimos(conexion) == {}
+
+
+def test_ultimos_da_el_mayor_de_cada_ejemplar_y_omite_a_los_que_no_tienen(
+    conexion: sqlite3.Connection,
+) -> None:
+    uno, sin_riegos, tres = un_ejemplar(conexion), un_ejemplar(conexion), un_ejemplar(conexion)
+    for fecha in ("2026-09-01", "2026-09-15", "2026-09-10"):
+        agregar(conexion, uno, fecha)
+    for fecha in ("2026-08-30", "2026-08-01"):
+        agregar(conexion, tres, fecha)
+
+    assert ultimos(conexion) == {uno: "2026-09-15", tres: "2026-08-30"}
+    assert sin_riegos not in ultimos(conexion)
+
+
+def test_ultimos_coincide_con_el_ultimo_de_cada_ejemplar(conexion: sqlite3.Connection) -> None:
+    uno, otro = un_ejemplar(conexion), un_ejemplar(conexion)
+    for fecha in ("2026-09-15", "2026-09-15", "2026-09-01"):
+        agregar(conexion, uno, fecha)
+    agregar(conexion, otro, "2026-07-04")
+
+    en_lote = ultimos(conexion)
+
+    for ejemplar in (uno, otro):
+        riego = ultimo(conexion, ejemplar)
+        assert riego is not None and en_lote[ejemplar] == riego.fecha
+
+
+def test_ultimos_es_una_sola_sentencia_aunque_haya_muchos_ejemplares(
+    conexion: sqlite3.Connection,
+) -> None:
+    for _ in range(5):
+        agregar(conexion, un_ejemplar(conexion), "2026-09-15")
+    sentencias: list[str] = []
+    conexion.set_trace_callback(sentencias.append)
+
+    ultimos(conexion)
+
+    conexion.set_trace_callback(None)
+    assert len(sentencias) == 1

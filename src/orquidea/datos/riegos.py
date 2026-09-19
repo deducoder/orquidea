@@ -48,3 +48,11 @@ def quitar(conexion: sqlite3.Connection, ejemplar_id: int, id: int) -> bool:
         "DELETE FROM riegos WHERE id = ? AND ejemplar_id = ?", (id, ejemplar_id)
     )
     return cursor.rowcount == 1
+
+
+def ultimos(conexion: sqlite3.Connection) -> dict[int, str]:
+    """La fecha del último riego de cada ejemplar que tiene alguno, en una sola consulta."""
+    filas = conexion.execute(
+        "SELECT ejemplar_id, MAX(fecha) FROM riegos GROUP BY ejemplar_id"
+    ).fetchall()
+    return {ejemplar_id: fecha for ejemplar_id, fecha in filas}
