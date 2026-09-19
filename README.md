@@ -12,7 +12,16 @@ uv sync            # instala Python y las dependencias de desarrollo
 ./scripts/check    # verifica que todo esté en verde
 ```
 
-Para ejecutar la aplicación en local: `uv run uvicorn orquidea.web.app:app --reload` y abrir <http://127.0.0.1:8000>.
+Para ejecutar la aplicación en local, genera el hash de tu contraseña y pásalo por el entorno (ver
+[Configuración](#configuración)):
+
+```bash
+export ORQUIDEA_PASSWORD_HASH="$(uv run python -m orquidea.autenticacion)"   # pide la contraseña
+export ORQUIDEA_COOKIE_SEGURA=0        # solo en local: sin HTTPS la cookie no puede ser Secure
+uv run uvicorn orquidea.web.app:app --reload
+```
+
+y abre <http://127.0.0.1:8000>. La base se crea en `data/orquidea.sqlite3` (ignorada por git).
 Requisitos: [uv](https://docs.astral.sh/uv/) instalado.
 
 ## Development
@@ -43,7 +52,27 @@ La aplicación se despliega en un VPS con [Dokploy](https://dokploy.com) (Debian
 3. En **Domains** añade tu dominio, puerto `8000`, y activa HTTPS con Let's Encrypt.
 4. Despliega y comprueba `https://tu-dominio/salud` (debe responder `{"estado":"ok"}`) y `https://tu-dominio/especies`.
 
-No hay variables de entorno ni secretos: el catálogo viaja dentro de la imagen. Los nombres de las opciones pueden variar según la versión de Dokploy. El `Dockerfile` no se ha construido todavía en una máquina con Docker: si el primer build falla, el error indicará qué ajustar.
+La colección vive en un archivo SQLite: **monta un volumen en `/data`** (la imagen guarda ahí la base, `ORQUIDEA_DB=/data/orquidea.sqlite3`); sin volumen, un redespliegue la pierde. En Dokploy, añade un **Volume** al servicio con ruta de montaje `/data`. Un volumen con nombre hereda el propietario de la imagen (el usuario `app`, uid 10001); si montas una carpeta del servidor, dale ese propietario (`chown 10001 carpeta`). Las migraciones del esquema se aplican solas al arrancar una versión nueva sobre el mismo volumen.
+
+Antes del primer despliegue, en **Environment** define `ORQUIDEA_PASSWORD_HASH` con el hash de tu contraseña (ver [Configuración](#configuración)). Sin él **nadie puede iniciar sesión**: la aplicación falla cerrada. El catálogo viaja dentro de la imagen. Los nombres de las opciones pueden variar según la versión de Dokploy. El `Dockerfile` no se ha construido todavía en una máquina con Docker: si el primer build falla, el error indicará qué ajustar.
+
+## Configuración
+
+Todo se configura por variables de entorno; ninguna vive en el repositorio ni en la imagen.
+
+| Variable | Obligatoria | Qué hace |
+|----------|:-----------:|----------|
+| `ORQUIDEA_PASSWORD_HASH` | sí | Hash scrypt de la contraseña del único usuario. Sin ella (o con un valor inválido) nadie puede entrar. |
+| `ORQUIDEA_DB` | no | Ruta del archivo SQLite. En la imagen es `/data/orquidea.sqlite3` (el volumen); en local, `data/orquidea.sqlite3`. |
+| `ORQUIDEA_COOKIE_SEGURA` | no | La cookie de sesión es `Secure` (solo viaja por HTTPS) y se emite la cabecera HSTS. Poner `0` **solo en desarrollo local** sin HTTPS; en el VPS, Dokploy termina el HTTPS y no debe tocarse. |
+
+Para generar el hash de la contraseña (no la guardes en ningún archivo; el hash sí puede ir en el entorno):
+
+```bash
+uv run python -m orquidea.autenticacion
+```
+
+Imprime una línea con el formato `scrypt$N$r$p$sal$hash`; pégala como valor de `ORQUIDEA_PASSWORD_HASH`. Para cambiar la contraseña, genera otro hash, cámbialo en el entorno y reinicia: no hay recuperación por correo. Las sesiones duran 12 horas como máximo y 30 minutos sin actividad; cinco intentos fallidos seguidos bloquean el acceso cinco minutos.
 
 ## Structure
 
