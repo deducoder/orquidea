@@ -49,3 +49,8 @@ names it.
 **Decided:** no se espera confirmación; la intención va en el reporte: s4.3 añade la tabla `floraciones` (cascada, `CHECK` de forma y de orden), `validar_floracion` y `datos.floraciones` con `agregar`, `terminar` (una sola sentencia condicionada a propia, en curso y con inicio no posterior), `listar` y `quitar`, con tope de 500 atómico.
 **Why:** `stories/s4.3-*/plan.md` línea `> Pause: none (default)` y la propia skill: «in which case there is no human in the loop and the restatement goes in your report instead».
 **Would have stopped:** P5 si el plan declarara `per task`.
+
+### 2026-09-19 · story-implement (s4.3) step 5 · Acuse del humano tras cada tarea
+**Decided:** se continúa con la tarea siguiente en cuanto el gate está en verde y el commit existe, para T1 a T3.
+**Why:** `stories/s4.3-*/plan.md` línea `> Pause: none (default)`; story-implement paso 5: «in which case continue to the next task once the gate is green».
+**Would have stopped:** P3 si el gate estuviera en rojo y no supiera arreglarlo.
