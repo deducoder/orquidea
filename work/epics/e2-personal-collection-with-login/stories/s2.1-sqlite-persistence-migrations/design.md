@@ -28,8 +28,8 @@ Un módulo `orquidea.datos.base` con `abrir_base(ruta, migraciones)` que abre `s
 from pathlib import Path
 from orquidea.datos.base import abrir_base, ruta_de_la_base
 
-conexion = abrir_base(ruta_de_la_base())          # ORQUIDEA_DB o data/orquidea.sqlite3
-conexion.execute("INSERT INTO a (x) VALUES (?)", ("uno",))   # siempre parametrizado
+conexion = abrir_base(ruta_de_la_base())  # ORQUIDEA_DB o data/orquidea.sqlite3
+conexion.execute("INSERT INTO a (x) VALUES (?)", ("uno",))  # siempre parametrizado
 ```
 
 ### Expected output (success + error)
@@ -53,7 +53,9 @@ ORQUIDEA_DB=/datos/o.sqlite3                -> ruta_de_la_base() == Path("/datos
 RUTA_POR_DEFECTO = Path("data/orquidea.sqlite3")
 MIGRACIONES = Path(__file__).parent / "migraciones"
 
+
 class MigracionFallida(Exception): ...
+
 
 def ruta_de_la_base() -> Path: ...
 def abrir_base(ruta: Path, migraciones: Path = MIGRACIONES) -> sqlite3.Connection: ...
