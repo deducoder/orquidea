@@ -441,6 +441,7 @@ source = { editable = "." }
 dependencies = [
     { name = "fastapi" },
     { name = "jinja2" },
+    { name = "pydantic" },
 ]
 
 [package.dev-dependencies]
@@ -456,6 +457,7 @@ dev = [
 requires-dist = [
     { name = "fastapi", specifier = ">=0.141.1" },
     { name = "jinja2", specifier = ">=3.1.6" },
+    { name = "pydantic", specifier = ">=2.13.5" },
 ]
 
 [package.metadata.requires-dev]

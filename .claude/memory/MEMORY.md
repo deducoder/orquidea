@@ -1,1 +1,2 @@
 - [Starlette TestClient usa httpx2](starlette-testclient-httpx2.md) — httpx2 en dev; ids locales s{N}.{M}
+- [Mutaciones sin bytecode; ruff formatea .md](mutation-checks-stale-bytecode.md) — falsos supervivientes
