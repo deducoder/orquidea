@@ -25,3 +25,23 @@ def resolver(ejemplares: list[Ejemplar], catalogo: list[Especie]) -> list[Ejempl
         EjemplarConEspecie(ejemplar=ejemplar, especie=por_id.get(ejemplar.especie_id or ""))
         for ejemplar in ejemplares
     ]
+
+
+NOMBRE_MAXIMO = 120
+NOTAS_MAXIMO = 2000
+
+
+class EjemplarInvalido(ValueError):
+    pass
+
+
+def validar_ejemplar_propio(nombre: str, notas: str) -> tuple[str, str]:
+    nombre = nombre.strip()
+    notas = notas.replace("\r\n", "\n").replace("\r", "\n").strip()
+    if not nombre:
+        raise EjemplarInvalido("El nombre es obligatorio.")
+    if len(nombre) > NOMBRE_MAXIMO:
+        raise EjemplarInvalido(f"El nombre no puede pasar de {NOMBRE_MAXIMO} caracteres.")
+    if len(notas) > NOTAS_MAXIMO:
+        raise EjemplarInvalido(f"Las notas no pueden pasar de {NOTAS_MAXIMO} caracteres.")
+    return nombre, notas
