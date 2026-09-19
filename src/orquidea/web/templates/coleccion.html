@@ -17,6 +17,11 @@
     {% endif %}
     {% if item.ejemplar.especie_id and item.ejemplar.nombre %}«{{ item.ejemplar.nombre }}»{% elif not item.ejemplar.especie_id %}{{ item.ejemplar.nombre }}{% endif %}
     <small>Agregado el {{ item.ejemplar.creado | fecha }}</small>
+    {% if item.ejemplar.id in ultimos %}
+    <small>Último riego: {{ ultimos[item.ejemplar.id] }}</small>
+    {% else %}
+    <small>Sin riegos</small>
+    {% endif %}
     <a href="/coleccion/{{ item.ejemplar.id }}">Ficha</a>
     <a href="/coleccion/{{ item.ejemplar.id }}/editar">Editar</a>
     <a href="/coleccion/{{ item.ejemplar.id }}/quitar">Quitar</a>
