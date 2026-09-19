@@ -52,3 +52,18 @@ names it.
 ### 2026-09-19 · epic-review step 3 · Answered (P4 above)
 **Decided:** el criterio `[stated]` rezagado del brief y las verificaciones de `must-perf-001` con navegador (tiempo con Slow 3G y CSP frente a htmx) se difieren: la épica cierra y el humano las verifica tras el primer despliegue.
 **Why:** answer from the supervisor, verbatim: "a — diferir todo y dejar que e2 cierre"
+
+### 2026-09-19 · epic-close step 4 · Preguntar al humano qué le faltaría a un desarrollador nuevo
+**Decided:** no se pregunta y se sigue; `docs.md` incluye como modos de fallo los tropiezos reales de la épica (los dos defectos de `epic-review`, el bytecode obsoleto de las mutaciones, el formato de `.md` por `ruff`, la conexión SQLite por hilo, la CSP frente a htmx y el primer `docker build`, estos dos últimos marcados como no verificados).
+**Why:** `epic-close | Then ask the human what a developer new to the code would still find` está clasificado `decision`; el humano lo revisa después en `docs.md`. El supervisor ya respondió lo relevante: "a — diferir todo y dejar que e2 cierre".
+**Would have stopped:** un stop añadido en el binding (`Added stops: none`).
+
+### 2026-09-19 · epic-close step 4 · Revisión humana de docs.md antes del paso 5
+**Decided:** `docs.md` se da por revisada por el humano a posteriori y se continúa; el humano la leerá tras el cierre.
+**Why:** gates `epic-close | missing — added failure modes are the most valuable. Human-reviewed before` y `epic-close | Human reviewed docs.md before shipping.`, ambos `decision`; y el supervisor dijo: "a — diferir todo y dejar que e2 cierre".
+**Would have stopped:** que `docs.md` afirmara algo no verificado; se cuidó que cada módulo, prueba y ruta nombrados existan (comprobados con `grep`); lo no verificado (CSP con htmx, `docker build`) se dice como tal.
+
+### 2026-09-19 · epic-close step 5 · Deriva del README
+**Decided:** se corrige en `README.md` solo la fila de Structure `src/orquidea/` (faltaban `coleccion/`, `autenticacion.py` y el nuevo contenido de `datos/`); el resto de Structure coincide con la raíz del repositorio y el Quick start coincide con `scripts/check` y con el arranque local que s2.7 ya actualizó, y no se tocan.
+**Why:** gates `epic-close | nothing has drifted, say so and change nothing. Human-reviewed before` y `epic-close | sections only — human-reviewed, never any other section`, `decision`; la comparación fue entre la tabla y los primeros niveles del repositorio y `src/orquidea/`.
+**Would have stopped:** cambiar una sección distinta de Quick start o Structure.
