@@ -45,7 +45,7 @@ None. Todas las historias tocan `orquidea.web.app` y sus plantillas; ninguna cor
 
 | Story | Status | Est. | Actual |
 |-------|:------:|:----:|:------:|
-| s2.1 | todo | S | — |
+| s2.1 | done | S | S |
 | s2.2 | todo | M | — |
 | s2.3 | todo | S | — |
 | s2.4 | todo | M | — |
