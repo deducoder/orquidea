@@ -5,3 +5,4 @@
 - [ASVS al diseñar, no al revisar](asvs-checklist-at-design.md) — recorrer ASVS L2 en el design.md de historias de seguridad
 - [Concurrencia y proceso real en historias de seguridad](concurrency-and-real-process-in-security-stories.md) — hilos (scrypt) y registros bajo uvicorn, no solo lógica
 - [Pillow guarda el comentario JPEG](pillow-guarda-comentario-jpeg.md) — reconstruir desde píxeles; probar bytes, no API
+- [include_router anida las rutas](fastapi-include-router-anida-rutas.md) — enumerar con rutas_registradas, no con app.routes

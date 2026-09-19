@@ -43,7 +43,7 @@ None. s3.1 (`orquidea.web`) y s3.2 (`orquidea.datos.fotos`, `pyproject.toml`) to
 
 | Story | Status | Est. | Actual |
 |-------|:------:|:----:|:------:|
-| s3.1 | todo | S | |
+| s3.1 | done | S | S |
 | s3.2 | done | M | M |
 | s3.3 | todo | M | |
 | s3.4 | todo | M | |
