@@ -3,10 +3,10 @@ import time
 from typing import Annotated
 
 from fastapi import APIRouter, Form, HTTPException, Request
-from fastapi.responses import HTMLResponse, RedirectResponse, Response
+from fastapi.responses import FileResponse, HTMLResponse, RedirectResponse, Response
 
 from orquidea.coleccion.modelo import Ejemplar, EjemplarInvalido, resolver, validar_ejemplar
-from orquidea.datos.almacen_fotos import quitar_con_foto
+from orquidea.datos.almacen_fotos import NombreDeFotoInvalido, quitar_con_foto, ruta_de_foto
 from orquidea.datos.ejemplares import (
     actualizar,
     agregar,
@@ -126,6 +126,38 @@ def agregar_ejemplar_propio(
         return _formulario_de_ejemplar_propio(request, 422, nombre, notas, str(fallo))
     agregar_sin_especie(conexion, nombre_limpio, notas_limpias, int(time.time()))
     return RedirectResponse("/coleccion", status_code=303)
+
+
+# Se registra después de `/coleccion/nuevo`: en el orden inverso, "nuevo" se leería como un id.
+@router.get("/coleccion/{id}", response_class=HTMLResponse)
+def ficha_del_ejemplar(request: Request, id: int, conexion: Base) -> HTMLResponse:
+    ejemplar = _ejemplar_o_404(conexion, id)
+    (resuelto,) = resolver([ejemplar], request.app.state.catalogo)
+    return templates.TemplateResponse(request, "ejemplar_ficha.html", {"item": resuelto})
+
+
+def _imagen(request: Request, id: int, conexion: sqlite3.Connection, miniatura: bool) -> Response:
+    ejemplar = obtener(conexion, id)
+    if ejemplar is None or not ejemplar.foto:
+        raise HTTPException(status_code=404, detail="Foto no encontrada")
+    try:
+        ruta = ruta_de_foto(request.app.state.directorio_fotos, ejemplar.foto, miniatura=miniatura)
+    except NombreDeFotoInvalido:
+        raise HTTPException(status_code=404, detail="Foto no encontrada") from None
+    if not ruta.is_file():
+        raise HTTPException(status_code=404, detail="Foto no encontrada")
+    # El tipo es fijo: el archivo lo generó `procesar_foto`, nunca lo subido por el usuario.
+    return FileResponse(ruta, media_type="image/jpeg")
+
+
+@router.get("/coleccion/{id}/foto")
+def imagen_del_ejemplar(request: Request, id: int, conexion: Base) -> Response:
+    return _imagen(request, id, conexion, miniatura=False)
+
+
+@router.get("/coleccion/{id}/foto/miniatura")
+def miniatura_del_ejemplar(request: Request, id: int, conexion: Base) -> Response:
+    return _imagen(request, id, conexion, miniatura=True)
 
 
 @router.get("/coleccion/{id}/editar", response_class=HTMLResponse)

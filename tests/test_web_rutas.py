@@ -8,6 +8,9 @@ RUTAS = [
     ("GET", "/acceso"),
     ("GET", "/coleccion"),
     ("GET", "/coleccion/nuevo"),
+    ("GET", "/coleccion/{id}"),
+    ("GET", "/coleccion/{id}/foto"),
+    ("GET", "/coleccion/{id}/foto/miniatura"),
     ("GET", "/coleccion/{id}/editar"),
     ("GET", "/coleccion/{id}/quitar"),
     ("GET", "/especies"),
@@ -27,7 +30,7 @@ def _registradas() -> list[tuple[str, str]]:
 
 
 def test_el_mapa_de_rutas_es_el_declarado() -> None:
-    assert sorted(_registradas()) == RUTAS
+    assert sorted(_registradas()) == sorted(RUTAS)
 
 
 def test_nuevo_se_registra_antes_que_una_ruta_con_id_sin_sufijo() -> None:
