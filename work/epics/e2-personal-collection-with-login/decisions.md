@@ -19,3 +19,8 @@ names it.
 **Decided:** no despachar; la sesión de épica implementa s2.2 ella misma; con `> Pause: none` la reformulación va en el reporte y las tareas siguen con el gate en verde y el commit hecho.
 **Why:** `plan.md` de la épica, `## Delegation`, fila s2.2: `—`; y `delegate`: "never delegate on your own initiative without asking first". Los moldes de T2 a T4 son tareas de la propia historia o código existente. Plan de la historia: `> Pause: none (default)`.
 **Would have stopped:** una fila de Delegation con bloque para s2.2, o un stop añadido en el binding (`Added stops: none`).
+
+### 2026-09-19 · story-implement step 1 · s2.3: ofrecer el despacho del bloque
+**Decided:** no despachar; la sesión de épica implementa s2.3 ella misma; con `> Pause: none` la reformulación va en el reporte.
+**Why:** `plan.md` de la épica, `## Delegation`, fila s2.3: `—`; y `delegate`: "never delegate on your own initiative without asking first". Plan de la historia: `> Pause: none (default)`.
+**Would have stopped:** una fila de Delegation con bloque para s2.3, o un stop añadido en el binding (`Added stops: none`).
