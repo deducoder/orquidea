@@ -2,30 +2,30 @@
 
 ## Pregunta y decisión que informa
 
-**Pregunta primaria (falsable):** ¿es posible reunir 100 orquídeas nativas de Chiapas, entre las más conocidas y populares, con datos de luz, riego, temperatura y sustrato respaldados por una fuente real consultada para cada dato ()?
+**Pregunta primaria (falsable):** ¿es posible reunir 100 orquídeas nativas de Chiapas, entre las más conocidas y populares, con datos de luz, riego, temperatura y sustrato respaldados por una fuente real consultada para cada dato (`must-data-001`)?
 **Informa:** s1.6 (conjunto semilla) y, con ello, la métrica líder del brief. Profundidad: estándar. Respuesta del humano al stop P5: "Debemos hacer un research para buscar los datos... Pongamos las 100 más conocidas y populares".
 
 ## Recomendación
 
-Sí es posible, con una limitación que el humano debe conocer: **los cuidados son del género, no de la especie.** Para las 100 especies existe fuente citable de cuidados solo a nivel de género (AOS). Ninguna fuente consultada da cuidados medidos para cada una de esas especies de Chiapas. Cada dato lo dice en su propia fuente ("cuidado del género, no específico de la especie") y la descripción de la ficha lo repite. Confianza: **MEDIA** para que los cuidados sean una guía razonable; **BAJA** para que sean exactos para cada especie.
+Sí es posible, con una limitación que el humano debe conocer: **los cuidados son del género, no de la especie.** Para las 100 especies existe fuente citable de cuidados solo a nivel de género (AOS). Ninguna fuente consultada da cuidados medidos para cada una de esas especies de Chiapas. Cada dato lo dice en su propia fuente ("cuidado del género, no específico de la especie") y la descripción de la ficha lo repite. Confianza: **MEDIA** en que los cuidados sean una guía razonable; **BAJA** en que sean exactos para cada especie.
 
 ## Método
 
-1. **Universo y popularidad.** Observaciones de grado de investigación de Orchidaceae en Chiapas (iNaturalist, lugar 97003, , , , consulta del 2026-09-19): 444 especies, 440 nativas. "Más conocidas y populares" se operacionaliza como **más observadas por la comunidad en el estado** (medida objetiva y reproducible). Es una proxy: favorece plantas visibles y de camino, y no mide el comercio de plantas ni su cultivo.
-2. **Nativas.** Se usó el filtro  de iNaturalist (listas de establecimiento por lugar). Se intentó verificar con Kew POWO, pero su API está detrás de un desafío anti-bots de Cloudflare y no se eludió. Queda sin doble verificación.
-3. **Cuidados.** Para cada género, la "Care and Culture Card" de su página en la AOS () y, donde no hay tarjeta útil, la hoja de cultivo de la AOS: Oncidium (para Oncidium y Trichocentrum), Cattleya (para Guarianthe), Gongora, Catasetum, y para *Epidendrum radicans* el artículo de la AOS sobre Epidendrum de tallo de caña. Los textos son paráfrasis en español; ninguna cita literal.
+1. **Universo y popularidad.** Observaciones de grado de investigación de Orchidaceae en Chiapas (iNaturalist, lugar 97003, `quality_grade=research`, `native=true`, `captive=false`, consulta del 2026-09-19): 444 especies, 440 nativas. "Más conocidas y populares" se operacionaliza como **más observadas por la comunidad en el estado** (medida objetiva y reproducible). Es una proxy: favorece plantas visibles y de camino, y no mide el comercio de plantas ni su cultivo.
+2. **Nativas.** Se usó el filtro `native=true` de iNaturalist (listas de establecimiento por lugar). Se intentó verificar con Kew POWO, pero su API está detrás de un desafío anti-bots de Cloudflare y no se eludió. Queda sin doble verificación.
+3. **Cuidados.** Para cada género, la "Care and Culture Card" de su página en la AOS (`https://www.aos.org/explore/{género}`) y, donde no hay tarjeta útil, la hoja de cultivo de la AOS: Oncidium (para Oncidium y Trichocentrum), Cattleya (para Guarianthe), Gongora, Catasetum, y para *Epidendrum radicans* el artículo de la AOS sobre Epidendrum de tallo de caña. Los textos son paráfrasis en español; ninguna cita literal.
 4. **Regla de selección.** Se recorrió la lista por número de observaciones y se tomaron las primeras 100 cuyo género tiene una fuente de cuidados utilizable.
 
 ## Hallazgos y confianza
 
-- **H1 — Hay al menos 440 orquídeas nativas de Chiapas con observaciones de grado de investigación.** Confianza MEDIA: una plataforma con dos filtros propios (nativa, no cautiva) y sin doble verificación; el conteo es coherente con los ~700 taxa que la literatura reporta para el estado (ver fuentes 3 y 4), porque solo cuenta especies observadas.
-- **H2 — Los cuidados por género están documentados por la AOS de forma consistente** (luz, temperatura, riego, sustrato). Confianza MEDIA: una sola organización, aunque de referencia; comparada con las hojas de cultivo de la misma AOS, coincide en dirección (intermedias, luz brillante, riego regular).
+- **H1 — Hay al menos 440 orquídeas nativas de Chiapas con observaciones de grado de investigación.** Confianza MEDIA: una plataforma con dos filtros propios (nativa, no cautiva) y sin doble verificación; es coherente con los 325 taxa de una sola región del estado (fuente 3) y con los ~700 que se reportan para todo el estado (fuente 4, solo referida).
+- **H2 — Los cuidados por género están documentados por la AOS de forma consistente** (luz, temperatura, riego, sustrato). Confianza MEDIA: una sola organización, aunque de referencia; las tarjetas de género y las hojas de cultivo de la misma AOS coinciden en dirección (luz brillante, temperaturas intermedias, riego regular).
 - **H3 — La AOS advierte que su hoja de Cattleya "puede no ser representativa de todas las plantas de la alianza o del género".** Confianza ALTA (texto explícito, fuente 6). Es evidencia **contraria** a tratar los cuidados de género como si fueran de la especie, y por eso cada dato lo declara.
 - **H4 — Hay géneros populares sin fuente de cuidados utilizable en esta investigación**, y quedaron fuera: *Cyrtopodium* (69 observaciones), *Malaxis*, *Stelis*, *Specklinia*, *Elleanthus*, *Chysis*, *Dinema*, *Polystachya*, *Acianthera*; *Cypripedium irapeanum* (17) se excluyó porque su tarjeta trata de especies templadas y la AOS remite a literatura especializada, y *Calanthe calanthoides* (25) porque su tarjeta distingue dos formas de crecimiento y no se puede saber cuál corresponde. Confianza ALTA en que faltan; no se afirma que no exista literatura en otros lugares.
 
 ## Límites y riesgos
 
-- La lista refleja lo que la gente **observa**, no lo que se **compra o cultiva**. Especies muy populares en cultivo pero poco observadas pueden faltar (p. ej. no se validó ninguna lista comercial).
+- La lista refleja lo que la gente **observa**, no lo que se **compra o cultiva**. Especies muy populares en cultivo pero poco observadas pueden faltar (no se validó ninguna lista comercial).
 - Nombres comunes tomados de iNaturalist (contribuidos por usuarios; solo 40 de 100 tienen uno).
 - Nombres científicos como los da iNaturalist; pueden diferir de los aceptados por Kew o de las sinonimias de la AOS (Guarianthe se cita con la hoja de Cattleya; Trichocentrum, con la de Oncidium).
 - Evidencia global: **Media/Baja**, sin revisión de un experto botánico.
@@ -141,12 +141,12 @@ Géneros: Epidendrum (12), Prosthechea (9), Govenia (5), Trichocentrum (5), Maxi
 
 | # | Fuente | Tipo | Nivel |
 |--:|--------|------|-------|
-| 1 | iNaturalist API, , lugar 97003 (Chiapas), Orchidaceae, grado de investigación, , , consultada 2026-09-19 | Base comunitaria con verificación por pares | Medio |
-| 2 | American Orchid Society, páginas de género  (Care and Culture Card) | Organización de referencia | Alto |
+| 1 | iNaturalist API, `observations/species_counts`, lugar 97003 (Chiapas), Orchidaceae, grado de investigación, `native=true`, `captive=false`, consultada 2026-09-19 | Base comunitaria con verificación por pares | Medio |
+| 2 | American Orchid Society, páginas de género `https://www.aos.org/explore/{género}` (Care and Culture Card) | Organización de referencia | Alto |
 | 3 | Solano-Gómez, R. et al. 2016. Diversity and distribution of the orchids of the Tacaná-Boquerón region, Chiapas, Mexico. Botanical Sciences 94(3): 625-664 (325 especies en la región) | Revisada por pares | Muy alto |
-| 4 | Catálogo de Orquídeas de Chiapas (referido en búsqueda; 717 especies): no se pudo leer su texto | Secundaria | Bajo |
-| 5 | AOS, hojas de cultivo Oncidium, Cattleya, Gongora, Catasetum y Reedstem Epidendrum Culture,  | Organización de referencia | Alto |
-| 6 | AOS, alianza Cattleya,  (advertencia sobre su hoja) | Organización de referencia | Alto |
+| 4 | Catálogo de Orquídeas de Chiapas (referido en una búsqueda; 717 especies): no se pudo leer su texto | Secundaria | Bajo |
+| 5 | AOS, hojas de cultivo Oncidium, Cattleya, Gongora, Catasetum y Reedstem Epidendrum Culture, `https://www.aos.org/orchid-care/` | Organización de referencia | Alto |
+| 6 | AOS, alianza Cattleya, `https://www.aos.org/explore/alliance/cattleya-alliance` (advertencia sobre su hoja) | Organización de referencia | Alto |
 
 ## Dónde aterrizó
 
