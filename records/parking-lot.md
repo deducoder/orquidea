@@ -29,6 +29,12 @@ wrote it. Retirement moves an entry to `## Retired` with its reason.
 - **`docker build` y `docker run` sin verificar (dos épicas seguidas).** El cliente de Docker existe en esta máquina pero el daemon no responde, así que ni el `Dockerfile` de e1 ni el volumen de e2 se han construido. El wheel sí se verificó en un entorno limpio.
   *Origin:* s2.7 (e2), `story-review`, 2026-09-19 — prueba manual del empaquetado.
   *Promotion:* la primera sesión con Docker Desktop en marcha, o el primer despliegue del humano: construir la imagen, arrancarla con `-v` y `ORQUIDEA_PASSWORD_HASH`, y comprobar `/salud`, el acceso y que la colección sobrevive a recrear el contenedor.
+- **Varias subidas simultáneas del tamaño máximo pueden agotar la memoria de un VPS pequeño.** Con el arreglo de `procesar_foto` (reducir antes de copiar) una foto de 48 MP pica en ~280 MB (JPEG, PNG RGB) y ~430 MB (PNG RGBA); una de 64 MP (el tope), ~360 y ~570 MB. Un solo usuario rara vez sube en paralelo, pero tres PNG RGBA grandes a la vez pasarían de 1,5 GB.
+  *Origin:* e3, `epic-review` (medición del pico de memoria con un proceso aparte), 2026-09-19.
+  *Promotion:* al desplegar en un VPS de 1 GB o menos, o si el proceso muere por OOM: bajar `PIXELES_MAXIMOS` o serializar `procesar_foto` con un semáforo (una foto a la vez).
+- **Las miniaturas no se cachean y se piden en cada visita a "Mi colección".** El middleware pone `Cache-Control: no-store` a todo salvo `/static`; con 25 fotos son ~130 KB en cada visita, y la URL por id no cambia aunque cambie la foto.
+  *Origin:* e3, `epic-review`, 2026-09-19 — resultado de `scripts/medir-primera-carga.py`.
+  *Promotion:* si la lista se siente lenta con la colección real: servir las imágenes con `Cache-Control: private, max-age` y una URL que incluya el nombre aleatorio de la foto (cambia al reemplazarla).
 
 ## Retired
 
