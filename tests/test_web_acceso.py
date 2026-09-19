@@ -169,3 +169,42 @@ def test_los_accesos_se_registran_sin_la_contrasena(
     assert "acceso correcto" in mensajes
     assert "acceso bloqueado" in mensajes
     assert not any("secreto-erroneo" in mensaje or CONTRASENA in mensaje for mensaje in mensajes)
+
+
+def test_los_accesos_llegan_a_la_salida_de_error_con_la_configuracion_por_defecto_de_uvicorn(
+    anonimo: TestClient, capsys: pytest.CaptureFixture[str]
+) -> None:
+    registro = logging.getLogger("orquidea.acceso")
+    anteriores = list(registro.handlers)
+    try:
+        with anonimo:  # ejecuta el ciclo de vida, que configura el registro
+            acceder(anonimo, "mala")
+            acceder(anonimo)
+    finally:
+        for manejador in registro.handlers:
+            if manejador not in anteriores:
+                registro.removeHandler(manejador)
+        registro.setLevel(logging.NOTSET)
+
+    salida = capsys.readouterr().err
+    assert "acceso fallido" in salida
+    assert "acceso correcto" in salida
+    assert CONTRASENA not in salida
+
+
+def test_arrancar_dos_veces_no_duplica_el_manejador(anonimo: TestClient) -> None:
+    registro = logging.getLogger("orquidea.acceso")
+    anteriores = list(registro.handlers)
+    try:
+        with anonimo:
+            pass
+        with anonimo:
+            pass
+        nuevos = [m for m in registro.handlers if m not in anteriores]
+    finally:
+        for manejador in list(registro.handlers):
+            if manejador not in anteriores:
+                registro.removeHandler(manejador)
+        registro.setLevel(logging.NOTSET)
+
+    assert len(nuevos) == 1

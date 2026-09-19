@@ -42,8 +42,19 @@ RUTAS_PUBLICAS = frozenset({"/acceso", "/salud"})
 METODOS_SEGUROS = frozenset({"GET", "HEAD", "OPTIONS"})
 
 
+def _configurar_registro() -> None:
+    # uvicorn solo configura sus propios registros: sin un manejador propio, el INFO de
+    # "acceso correcto" se pierde y solo salen los avisos.
+    if not registro.handlers:
+        manejador = logging.StreamHandler()
+        manejador.setFormatter(logging.Formatter("%(levelname)s:     %(name)s - %(message)s"))
+        registro.addHandler(manejador)
+    registro.setLevel(logging.INFO)
+
+
 @asynccontextmanager
 async def ciclo_de_vida(app: FastAPI) -> AsyncIterator[None]:
+    _configurar_registro()
     abrir_base(app.state.ruta_base).close()
     yield
 
