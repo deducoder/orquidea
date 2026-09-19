@@ -456,3 +456,176 @@ def test_una_floracion_rechazada_conserva_sus_campos_y_no_altera_el_formulario_d
     assert 'name="inicio" type="date" value="2026-03-20"' in texto
     assert 'name="fin" type="date" value="2026-03-01"' in texto
     assert f'name="fecha" type="date" value="{_hoy().isoformat()}"' in texto
+
+
+def _desfasar_los_ids() -> None:
+    """Que el id de una floración no coincida con el de su ejemplar (así un cruce se nota)."""
+    _con_floraciones(_ejemplar("Señuelo"), *[("2020-01-01", None)] * 5)
+
+
+def _id_de_la_floracion(id: int, inicio: str) -> int:
+    conexion = _conexion()
+    try:
+        fila = conexion.execute(
+            "SELECT id FROM floraciones WHERE ejemplar_id = ? AND inicio = ?", (id, inicio)
+        ).fetchone()
+        return int(fila[0])
+    finally:
+        conexion.close()
+
+
+def _terminar(client: TestClient, csrf: str, id: int, floracion: int, fin: str) -> Response:
+    return client.post(
+        f"/coleccion/{id}/floraciones/{floracion}/fin",
+        data={"csrf": csrf, "fin": fin},
+        follow_redirects=False,
+    )
+
+
+def _quitar_floracion(client: TestClient, csrf: str, id: int, floracion: int) -> Response:
+    return client.post(
+        f"/coleccion/{id}/floraciones/{floracion}/quitar",
+        data={"csrf": csrf},
+        follow_redirects=False,
+    )
+
+
+def test_terminar_una_floracion_en_curso_la_deja_terminada(
+    client: TestClient, sesion: Sesion
+) -> None:
+    _desfasar_los_ids()
+    id = _ejemplar()
+    _con_floraciones(id, ("2026-03-01", None))
+
+    respuesta = _terminar(
+        client, sesion.csrf, id, _id_de_la_floracion(id, "2026-03-01"), "2026-03-20"
+    )
+
+    assert respuesta.status_code == 303
+    assert respuesta.headers["location"] == f"/coleccion/{id}"
+    assert _floraciones_guardadas(id) == [("2026-03-01", "2026-03-20")]
+    assert re.search(r"<li>\s*2026-03-01 — 2026-03-20", client.get(f"/coleccion/{id}").text)
+
+
+def test_solo_las_floraciones_en_curso_ofrecen_terminar_y_todas_ofrecen_quitar(
+    client: TestClient,
+) -> None:
+    id = _ejemplar()
+    _con_floraciones(id, ("2026-03-01", None), ("2025-02-01", "2025-02-20"))
+    en_curso = _id_de_la_floracion(id, "2026-03-01")
+    terminada = _id_de_la_floracion(id, "2025-02-01")
+
+    texto = client.get(f"/coleccion/{id}").text
+
+    assert f'action="/coleccion/{id}/floraciones/{en_curso}/fin"' in texto
+    assert f'action="/coleccion/{id}/floraciones/{terminada}/fin"' not in texto
+    assert f'action="/coleccion/{id}/floraciones/{en_curso}/quitar"' in texto
+    assert f'action="/coleccion/{id}/floraciones/{terminada}/quitar"' in texto
+
+
+@pytest.mark.parametrize(
+    ("fin", "mensaje"),
+    [
+        ("2026-02-01", "fin no puede ser anterior al inicio"),
+        ("20/03/2026", "formato AAAA-MM-DD"),
+        ("2026-02-30", "no existe"),
+        ("", "obligatoria"),
+        ((_hoy() + timedelta(days=2)).isoformat(), "posterior a hoy"),
+    ],
+)
+def test_un_fin_rechazado_vuelve_a_la_ficha_y_la_floracion_sigue_en_curso(
+    client: TestClient, sesion: Sesion, fin: str, mensaje: str
+) -> None:
+    id = _ejemplar()
+    _con_floraciones(id, ("2026-03-01", None))
+
+    respuesta = _terminar(client, sesion.csrf, id, _id_de_la_floracion(id, "2026-03-01"), fin)
+
+    assert respuesta.status_code == 422
+    assert mensaje in respuesta.text
+    assert _floraciones_guardadas(id) == [("2026-03-01", None)]
+
+
+def test_terminar_una_ya_terminada_se_rechaza_y_no_cambia(
+    client: TestClient, sesion: Sesion
+) -> None:
+    id = _ejemplar()
+    _con_floraciones(id, ("2026-03-01", "2026-03-20"))
+
+    respuesta = _terminar(
+        client, sesion.csrf, id, _id_de_la_floracion(id, "2026-03-01"), "2026-03-25"
+    )
+
+    assert respuesta.status_code == 422
+    assert "ya terminó" in respuesta.text
+    assert _floraciones_guardadas(id) == [("2026-03-01", "2026-03-20")]
+
+
+def test_terminar_la_floracion_de_otro_ejemplar_da_404_y_no_la_cambia(
+    client: TestClient, sesion: Sesion
+) -> None:
+    _desfasar_los_ids()
+    uno, otro = _ejemplar("Uno"), _ejemplar("Otro")
+    _con_floraciones(otro, ("2026-03-01", None))
+
+    respuesta = _terminar(
+        client, sesion.csrf, uno, _id_de_la_floracion(otro, "2026-03-01"), "2026-03-20"
+    )
+
+    assert respuesta.status_code == 404
+    assert _floraciones_guardadas(otro) == [("2026-03-01", None)]
+
+
+def test_terminar_una_floracion_o_un_ejemplar_inexistentes_da_404(
+    client: TestClient, sesion: Sesion
+) -> None:
+    id = _ejemplar()
+
+    assert _terminar(client, sesion.csrf, id, 999, "2026-03-20").status_code == 404
+    assert _terminar(client, sesion.csrf, 999, 1, "2026-03-20").status_code == 404
+
+
+def test_quitar_una_floracion_la_borra_y_deja_las_demas(client: TestClient, sesion: Sesion) -> None:
+    _desfasar_los_ids()
+    id = _ejemplar()
+    _con_floraciones(id, ("2026-03-01", None), ("2025-02-01", "2025-02-20"))
+
+    respuesta = _quitar_floracion(client, sesion.csrf, id, _id_de_la_floracion(id, "2026-03-01"))
+
+    assert respuesta.status_code == 303
+    assert respuesta.headers["location"] == f"/coleccion/{id}"
+    assert _floraciones_guardadas(id) == [("2025-02-01", "2025-02-20")]
+
+
+def test_quitar_la_floracion_de_otro_ejemplar_da_404_y_no_la_borra(
+    client: TestClient, sesion: Sesion
+) -> None:
+    _desfasar_los_ids()
+    uno, otro = _ejemplar("Uno"), _ejemplar("Otro")
+    _con_floraciones(otro, ("2026-03-01", None))
+
+    respuesta = _quitar_floracion(client, sesion.csrf, uno, _id_de_la_floracion(otro, "2026-03-01"))
+
+    assert respuesta.status_code == 404
+    assert _floraciones_guardadas(otro) == [("2026-03-01", None)]
+
+
+def test_quitar_una_floracion_o_un_ejemplar_inexistentes_da_404(
+    client: TestClient, sesion: Sesion
+) -> None:
+    id = _ejemplar()
+
+    assert _quitar_floracion(client, sesion.csrf, id, 999).status_code == 404
+    assert _quitar_floracion(client, sesion.csrf, 999, 1).status_code == 404
+
+
+def test_tocar_las_floraciones_no_cambia_los_riegos(client: TestClient, sesion: Sesion) -> None:
+    id = _ejemplar()
+    _con_riegos(id, "2026-09-01")
+    _con_floraciones(id, ("2026-03-01", None))
+    floracion = _id_de_la_floracion(id, "2026-03-01")
+
+    _terminar(client, sesion.csrf, id, floracion, "2026-03-20")
+    _quitar_floracion(client, sesion.csrf, id, floracion)
+
+    assert _riegos_guardados(id) == ["2026-09-01"]
