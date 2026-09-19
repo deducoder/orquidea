@@ -14,3 +14,8 @@ names it.
 **Decided:** no se envía; la sesión implementa s4.1 ella misma.
 **Why:** `plan.md` del épico, `## Delegation`, fila s4.1: Block `—`, Mode `—` («The designation is the plan's, never the executor's»); orchestrate paso 6: una fila con `—` → esta sesión corre las skills de la historia.
 **Would have stopped:** P5 si la fila designara un bloque y `delegate` no pudiera correrlo.
+
+### 2026-09-19 · story-implement (s4.1) step 2 · Confirmar con el humano la intención del diseño
+**Decided:** no se espera confirmación; la intención va en el reporte: s4.1 añade la tabla `riegos` (cascada, `CHECK` de forma), la validación estricta de la fecha, el tope de 500 comprobado en el mismo `INSERT` y las funciones `agregar/listar/ultimo/quitar` filtradas por ejemplar y registro.
+**Why:** `stories/s4.1-*/plan.md` línea `> Pause: none (default)` y la propia skill: «unless the plan declares `> Pause: none`, in which case there is no human in the loop and the restatement goes in your report instead».
+**Would have stopped:** P5 si el plan declarara `per task`.
