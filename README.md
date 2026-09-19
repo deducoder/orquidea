@@ -73,6 +73,20 @@ uv run python scripts/medir-primera-carga.py ~/fotos/*.jpg   # con tus fotos rea
 
 Sale con código 1 si pasa del presupuesto. Con fotos de ejemplo es una estimación; la medición con el perfil "Slow 3G" de las herramientas del navegador y tus fotos reales es la que vale.
 
+## Historial de cuidados
+
+Cada ejemplar guarda su historial de **riegos** (una fecha) y de **floraciones** (fecha de inicio y, si ya terminó, de fin). La ficha del ejemplar muestra los dos historiales, del más reciente al más antiguo, y la fecha del último riego; "Mi colección" muestra el último riego de cada planta. Las fechas son días de calendario en formato AAAA-MM-DD, sin hora ni zona; no pueden ser posteriores a hoy, y "hoy" es el del servidor en UTC (al oeste de UTC, durante unas horas se acepta el día siguiente). Un fin no puede ser anterior al inicio y una floración terminada no se reabre: para corregir un registro se quita y se vuelve a agregar.
+
+Cada ejemplar admite hasta 500 riegos y 500 floraciones; el registro 501 se rechaza con un mensaje. El tope acota el peso de la ficha. El historial vive en la misma base SQLite que la colección, así que el respaldo de `/data` ya lo incluye y quitar un ejemplar borra su historial.
+
+El script de medición también mide la primera carga de la ficha con 50 riegos y 50 floraciones y con el tope (500 y 500), y sale con código 1 si alguna pasa del presupuesto de 200 KB; una prueba del gate lo vigila:
+
+```bash
+uv run python scripts/medir-primera-carga.py
+```
+
+El presupuesto se cuenta en gzip, como lo serviría un proxy: la ficha con el tope pesa unos 500 KB sin comprimir y unos 14 KB en gzip. **La aplicación no comprime sus respuestas**: comprueba que el proxy de tu despliegue comprima el HTML (no está verificado en Dokploy). La medición con el perfil "Slow 3G" de las herramientas del navegador y tus datos reales sigue siendo la que vale.
+
 ## Configuración
 
 Todo se configura por variables de entorno; ninguna vive en el repositorio ni en la imagen.

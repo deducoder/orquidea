@@ -6,6 +6,7 @@ from pathlib import Path
 import pytest
 
 from orquidea.autenticacion import LimiteDeIntentos
+from orquidea.coleccion.modelo import CUIDADOS_MAXIMO
 from orquidea.datos.almacen_fotos import directorio_de_fotos
 from orquidea.datos.fotos import ANCHO_MAXIMO, LADO_MINIATURA, TAMANO_MAXIMO
 from orquidea.datos.sesiones import ANTIGUEDAD_MAXIMA, INACTIVIDAD_MAXIMA
@@ -152,6 +153,7 @@ def test_cada_cifra_de_la_guia_es_la_de_su_constante() -> None:
         "ancho de la imagen": f"{ANCHO_MAXIMO} px",
         "lado de la miniatura": f"{LADO_MINIATURA} px",
         "cuerpo máximo": f"{LIMITE_DE_CUERPO // 1024**2} MiB",
+        "tope del historial": f"{CUIDADOS_MAXIMO} riegos y {CUIDADOS_MAXIMO} floraciones",
         "antigüedad de la sesión": f"{ANTIGUEDAD_MAXIMA // 3600} horas",
         "inactividad de la sesión": f"{INACTIVIDAD_MAXIMA // 60} minutos",
         "intentos": f"{_numero_en_palabras(LimiteDeIntentos.MAXIMO)} intentos",
@@ -171,3 +173,14 @@ def test_la_guia_dice_que_el_volumen_guarda_las_fotos_y_como_respaldarlas() -> N
     assert "sin metadatos" in texto and "ubicación" in texto
     assert "proxy" in texto
     assert "medir-primera-carga" in texto
+
+
+def test_la_guia_explica_el_historial_de_cuidados_y_su_peso() -> None:
+    texto = README.read_text(encoding="utf-8")
+
+    assert "## Historial de cuidados" in texto
+    assert "riegos" in texto and "floraciones" in texto
+    assert "AAAA-MM-DD" in texto and "UTC" in texto
+    assert "misma base" in texto  # se respalda con /data, junto con las fotos
+    assert "no comprime" in texto and "gzip" in texto
+    assert "Slow 3G" in texto
