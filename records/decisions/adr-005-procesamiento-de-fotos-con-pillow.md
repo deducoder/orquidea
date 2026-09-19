@@ -2,7 +2,7 @@
 type: adr
 id: ADR-005
 title: "Procesamiento de fotos con Pillow: se reconstruye la imagen desde sus píxeles"
-status: accepted
+status: superseded by ADR-007
 date: 2026-09-19
 epic: e3
 published: no — el proyecto no tiene espacio de documentación externo; el ADR vive solo en el repositorio
@@ -12,7 +12,7 @@ published: no — el proyecto no tiene espacio de documentación externo; el ADR
 
 ## Status
 
-Accepted
+Superseded by ADR-007 (solo cambia el tamaño y la calidad de la miniatura; el resto de la decisión se mantiene)
 
 ## Context
 
