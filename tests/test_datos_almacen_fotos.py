@@ -10,8 +10,11 @@ from PIL import Image
 
 from orquidea.datos import almacen_fotos
 from orquidea.datos.almacen_fotos import (
+    DirectorioDeFotosNoEscribible,
     NombreDeFotoInvalido,
+    directorio_de_fotos,
     poner_foto,
+    preparar_directorio,
     quitar_con_foto,
     quitar_foto,
     ruta_de_foto,
@@ -213,3 +216,36 @@ def test_dos_subidas_simultaneas_dejan_una_sola_foto(
     vigente = _nombre(conectar(ruta), ejemplar.id)
     assert all(resultados)
     assert _archivos(directorio) == _esperados(vigente)
+
+
+def test_el_directorio_por_defecto_va_junto_a_la_base(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    monkeypatch.delenv("ORQUIDEA_FOTOS", raising=False)
+
+    assert directorio_de_fotos(tmp_path / "datos" / "o.sqlite3") == tmp_path / "datos" / "fotos"
+
+
+def test_orquidea_fotos_cambia_el_directorio(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    monkeypatch.setenv("ORQUIDEA_FOTOS", str(tmp_path / "otras"))
+
+    assert directorio_de_fotos(tmp_path / "o.sqlite3") == tmp_path / "otras"
+
+
+def test_preparar_crea_el_directorio_y_no_deja_basura(tmp_path: Path) -> None:
+    directorio = tmp_path / "a" / "fotos"
+
+    preparar_directorio(directorio)
+    preparar_directorio(directorio)  # idempotente
+
+    assert directorio.is_dir() and _archivos(directorio) == set()
+
+
+def test_un_directorio_que_no_se_puede_escribir_falla_nombrando_la_ruta(tmp_path: Path) -> None:
+    archivo = tmp_path / "archivo"
+    archivo.write_text("no soy un directorio")
+
+    with pytest.raises(DirectorioDeFotosNoEscribible, match="archivo"):
+        preparar_directorio(archivo / "fotos")

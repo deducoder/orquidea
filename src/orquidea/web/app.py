@@ -7,6 +7,7 @@ from fastapi.responses import RedirectResponse, Response
 from fastapi.staticfiles import StaticFiles
 
 from orquidea.autenticacion import LimiteDeIntentos
+from orquidea.datos.almacen_fotos import directorio_de_fotos, preparar_directorio
 from orquidea.datos.base import abrir_base, ruta_de_la_base
 from orquidea.datos.catalogo import DIRECTORIO_CATALOGO, cargar_catalogo
 from orquidea.web.rutas import acceso, catalogo, coleccion
@@ -19,6 +20,7 @@ BASE_DIR = Path(__file__).parent
 async def ciclo_de_vida(app: FastAPI) -> AsyncIterator[None]:
     acceso.configurar_registro()
     abrir_base(app.state.ruta_base).close()
+    preparar_directorio(app.state.directorio_fotos)
     yield
 
 
@@ -31,6 +33,7 @@ app = FastAPI(
 )
 app.state.catalogo = cargar_catalogo(DIRECTORIO_CATALOGO)
 app.state.ruta_base = ruta_de_la_base()
+app.state.directorio_fotos = directorio_de_fotos(app.state.ruta_base)
 app.state.limite = LimiteDeIntentos()
 app.mount("/static", StaticFiles(directory=BASE_DIR / "static"), name="static")
 

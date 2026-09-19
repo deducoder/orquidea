@@ -64,6 +64,7 @@ Todo se configura por variables de entorno; ninguna vive en el repositorio ni en
 |----------|:-----------:|----------|
 | `ORQUIDEA_PASSWORD_HASH` | sí | Hash scrypt de la contraseña del único usuario. Sin ella (o con un valor inválido) nadie puede entrar. |
 | `ORQUIDEA_DB` | no | Ruta del archivo SQLite. En la imagen es `/data/orquidea.sqlite3` (el volumen); en local, `data/orquidea.sqlite3`. |
+| `ORQUIDEA_FOTOS` | no | Directorio donde se guardan las fotos de los ejemplares. Por defecto, `fotos/` junto al archivo de la base (en la imagen, dentro del volumen `/data`). |
 | `ORQUIDEA_COOKIE_SEGURA` | no | La cookie de sesión es `Secure` (solo viaja por HTTPS) y se emite la cabecera HSTS. Poner `0` **solo en desarrollo local** sin HTTPS; en el VPS, Dokploy termina el HTTPS y no debe tocarse. |
 
 Para generar el hash de la contraseña (no la guardes en ningún archivo; el hash sí puede ir en el entorno):

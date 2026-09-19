@@ -1,11 +1,15 @@
+import io
 import re
 import time
 from datetime import UTC, datetime
+from pathlib import Path
 
 import pytest
 from fastapi.testclient import TestClient
 from httpx2 import Response
+from PIL import Image
 
+from orquidea.datos.almacen_fotos import DirectorioDeFotosNoEscribible, poner_foto
 from orquidea.datos.base import conectar
 from orquidea.datos.ejemplares import (
     actualizar,
@@ -14,6 +18,7 @@ from orquidea.datos.ejemplares import (
     listar,
     obtener,
 )
+from orquidea.datos.fotos import procesar_foto
 from orquidea.datos.sesiones import Sesion
 from orquidea.web.app import app
 from tests.fabricas import especie
@@ -590,6 +595,38 @@ def test_confirmar_la_baja_quita_solo_ese_ejemplar(client: TestClient, sesion: S
     assert fila(otro) == (RADICANS, "", "notas del otro")
     assert fila(propio) == (None, "Mi rara", "")
     assert "notas del otro" in client.get("/coleccion").text
+
+
+def test_quitar_un_ejemplar_con_foto_borra_sus_archivos(client: TestClient, sesion: Sesion) -> None:
+    con_foto = alta(None, "Con foto")
+    sin_foto = alta(None, "Sin foto")
+    entrada = io.BytesIO()
+    Image.new("RGB", (60, 40), (10, 200, 90)).save(entrada, "JPEG")
+    conexion = conectar(app.state.ruta_base)
+    try:
+        assert poner_foto(
+            conexion, app.state.directorio_fotos, con_foto, procesar_foto(entrada.getvalue())
+        )
+    finally:
+        conexion.close()
+    assert len(list(app.state.directorio_fotos.iterdir())) == 2
+
+    respuesta = quitar_ejemplar(client, sesion, con_foto)
+
+    assert respuesta.status_code == 303
+    assert fila(con_foto) is None and fila(sin_foto) is not None
+    assert list(app.state.directorio_fotos.iterdir()) == []
+
+
+def test_un_directorio_de_fotos_que_no_se_puede_escribir_detiene_el_arranque(
+    anonimo: TestClient, tmp_path: Path
+) -> None:
+    archivo = tmp_path / "archivo"
+    archivo.write_text("no soy un directorio")
+    app.state.directorio_fotos = archivo / "fotos"
+
+    with pytest.raises(DirectorioDeFotosNoEscribible, match="archivo"), TestClient(app):
+        pass
 
 
 def test_quitar_un_id_inexistente_da_404_en_get_y_post(client: TestClient, sesion: Sesion) -> None:

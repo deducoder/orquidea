@@ -3,6 +3,7 @@ import os
 import re
 import secrets
 import sqlite3
+import tempfile
 import threading
 from pathlib import Path
 
@@ -19,6 +20,26 @@ _NOMBRE = re.compile(r"[A-Za-z0-9_-]{1,64}")
 
 class NombreDeFotoInvalido(ValueError):
     pass
+
+
+class DirectorioDeFotosNoEscribible(Exception):
+    pass
+
+
+def directorio_de_fotos(ruta_base: Path) -> Path:
+    """`ORQUIDEA_FOTOS`, o `fotos/` junto a la base: en la imagen, dentro del volumen `/data`."""
+    return Path(os.environ.get("ORQUIDEA_FOTOS") or ruta_base.parent / "fotos")
+
+
+def preparar_directorio(directorio: Path) -> None:
+    try:
+        directorio.mkdir(parents=True, exist_ok=True)
+        with tempfile.TemporaryFile(dir=directorio):
+            pass
+    except OSError as fallo:
+        raise DirectorioDeFotosNoEscribible(
+            f"No se puede escribir en el directorio de fotos {directorio}: {fallo}"
+        ) from fallo
 
 
 def ruta_de_foto(directorio: Path, nombre: str, *, miniatura: bool) -> Path:
