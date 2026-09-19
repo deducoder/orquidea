@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from fastapi import FastAPI, Request
+from fastapi import FastAPI, HTTPException, Request
 from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
@@ -25,3 +25,11 @@ def lista_de_especies(request: Request) -> HTMLResponse:
     return templates.TemplateResponse(
         request, "especies.html", {"especies": request.app.state.catalogo}
     )
+
+
+@app.get("/especies/{id}", response_class=HTMLResponse)
+def ficha_de_especie(request: Request, id: str) -> HTMLResponse:
+    especie = next((e for e in request.app.state.catalogo if e.id == id), None)
+    if especie is None:
+        raise HTTPException(status_code=404, detail="Especie no encontrada")
+    return templates.TemplateResponse(request, "especie.html", {"especie": especie})

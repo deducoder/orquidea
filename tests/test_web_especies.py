@@ -65,3 +65,30 @@ def test_lista_escapa_el_html_de_los_datos(client: TestClient) -> None:
 
     assert "<script>alert(1)</script>" not in html
     assert "&lt;script&gt;" in html
+
+
+def test_ficha_muestra_datos_generales_y_cada_cuidado_con_su_fuente(
+    client: TestClient,
+) -> None:
+    app.state.catalogo = [especie()]
+
+    respuesta = client.get("/especies/epidendrum-radicans")
+
+    assert respuesta.status_code == 200
+    html = respuesta.text
+    for esperado in (
+        "Epidendrum radicans",
+        "orquídea de fuego",
+        "Epífita de flores anaranjadas.",
+        "Hágsater et al. 2015",
+    ):
+        assert esperado in html
+    for cuidado in ("luz", "riego", "temperatura", "sustrato"):
+        assert f"texto de {cuidado}" in html
+        assert f"Fuente: fuente de {cuidado}" in html
+
+
+def test_ficha_de_id_inexistente_da_404(client: TestClient) -> None:
+    app.state.catalogo = [especie()]
+
+    assert client.get("/especies/no-existe").status_code == 404
