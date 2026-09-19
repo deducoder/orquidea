@@ -629,3 +629,38 @@ def test_tocar_las_floraciones_no_cambia_los_riegos(client: TestClient, sesion: 
     _quitar_floracion(client, sesion.csrf, id, floracion)
 
     assert _riegos_guardados(id) == ["2026-09-01"]
+
+
+def _rutas_de_floraciones(id: int, floracion: int) -> list[tuple[str, dict[str, str]]]:
+    return [
+        (f"/coleccion/{id}/floraciones", {"inicio": "2026-03-01", "fin": ""}),
+        (f"/coleccion/{id}/floraciones/{floracion}/fin", {"fin": "2026-03-20"}),
+        (f"/coleccion/{id}/floraciones/{floracion}/quitar", {}),
+    ]
+
+
+def test_sin_sesion_no_se_registra_termina_ni_quita_ninguna_floracion(
+    anonimo: TestClient,
+) -> None:
+    id = _ejemplar()
+    _con_floraciones(id, ("2026-03-01", None))
+    floracion = _id_de_la_floracion(id, "2026-03-01")
+
+    for ruta, datos in _rutas_de_floraciones(id, floracion):
+        respuesta = anonimo.post(ruta, data=datos, follow_redirects=False)
+
+        assert (respuesta.status_code, respuesta.headers["location"]) == (303, "/acceso"), ruta
+    assert _floraciones_guardadas(id) == [("2026-03-01", None)]
+
+
+def test_sin_token_csrf_no_cambia_ninguna_floracion(client: TestClient) -> None:
+    id = _ejemplar()
+    _con_floraciones(id, ("2026-03-01", None))
+    floracion = _id_de_la_floracion(id, "2026-03-01")
+
+    for ruta, datos in _rutas_de_floraciones(id, floracion):
+        sin_token = client.post(ruta, data=datos, follow_redirects=False)
+        equivocado = client.post(ruta, data={**datos, "csrf": "otro"}, follow_redirects=False)
+
+        assert (sin_token.status_code, equivocado.status_code) == (403, 403), ruta
+    assert _floraciones_guardadas(id) == [("2026-03-01", None)]

@@ -89,3 +89,43 @@ def test_registrar_un_riego_y_ver_el_ultimo_en_la_ficha_del_ejemplar(
         assert conexion.execute("SELECT COUNT(*) FROM riegos").fetchone() == (0,)
     finally:
         conexion.close()
+
+
+def _formulario(html: str, accion: str) -> tuple[str, str]:
+    """La acción de un formulario de la página y el token CSRF que ese mismo formulario lleva."""
+    formulario = re.search(rf'<form method="post" action="({accion})".*?</form>', html, re.S)
+    assert formulario is not None, accion
+    token = re.search(r'name="csrf" value="([^"]+)"', formulario.group())
+    assert token is not None, accion
+    return formulario.group(1), token.group(1)
+
+
+def test_registrar_terminar_y_quitar_una_floracion_desde_la_ficha(
+    anonimo: TestClient, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """RF-07 por la interfaz: el historial de floración de un ejemplar, de punta a punta."""
+    monkeypatch.setenv("ORQUIDEA_PASSWORD_HASH", hashear_contrasena(CONTRASENA, n=2**4))
+    anonimo.post("/acceso", data={"contrasena": CONTRASENA}, follow_redirects=False)
+    especie = anonimo.get(f"/especies/{ESPECIE}")
+    _, csrf = _formulario(especie.text, "/coleccion")
+    anonimo.post("/coleccion", data={"especie_id": ESPECIE, "csrf": csrf})
+    (ejemplar,) = listar(abrir_base(app.state.ruta_base))
+    base = f"/coleccion/{ejemplar.id}/floraciones"
+
+    # 1. Registra una floración en curso con el formulario de la ficha.
+    ficha = anonimo.get(f"/coleccion/{ejemplar.id}")
+    assert "Aún no hay floraciones." in ficha.text
+    accion, token = _formulario(ficha.text, base)
+    registrada = anonimo.post(accion, data={"inicio": "2026-03-01", "fin": "", "csrf": token})
+    assert re.search(r"<li>\s*2026-03-01 — en curso", registrada.text)
+
+    # 2. La termina con el formulario de esa fila y ve las dos fechas.
+    accion, token = _formulario(registrada.text, rf"{base}/\d+/fin")
+    terminada = anonimo.post(accion, data={"fin": "2026-03-20", "csrf": token})
+    assert re.search(r"<li>\s*2026-03-01 — 2026-03-20", terminada.text)
+    assert "Terminar" not in terminada.text  # ya no ofrece cerrarla otra vez
+
+    # 3. La quita con el formulario de esa fila y el historial vuelve a estar vacío.
+    accion, token = _formulario(terminada.text, rf"{base}/\d+/quitar")
+    quitada = anonimo.post(accion, data={"csrf": token})
+    assert "Aún no hay floraciones." in quitada.text
