@@ -1,7 +1,8 @@
 {
   "enabledPlugins": {
     "gemba-code@gemba": true,
-    "gemba@gemba": true
+    "gemba@gemba": true,
+    "gemba-design@gemba": true
   },
   "attribution": {
     "commit": "",
