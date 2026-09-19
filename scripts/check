@@ -1,0 +1,44 @@
+#!/usr/bin/env bash
+# Quality gates for this project — the commit gate.
+#
+# Run this before every commit. Nothing enforces that — a red check will not
+# stop a commit — so run it yourself while working.
+# Keep it FAST: lint, format, types, unit tests. Anything that needs services
+# running, the network, or minutes belongs in ./scripts/check-integration and
+# runs at push/PR time instead.
+#
+# Contract: exit 0 = green, non-zero = red. Binary and scriptable on purpose,
+# even with nothing consuming it today.
+#
+# Usage: ./scripts/check
+
+set -uo pipefail
+cd "$(dirname "$0")/.." || exit 1
+
+# Uncomment if the tests read configuration from a dotenv file:
+# set -a; [ -f .env ] && . ./.env 2>/dev/null; set +a
+
+fail=0
+run() { printf '\n· %s\n' "$*"; "$@" || fail=1; }
+
+# --- This project's gates ---------------------------------------------------
+# pytest exits 5 when it collects no tests — green until the first one exists.
+unit_tests() { uv run pytest -q; local rc=$?; [ "$rc" -eq 5 ] && return 0; return "$rc"; }
+
+run uv run ruff check
+run uv run ruff format --check
+run uv run mypy
+run unit_tests
+# -----------------------------------------------------------------------------
+
+# The method's own checks, vendored by /gemba:checks — opt-in; absent, nothing runs.
+for c in scripts/gemba/conventions/*/checks/*.sh; do
+  [ -e "$c" ] || continue
+  run bash "$c"
+done
+
+if [ "$fail" -ne 0 ]; then
+  printf '\n✗ gates failed\n'
+  exit 1
+fi
+printf '\n✓ gates passed\n'
