@@ -16,11 +16,19 @@ from fastapi.templating import Jinja2Templates
 
 from orquidea.autenticacion import LimiteDeIntentos, verificar_contrasena
 from orquidea.catalogo.busqueda import buscar
-from orquidea.coleccion.modelo import EjemplarInvalido, resolver, validar_ejemplar_propio
+from orquidea.coleccion.modelo import Ejemplar, EjemplarInvalido, resolver, validar_ejemplar
 from orquidea.datos.base import abrir_base, conectar, ruta_de_la_base
 from orquidea.datos.catalogo import DIRECTORIO_CATALOGO, cargar_catalogo
-from orquidea.datos.ejemplares import agregar, agregar_sin_especie, listar
-from orquidea.datos.sesiones import ANTIGUEDAD_MAXIMA, cerrar, crear, obtener
+from orquidea.datos.ejemplares import (
+    actualizar,
+    agregar,
+    agregar_sin_especie,
+    listar,
+    obtener,
+    quitar,
+)
+from orquidea.datos.sesiones import ANTIGUEDAD_MAXIMA, cerrar, crear
+from orquidea.datos.sesiones import obtener as obtener_sesion
 
 BASE_DIR = Path(__file__).parent
 registro = logging.getLogger("orquidea.acceso")
@@ -74,7 +82,7 @@ def exigir_sesion(
     if ruta is not None and ruta.path in RUTAS_PUBLICAS:
         return
     identificador = request.cookies.get(_nombre_de_cookie())
-    sesion = obtener(conexion, identificador, int(time.time())) if identificador else None
+    sesion = obtener_sesion(conexion, identificador, int(time.time())) if identificador else None
     if sesion is None:
         raise SesionRequerida
     if request.method not in METODOS_SEGUROS:
@@ -216,11 +224,76 @@ def agregar_a_mi_coleccion(
     return RedirectResponse("/coleccion", status_code=303)
 
 
+def _formulario_de_ejemplar(
+    request: Request,
+    estado: int,
+    *,
+    titulo: str,
+    accion: str,
+    boton: str,
+    nombre: str = "",
+    notas: str = "",
+    error: str = "",
+    especie: str = "",
+) -> HTMLResponse:
+    contexto = {
+        "titulo": titulo,
+        "accion": accion,
+        "boton": boton,
+        "nombre": nombre,
+        "notas": notas,
+        "error": error,
+        "especie": especie,
+    }
+    return templates.TemplateResponse(request, "ejemplar.html", contexto, status_code=estado)
+
+
 def _formulario_de_ejemplar_propio(
     request: Request, estado: int, nombre: str = "", notas: str = "", error: str = ""
 ) -> HTMLResponse:
-    contexto = {"nombre": nombre, "notas": notas, "error": error}
-    return templates.TemplateResponse(request, "nuevo_ejemplar.html", contexto, status_code=estado)
+    return _formulario_de_ejemplar(
+        request,
+        estado,
+        titulo="Planta fuera del catálogo",
+        accion="/coleccion/nuevo",
+        boton="Agregar a mi colección",
+        nombre=nombre,
+        notas=notas,
+        error=error,
+    )
+
+
+def _ejemplar_o_404(conexion: sqlite3.Connection, id: int) -> Ejemplar:
+    ejemplar = obtener(conexion, id)
+    if ejemplar is None:
+        raise HTTPException(status_code=404, detail="Ejemplar no encontrado")
+    return ejemplar
+
+
+def _formulario_de_edicion(
+    request: Request,
+    estado: int,
+    ejemplar: Ejemplar,
+    nombre: str,
+    notas: str,
+    error: str = "",
+) -> HTMLResponse:
+    especie = ""
+    if ejemplar.especie_id is not None:
+        catalogo = request.app.state.catalogo
+        encontrada = next((e for e in catalogo if e.id == ejemplar.especie_id), None)
+        especie = encontrada.nombre_cientifico if encontrada else ejemplar.especie_id
+    return _formulario_de_ejemplar(
+        request,
+        estado,
+        titulo="Editar ejemplar",
+        accion=f"/coleccion/{ejemplar.id}/editar",
+        boton="Guardar cambios",
+        nombre=nombre,
+        notas=notas,
+        error=error,
+        especie=especie,
+    )
 
 
 @app.get("/coleccion/nuevo", response_class=HTMLResponse)
@@ -236,10 +309,49 @@ def agregar_ejemplar_propio(
     notas: Annotated[str, Form()] = "",
 ) -> Response:
     try:
-        nombre_limpio, notas_limpias = validar_ejemplar_propio(nombre, notas)
+        nombre_limpio, notas_limpias = validar_ejemplar(nombre, notas)
     except EjemplarInvalido as fallo:
         return _formulario_de_ejemplar_propio(request, 422, nombre, notas, str(fallo))
     agregar_sin_especie(conexion, nombre_limpio, notas_limpias, int(time.time()))
+    return RedirectResponse("/coleccion", status_code=303)
+
+
+@app.get("/coleccion/{id}/editar", response_class=HTMLResponse)
+def formulario_de_edicion(request: Request, id: int, conexion: Base) -> HTMLResponse:
+    ejemplar = _ejemplar_o_404(conexion, id)
+    return _formulario_de_edicion(request, 200, ejemplar, ejemplar.nombre, ejemplar.notas)
+
+
+@app.post("/coleccion/{id}/editar", response_model=None)
+def editar_ejemplar(
+    request: Request,
+    id: int,
+    conexion: Base,
+    nombre: Annotated[str, Form()] = "",
+    notas: Annotated[str, Form()] = "",
+) -> Response:
+    ejemplar = _ejemplar_o_404(conexion, id)
+    try:
+        nombre_limpio, notas_limpias = validar_ejemplar(
+            nombre, notas, con_especie=ejemplar.especie_id is not None
+        )
+    except EjemplarInvalido as fallo:
+        return _formulario_de_edicion(request, 422, ejemplar, nombre, notas, str(fallo))
+    actualizar(conexion, id, nombre_limpio, notas_limpias)
+    return RedirectResponse("/coleccion", status_code=303)
+
+
+@app.get("/coleccion/{id}/quitar", response_class=HTMLResponse)
+def confirmar_baja(request: Request, id: int, conexion: Base) -> HTMLResponse:
+    ejemplar = _ejemplar_o_404(conexion, id)
+    (resuelto,) = resolver([ejemplar], request.app.state.catalogo)
+    return templates.TemplateResponse(request, "confirmar_baja.html", {"item": resuelto})
+
+
+@app.post("/coleccion/{id}/quitar")
+def quitar_ejemplar(id: int, conexion: Base) -> RedirectResponse:
+    if not quitar(conexion, id):
+        raise HTTPException(status_code=404, detail="Ejemplar no encontrado")
     return RedirectResponse("/coleccion", status_code=303)
 
 

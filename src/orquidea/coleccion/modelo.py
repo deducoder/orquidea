@@ -35,10 +35,10 @@ class EjemplarInvalido(ValueError):
     pass
 
 
-def validar_ejemplar_propio(nombre: str, notas: str) -> tuple[str, str]:
+def validar_ejemplar(nombre: str, notas: str, con_especie: bool = False) -> tuple[str, str]:
     nombre = nombre.strip()
     notas = notas.replace("\r\n", "\n").replace("\r", "\n").strip()
-    if not nombre:
+    if not nombre and not con_especie:
         raise EjemplarInvalido("El nombre es obligatorio.")
     if len(nombre) > NOMBRE_MAXIMO:
         raise EjemplarInvalido(f"El nombre no puede pasar de {NOMBRE_MAXIMO} caracteres.")

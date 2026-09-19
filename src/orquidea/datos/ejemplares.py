@@ -23,6 +23,27 @@ def agregar_sin_especie(
     )
 
 
+def obtener(conexion: sqlite3.Connection, id: int) -> Ejemplar | None:
+    fila = conexion.execute(
+        "SELECT id, especie_id, nombre, notas, creado FROM ejemplares WHERE id = ?", (id,)
+    ).fetchone()
+    if fila is None:
+        return None
+    return Ejemplar(id=fila[0], especie_id=fila[1], nombre=fila[2], notas=fila[3], creado=fila[4])
+
+
+def actualizar(conexion: sqlite3.Connection, id: int, nombre: str, notas: str) -> bool:
+    cursor = conexion.execute(
+        "UPDATE ejemplares SET nombre = ?, notas = ? WHERE id = ?", (nombre, notas, id)
+    )
+    return cursor.rowcount == 1
+
+
+def quitar(conexion: sqlite3.Connection, id: int) -> bool:
+    cursor = conexion.execute("DELETE FROM ejemplares WHERE id = ?", (id,))
+    return cursor.rowcount == 1
+
+
 def listar(conexion: sqlite3.Connection) -> list[Ejemplar]:
     filas = conexion.execute(
         "SELECT id, especie_id, nombre, notas, creado FROM ejemplares ORDER BY id"
