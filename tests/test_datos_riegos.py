@@ -1,10 +1,12 @@
 import sqlite3
+import threading
+from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 
 import pytest
 
 from orquidea.coleccion.modelo import CUIDADOS_MAXIMO, CuidadoInvalido, Riego
-from orquidea.datos.base import MIGRACIONES, abrir_base
+from orquidea.datos.base import MIGRACIONES, abrir_base, conectar
 from orquidea.datos.ejemplares import agregar as agregar_ejemplar
 from orquidea.datos.ejemplares import fijar_foto, listar
 from orquidea.datos.ejemplares import quitar as quitar_ejemplar
@@ -170,3 +172,32 @@ def test_la_migracion_conserva_los_ejemplares_y_sus_fotos(tmp_path: Path) -> Non
     assert (conservado.id, conservado.foto) == (ejemplar, "Xq3vT")
     assert nueva.execute("SELECT COUNT(*) FROM riegos").fetchone() == (0,)
     assert nueva.execute("PRAGMA user_version").fetchone() == (4,)
+
+
+def test_altas_simultaneas_no_rebasan_el_tope(tmp_path: Path) -> None:
+    ruta = tmp_path / "o.sqlite3"
+    base = abrir_base(ruta)
+    ejemplar = un_ejemplar(base)
+    base.executemany(
+        "INSERT INTO riegos (ejemplar_id, fecha) VALUES (?, '2026-01-01')",
+        [(ejemplar,)] * (CUIDADOS_MAXIMO - 1),
+    )
+    hilos = 8
+    salida = threading.Barrier(hilos)
+
+    def alta(_: int) -> bool:
+        conexion = conectar(ruta)  # como cada petición: una conexión propia
+        try:
+            salida.wait()
+            agregar(conexion, ejemplar, "2026-09-15")
+            return True
+        except CuidadoInvalido:
+            return False
+        finally:
+            conexion.close()
+
+    with ThreadPoolExecutor(max_workers=hilos) as pool:
+        resultados = list(pool.map(alta, range(hilos)))
+
+    assert resultados.count(True) == 1
+    assert base.execute("SELECT COUNT(*) FROM riegos").fetchone() == (CUIDADOS_MAXIMO,)
