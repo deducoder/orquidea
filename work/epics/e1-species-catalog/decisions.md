@@ -57,3 +57,13 @@ names it.
 **Decided:** "más conocidas y populares" se operacionaliza como las especies nativas de Chiapas con más observaciones de grado de investigación en iNaturalist que además tienen una fuente de cuidados utilizable; los cuidados citan la AOS a nivel de género y lo declaran en cada dato.
 **Why:** answer del supervisor: "Pongamos las 100 más conocidas y populares"; ninguna medida de popularidad comercial es accesible y `must-data-001` exige una fuente real por dato, así que se eligió la medida objetiva y reproducible descrita en `work/research/chiapas-orchid-seed/report.md`. No contradice ningún criterio `[stated]`: el 100 se cumple.
 **Would have stopped:** P4 si no hubiera 100 con fuente; no fue el caso (100 con fuente). Queda para revisión del humano: la regla de popularidad y que los cuidados sean de género, ambos marcados en la retrospectiva de s1.6.
+
+### 2026-09-19 · story-implement step 1 · s1.5: ofrecer el despacho del bloque
+**Decided:** no despachar; la sesión de épica implementa s1.5 ella misma.
+**Why:** `plan.md` de la épica, `## Delegation`, fila s1.5: `—`; y `delegate`: "never delegate on your own initiative without asking first".
+**Would have stopped:** una fila de Delegation con bloque para s1.5, o un stop añadido en el binding (`Added stops: none`).
+
+### 2026-09-19 · story-start step 4 · s1.5: el despliegue real queda fuera de la historia
+**Decided:** s1.5 entrega Dockerfile, healthcheck y guía; la ejecución del despliegue en el VPS no forma parte de la historia y el criterio `[stated]` de la épica ("desplegada en el VPS") se verifica con el humano en `epic-review`.
+**Why:** `scope.md` de la épica y regla de la épica ("A story under an epic merges locally... defers the push to `epic-close`"): sin push a GitHub, Dokploy no puede construir, y el acceso al Dokploy es del humano; publicar antes sería un push que el modo prohíbe hasta el cierre. Tampoco hay Docker utilizable en esta máquina.
+**Would have stopped:** P1 si el despliegue apuntara a `main`; no aplica. El criterio `[stated]` queda sin cumplir hasta que el humano despliegue: es el punto de P4 para `epic-review`.
