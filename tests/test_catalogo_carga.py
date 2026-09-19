@@ -119,3 +119,22 @@ def test_raiz_que_no_es_objeto_nombra_archivo_y_raiz(tmp_path: Path) -> None:
         cargar_catalogo(tmp_path)
 
     assert error.value.errores[0].startswith("lista.json: (raíz): ")
+
+
+def test_ids_duplicadas_nombran_ambos_archivos(tmp_path: Path) -> None:
+    escribir(tmp_path, "a.json", especie("laelia-anceps"))
+    escribir(tmp_path, "b.json", especie("laelia-anceps"))
+
+    with pytest.raises(CatalogoInvalido) as error:
+        cargar_catalogo(tmp_path)
+
+    assert error.value.errores == ['b.json: id: duplicada de a.json ("laelia-anceps")']
+
+
+def test_directorio_inexistente_es_catalogo_invalido(tmp_path: Path) -> None:
+    faltante = tmp_path / "no-existe"
+
+    with pytest.raises(CatalogoInvalido) as error:
+        cargar_catalogo(faltante)
+
+    assert str(faltante) in error.value.errores[0]

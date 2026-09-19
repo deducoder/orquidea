@@ -22,7 +22,7 @@ def cargar_catalogo(directorio: Path) -> list[Especie]:
     if not directorio.is_dir():
         raise CatalogoInvalido([f"{directorio}: el directorio del catálogo no existe"])
 
-    especies: list[Especie] = []
+    especies: dict[str, tuple[str, Especie]] = {}
     errores: list[str] = []
     for archivo in sorted(directorio.glob("*.json")):
         try:
@@ -33,13 +33,19 @@ def cargar_catalogo(directorio: Path) -> list[Especie]:
             )
             continue
         try:
-            especies.append(Especie.model_validate(datos))
+            especie = Especie.model_validate(datos)
         except ValidationError as fallo:
             errores.extend(
                 f"{archivo.name}: {_campo(error['loc'])}: {error['msg']}"
                 for error in fallo.errors()
             )
+            continue
+        if especie.id in especies:
+            primero = especies[especie.id][0]
+            errores.append(f'{archivo.name}: id: duplicada de {primero} ("{especie.id}")')
+            continue
+        especies[especie.id] = (archivo.name, especie)
 
     if errores:
         raise CatalogoInvalido(errores)
-    return sorted(especies, key=lambda especie: especie.id)
+    return [especie for _, especie in sorted(especies.values(), key=lambda par: par[1].id)]
