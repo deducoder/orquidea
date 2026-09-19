@@ -1,10 +1,15 @@
+import importlib.util
 from collections.abc import Iterator
+from pathlib import Path
 from typing import Any
 
 import pytest
 from fastapi.testclient import TestClient
 
 from orquidea.catalogo.modelo import Especie
+from orquidea.datos import catalogo as catalogo_datos
+from orquidea.datos.catalogo import CatalogoInvalido
+from orquidea.web import app as app_modulo
 from orquidea.web.app import app
 
 
@@ -92,3 +97,16 @@ def test_ficha_de_id_inexistente_da_404(client: TestClient) -> None:
     app.state.catalogo = [especie()]
 
     assert client.get("/especies/no-existe").status_code == 404
+
+
+def test_catalogo_invalido_detiene_el_arranque(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    (tmp_path / "roto.json").write_text("no es json", encoding="utf-8")
+    monkeypatch.setattr(catalogo_datos, "DIRECTORIO_CATALOGO", tmp_path)
+    spec = importlib.util.spec_from_file_location("app_de_prueba", app_modulo.__file__)
+    assert spec is not None and spec.loader is not None
+    modulo = importlib.util.module_from_spec(spec)
+
+    with pytest.raises(CatalogoInvalido, match="roto.json"):
+        spec.loader.exec_module(modulo)
