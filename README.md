@@ -12,8 +12,8 @@ uv sync            # instala Python y las dependencias de desarrollo
 ./scripts/check    # verifica que todo esté en verde
 ```
 
-Todavía no hay aplicación que ejecutar: el proyecto está recién gobernado y sin
-historias implementadas. Requisitos: [uv](https://docs.astral.sh/uv/) instalado.
+Para ejecutar la aplicación en local: `uv run uvicorn orquidea.web.app:app --reload` y abrir <http://127.0.0.1:8000>.
+Requisitos: [uv](https://docs.astral.sh/uv/) instalado.
 
 ## Development
 
@@ -33,6 +33,17 @@ uv run pytest tests/test_modulo.py::test_nombre
 
 Everything else about how work is organized (branches, commit format, where
 artifacts land) is in **Conventions** below.
+
+## Despliegue con Dokploy
+
+La aplicación se despliega en un VPS con [Dokploy](https://dokploy.com) (Debian 13) construyendo el `Dockerfile` del repositorio. Un solo proceso (`uvicorn`) sirve la aplicación en el puerto 8000 y `/salud` responde 200 cuando está viva. Dokploy termina el HTTPS.
+
+1. Con el código publicado en GitHub, crea en Dokploy una **Application** cuyo proveedor sea ese repositorio y la rama `main`.
+2. En **Build Type** elige **Dockerfile** (ruta `Dockerfile`, contexto `.`).
+3. En **Domains** añade tu dominio, puerto `8000`, y activa HTTPS con Let's Encrypt.
+4. Despliega y comprueba `https://tu-dominio/salud` (debe responder `{"estado":"ok"}`) y `https://tu-dominio/especies`.
+
+No hay variables de entorno ni secretos: el catálogo viaja dentro de la imagen. Los nombres de las opciones pueden variar según la versión de Dokploy. El `Dockerfile` no se ha construido todavía en una máquina con Docker: si el primer build falla, el error indicará qué ajustar.
 
 ## Structure
 
