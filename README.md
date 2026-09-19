@@ -52,9 +52,26 @@ La aplicación se despliega en un VPS con [Dokploy](https://dokploy.com) (Debian
 3. En **Domains** añade tu dominio, puerto `8000`, y activa HTTPS con Let's Encrypt.
 4. Despliega y comprueba `https://tu-dominio/salud` (debe responder `{"estado":"ok"}`) y `https://tu-dominio/especies`.
 
-La colección vive en un archivo SQLite: **monta un volumen en `/data`** (la imagen guarda ahí la base, `ORQUIDEA_DB=/data/orquidea.sqlite3`); sin volumen, un redespliegue la pierde. En Dokploy, añade un **Volume** al servicio con ruta de montaje `/data`. Un volumen con nombre hereda el propietario de la imagen (el usuario `app`, uid 10001); si montas una carpeta del servidor, dale ese propietario (`chown 10001 carpeta`). Las migraciones del esquema se aplican solas al arrancar una versión nueva sobre el mismo volumen.
+La colección vive en un archivo SQLite y las fotos en archivos junto a él: **monta un volumen en `/data`** (la imagen guarda ahí la base, `ORQUIDEA_DB=/data/orquidea.sqlite3`, y las fotos en `/data/fotos`); sin volumen, un redespliegue pierde las dos cosas. En Dokploy, añade un **Volume** al servicio con ruta de montaje `/data`. Un volumen con nombre hereda el propietario de la imagen (el usuario `app`, uid 10001); si montas una carpeta del servidor, dale ese propietario (`chown 10001 carpeta`): la aplicación crea `fotos/` al arrancar y **no arranca** si no puede escribir ahí, con un mensaje que nombra la ruta. Las migraciones del esquema se aplican solas al arrancar una versión nueva sobre el mismo volumen.
+
+**Respalda `/data` completo**: la base y las fotos van juntas; una foto sin su fila queda huérfana en el disco y una fila sin su foto se ve como un ejemplar sin foto. Si defines `ORQUIDEA_FOTOS`, apúntala a una ruta dentro de un volumen.
 
 Antes del primer despliegue, en **Environment** define `ORQUIDEA_PASSWORD_HASH` con el hash de tu contraseña (ver [Configuración](#configuración)). Sin él **nadie puede iniciar sesión**: la aplicación falla cerrada. El catálogo viaja dentro de la imagen. Los nombres de las opciones pueden variar según la versión de Dokploy. El `Dockerfile` no se ha construido todavía en una máquina con Docker: si el primer build falla, el error indicará qué ajustar.
+
+## Fotos
+
+Cada ejemplar admite una foto JPEG, PNG o WebP de hasta 10 MB. Al subirla se reduce a 1600 px de ancho, se guarda sin metadatos (sin EXIF y, por tanto, sin la ubicación GPS con que la tomó el teléfono) y se genera una miniatura de 192 px para las listas; el original no se conserva. Las fotos solo se entregan con la sesión iniciada.
+
+Si pones un proxy o balanceador delante de la aplicación, debe permitir cuerpos de petición de al menos 11 MiB (con nginx, `client_max_body_size 11m`); la aplicación responde 413 a lo que pase de ahí, y un proxy con un límite menor cortaría la subida antes.
+
+Para medir cuánto transfiere la primera carga de "Mi colección" con miniaturas (el presupuesto es de 200 KB, sin contar las fotos a tamaño completo):
+
+```bash
+uv run python scripts/medir-primera-carga.py                 # 25 fotos de ejemplo con detalle
+uv run python scripts/medir-primera-carga.py ~/fotos/*.jpg   # con tus fotos reales
+```
+
+Sale con código 1 si pasa del presupuesto. Con fotos de ejemplo es una estimación; la medición con el perfil "Slow 3G" de las herramientas del navegador y tus fotos reales es la que vale.
 
 ## Configuración
 
@@ -79,9 +96,9 @@ Imprime una línea con el formato `scrypt$N$r$p$sal$hash`; pégala como valor de
 
 | Path | What lives here |
 |------|-----------------|
-| `src/orquidea/` | El código de la aplicación: `catalogo/` y `coleccion/` (dominio), `autenticacion.py` (contraseña e intentos), `datos/` (SQLite con migraciones, sesiones, ejemplares y los JSON del catálogo) y `web/` (rutas y plantillas) |
+| `src/orquidea/` | El código de la aplicación: `catalogo/` y `coleccion/` (dominio), `autenticacion.py` (contraseña e intentos), `datos/` (SQLite con migraciones, sesiones, ejemplares, fotos y los JSON del catálogo) y `web/` (rutas y plantillas) |
 | `tests/` | Pruebas unitarias |
-| `scripts/` | Gate entry points (see Development) |
+| `scripts/` | Gate entry points (see Development) y `medir-primera-carga.py` (ver Fotos) |
 | `Dockerfile` | Imagen para desplegar en Dokploy (ver Despliegue con Dokploy) |
 | `governance/` | Vision, requirements, guardrails, architecture (see below) |
 | `conventions/` | Bindings de esta instancia (autonomía, notificaciones, seguridad) |
