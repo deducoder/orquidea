@@ -20,4 +20,4 @@ Permite subir una foto de cada ejemplar y registrar sus riegos y floraciones.
 | Epic | Status |
 |---|---|
 | e3 | closed |
-| e4 | open |
+| e4 | closed |
