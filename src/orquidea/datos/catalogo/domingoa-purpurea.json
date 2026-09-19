@@ -1,0 +1,28 @@
+{
+  "id": "domingoa-purpurea",
+  "nombre_cientifico": "Domingoa purpurea",
+  "nombres_comunes": [],
+  "descripcion": "Orquídea del género Domingoa, nativa de Chiapas: iNaturalist la registra 53 veces con grado de investigación en el estado, lo que la ubica entre las 100 más registradas con cuidados documentados. La AOS describe las plantas del género como epífitas de ramitas. Los cuidados de la ficha son los documentados para el género, no medidos para esta especie.",
+  "cuidados": {
+    "luz": {
+      "texto": "Luz brillante.",
+      "fuente": "AOS, página del género Domingoa (Care and Culture Card), https://www.aos.org/explore/domingoa, consultada el 2026-09-19; cuidado del género, no específico de la especie"
+    },
+    "riego": {
+      "texto": "Riego frecuente durante el crecimiento y solo de mantenimiento cuando maduran los brotes.",
+      "fuente": "AOS, página del género Domingoa (Care and Culture Card), https://www.aos.org/explore/domingoa, consultada el 2026-09-19; cuidado del género, no específico de la especie"
+    },
+    "temperatura": {
+      "texto": "Temperaturas cálidas.",
+      "fuente": "AOS, página del género Domingoa (Care and Culture Card), https://www.aos.org/explore/domingoa, consultada el 2026-09-19; cuidado del género, no específico de la especie"
+    },
+    "sustrato": {
+      "texto": "En tablillas pequeñas sin material que retenga humedad, o en macetas pequeñas con mezcla fina para plántulas, colgadas.",
+      "fuente": "AOS, página del género Domingoa (Care and Culture Card), https://www.aos.org/explore/domingoa, consultada el 2026-09-19; cuidado del género, no específico de la especie"
+    }
+  },
+  "fuentes": [
+    "iNaturalist, observaciones de grado de investigación de Domingoa purpurea en Chiapas (nativa, no cautiva), https://www.inaturalist.org/observations?place_id=97003&taxon_name=Domingoa%20purpurea&quality_grade=research, consultada el 2026-09-19",
+    "AOS, página del género Domingoa (Care and Culture Card), https://www.aos.org/explore/domingoa, consultada el 2026-09-19; cuidado del género, no específico de la especie"
+  ]
+}

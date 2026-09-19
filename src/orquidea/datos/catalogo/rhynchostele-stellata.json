@@ -1,0 +1,28 @@
+{
+  "id": "rhynchostele-stellata",
+  "nombre_cientifico": "Rhynchostele stellata",
+  "nombres_comunes": [],
+  "descripcion": "Orquídea del género Rhynchostele, nativa de Chiapas: iNaturalist la registra 38 veces con grado de investigación en el estado, lo que la ubica entre las 100 más registradas con cuidados documentados. Los cuidados de la ficha son los documentados para el género, no medidos para esta especie.",
+  "cuidados": {
+    "luz": {
+      "texto": "Luz brillante.",
+      "fuente": "AOS, página del género Rhynchostele (Care and Culture Card), https://www.aos.org/explore/rhynchostele, consultada el 2026-09-19; cuidado del género, no específico de la especie"
+    },
+    "riego": {
+      "texto": "Riego regular durante todo el año.",
+      "fuente": "AOS, página del género Rhynchostele (Care and Culture Card), https://www.aos.org/explore/rhynchostele, consultada el 2026-09-19; cuidado del género, no específico de la especie"
+    },
+    "temperatura": {
+      "texto": "Temperaturas frescas.",
+      "fuente": "AOS, página del género Rhynchostele (Care and Culture Card), https://www.aos.org/explore/rhynchostele, consultada el 2026-09-19; cuidado del género, no específico de la especie"
+    },
+    "sustrato": {
+      "texto": "Las especies miniatura, en tablillas con un poco de material que retenga humedad en las raíces; las de mayor tamaño, en macetas poco profundas con mezcla de grado medio para epífitas.",
+      "fuente": "AOS, página del género Rhynchostele (Care and Culture Card), https://www.aos.org/explore/rhynchostele, consultada el 2026-09-19; cuidado del género, no específico de la especie"
+    }
+  },
+  "fuentes": [
+    "iNaturalist, observaciones de grado de investigación de Rhynchostele stellata en Chiapas (nativa, no cautiva), https://www.inaturalist.org/observations?place_id=97003&taxon_name=Rhynchostele%20stellata&quality_grade=research, consultada el 2026-09-19",
+    "AOS, página del género Rhynchostele (Care and Culture Card), https://www.aos.org/explore/rhynchostele, consultada el 2026-09-19; cuidado del género, no específico de la especie"
+  ]
+}

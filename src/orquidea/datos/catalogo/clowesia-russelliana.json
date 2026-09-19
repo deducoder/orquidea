@@ -1,0 +1,28 @@
+{
+  "id": "clowesia-russelliana",
+  "nombre_cientifico": "Clowesia russelliana",
+  "nombres_comunes": [],
+  "descripcion": "Orquídea del género Clowesia, nativa de Chiapas: iNaturalist la registra 25 veces con grado de investigación en el estado, lo que la ubica entre las 100 más registradas con cuidados documentados. Los cuidados de la ficha son los documentados para el género, no medidos para esta especie.",
+  "cuidados": {
+    "luz": {
+      "texto": "Luz muy brillante.",
+      "fuente": "AOS, página del género Clowesia (Care and Culture Card), https://www.aos.org/explore/clowesia, consultada el 2026-09-19; cuidado del género, no específico de la especie"
+    },
+    "riego": {
+      "texto": "Riego regular durante el crecimiento; tras la floración y la caída de las hojas, mínimo hasta el nuevo crecimiento.",
+      "fuente": "AOS, página del género Clowesia (Care and Culture Card), https://www.aos.org/explore/clowesia, consultada el 2026-09-19; cuidado del género, no específico de la especie"
+    },
+    "temperatura": {
+      "texto": "De intermedias a cálidas.",
+      "fuente": "AOS, página del género Clowesia (Care and Culture Card), https://www.aos.org/explore/clowesia, consultada el 2026-09-19; cuidado del género, no específico de la especie"
+    },
+    "sustrato": {
+      "texto": "En macetas o canastas con mezcla de grado medio para epífitas.",
+      "fuente": "AOS, página del género Clowesia (Care and Culture Card), https://www.aos.org/explore/clowesia, consultada el 2026-09-19; cuidado del género, no específico de la especie"
+    }
+  },
+  "fuentes": [
+    "iNaturalist, observaciones de grado de investigación de Clowesia russelliana en Chiapas (nativa, no cautiva), https://www.inaturalist.org/observations?place_id=97003&taxon_name=Clowesia%20russelliana&quality_grade=research, consultada el 2026-09-19",
+    "AOS, página del género Clowesia (Care and Culture Card), https://www.aos.org/explore/clowesia, consultada el 2026-09-19; cuidado del género, no específico de la especie"
+  ]
+}

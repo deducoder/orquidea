@@ -1,0 +1,28 @@
+{
+  "id": "maxillaria-elatior",
+  "nombre_cientifico": "Maxillaria elatior",
+  "nombres_comunes": [],
+  "descripcion": "Orquídea del género Maxillaria, nativa de Chiapas: iNaturalist la registra 27 veces con grado de investigación en el estado, lo que la ubica entre las 100 más registradas con cuidados documentados. Los cuidados de la ficha son los documentados para el género, no medidos para esta especie.",
+  "cuidados": {
+    "luz": {
+      "texto": "De media a medianamente brillante, evitando que las hojas se calienten en exceso.",
+      "fuente": "AOS, página del género Maxillaria (Care and Culture Card), https://www.aos.org/explore/maxillaria, consultada el 2026-09-19; cuidado del género, no específico de la especie"
+    },
+    "riego": {
+      "texto": "Riego regular durante todo el año, sin un descanso marcado.",
+      "fuente": "AOS, página del género Maxillaria (Care and Culture Card), https://www.aos.org/explore/maxillaria, consultada el 2026-09-19; cuidado del género, no específico de la especie"
+    },
+    "temperatura": {
+      "texto": "La AOS no da una temperatura general por la diversidad del género; las especies de bosque de niebla no deben calentarse en exceso.",
+      "fuente": "AOS, página del género Maxillaria (Care and Culture Card), https://www.aos.org/explore/maxillaria, consultada el 2026-09-19; cuidado del género, no específico de la especie"
+    },
+    "sustrato": {
+      "texto": "En tablillas con material que retenga humedad, en canastas o en macetas con mezcla fina para epífitas; las de bosque de niebla, en musgo sphagnum sin dejar secar del todo las raíces.",
+      "fuente": "AOS, página del género Maxillaria (Care and Culture Card), https://www.aos.org/explore/maxillaria, consultada el 2026-09-19; cuidado del género, no específico de la especie"
+    }
+  },
+  "fuentes": [
+    "iNaturalist, observaciones de grado de investigación de Maxillaria elatior en Chiapas (nativa, no cautiva), https://www.inaturalist.org/observations?place_id=97003&taxon_name=Maxillaria%20elatior&quality_grade=research, consultada el 2026-09-19",
+    "AOS, página del género Maxillaria (Care and Culture Card), https://www.aos.org/explore/maxillaria, consultada el 2026-09-19; cuidado del género, no específico de la especie"
+  ]
+}

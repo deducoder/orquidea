@@ -1,0 +1,30 @@
+{
+  "id": "encyclia-cordigera",
+  "nombre_cientifico": "Encyclia cordigera",
+  "nombres_comunes": [
+    "Flor de Encarnacion"
+  ],
+  "descripcion": "Orquídea del género Encyclia, nativa de Chiapas: iNaturalist la registra 86 veces con grado de investigación en el estado, lo que la ubica entre las 100 más registradas con cuidados documentados. Los cuidados de la ficha son los documentados para el género, no medidos para esta especie.",
+  "cuidados": {
+    "luz": {
+      "texto": "Luz muy brillante.",
+      "fuente": "AOS, página del género Encyclia (Care and Culture Card), https://www.aos.org/explore/encyclia, consultada el 2026-09-19; cuidado del género, no específico de la especie"
+    },
+    "riego": {
+      "texto": "Riego regular durante el crecimiento, dejando secar ligeramente las raíces entre riegos; menos agua cuando maduran los pseudobulbos.",
+      "fuente": "AOS, página del género Encyclia (Care and Culture Card), https://www.aos.org/explore/encyclia, consultada el 2026-09-19; cuidado del género, no específico de la especie"
+    },
+    "temperatura": {
+      "texto": "De intermedias a cálidas.",
+      "fuente": "AOS, página del género Encyclia (Care and Culture Card), https://www.aos.org/explore/encyclia, consultada el 2026-09-19; cuidado del género, no específico de la especie"
+    },
+    "sustrato": {
+      "texto": "En macetas o canastas con mezcla de grado medio para epífitas, o en tablillas sin material que retenga humedad.",
+      "fuente": "AOS, página del género Encyclia (Care and Culture Card), https://www.aos.org/explore/encyclia, consultada el 2026-09-19; cuidado del género, no específico de la especie"
+    }
+  },
+  "fuentes": [
+    "iNaturalist, observaciones de grado de investigación de Encyclia cordigera en Chiapas (nativa, no cautiva), https://www.inaturalist.org/observations?place_id=97003&taxon_name=Encyclia%20cordigera&quality_grade=research, consultada el 2026-09-19",
+    "AOS, página del género Encyclia (Care and Culture Card), https://www.aos.org/explore/encyclia, consultada el 2026-09-19; cuidado del género, no específico de la especie"
+  ]
+}

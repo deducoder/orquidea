@@ -1,0 +1,30 @@
+{
+  "id": "ionopsis-utricularioides",
+  "nombre_cientifico": "Ionopsis utricularioides",
+  "nombres_comunes": [
+    "Angelitos"
+  ],
+  "descripcion": "Orquídea del género Ionopsis, nativa de Chiapas: iNaturalist la registra 18 veces con grado de investigación en el estado, lo que la ubica entre las 100 más registradas con cuidados documentados. La AOS describe las plantas del género como epífitas de ramitas de tierras bajas. Los cuidados de la ficha son los documentados para el género, no medidos para esta especie.",
+  "cuidados": {
+    "luz": {
+      "texto": "Luz alta y buena circulación de aire.",
+      "fuente": "AOS, página del género Ionopsis (Care and Culture Card), https://www.aos.org/explore/ionopsis, consultada el 2026-09-19; cuidado del género, no específico de la especie"
+    },
+    "riego": {
+      "texto": "Riego frecuente (diario) siempre que las raíces se sequen con rapidez.",
+      "fuente": "AOS, página del género Ionopsis (Care and Culture Card), https://www.aos.org/explore/ionopsis, consultada el 2026-09-19; cuidado del género, no específico de la especie"
+    },
+    "temperatura": {
+      "texto": "De intermedias a cálidas.",
+      "fuente": "AOS, página del género Ionopsis (Care and Culture Card), https://www.aos.org/explore/ionopsis, consultada el 2026-09-19; cuidado del género, no específico de la especie"
+    },
+    "sustrato": {
+      "texto": "En tablillas o ramitas sin medio que retenga humedad; I. utricularioides admite un medio fino en recipiente.",
+      "fuente": "AOS, página del género Ionopsis (Care and Culture Card), https://www.aos.org/explore/ionopsis, consultada el 2026-09-19; cuidado del género, no específico de la especie"
+    }
+  },
+  "fuentes": [
+    "iNaturalist, observaciones de grado de investigación de Ionopsis utricularioides en Chiapas (nativa, no cautiva), https://www.inaturalist.org/observations?place_id=97003&taxon_name=Ionopsis%20utricularioides&quality_grade=research, consultada el 2026-09-19",
+    "AOS, página del género Ionopsis (Care and Culture Card), https://www.aos.org/explore/ionopsis, consultada el 2026-09-19; cuidado del género, no específico de la especie"
+  ]
+}

@@ -1,0 +1,30 @@
+{
+  "id": "trichocentrum-brachyphyllum",
+  "nombre_cientifico": "Trichocentrum brachyphyllum",
+  "nombres_comunes": [
+    "Chorizo con huevo"
+  ],
+  "descripcion": "Orquídea del género Trichocentrum, nativa de Chiapas: iNaturalist la registra 17 veces con grado de investigación en el estado, lo que la ubica entre las 100 más registradas con cuidados documentados. Los cuidados de la ficha son los documentados para el género, no medidos para esta especie.",
+  "cuidados": {
+    "luz": {
+      "texto": "De 1 a 5 horas de sol al día; en invernadero, de 21,500 a 64,500 lúmenes (2,000 a 6,000 pies-vela); las de hojas gruesas toleran más luz.",
+      "fuente": "AOS, Oncidium Culture Sheet, https://www.aos.org/orchid-care/care-sheets/oncidium-culture-sheet, consultada el 2026-09-19; la AOS no tiene hoja para Trichocentrum (antes en Oncidium); cuidado del género, no específico de la especie"
+    },
+    "riego": {
+      "texto": "El sustrato debe secarse al menos hasta la mitad de la maceta antes de volver a regar; las de raíces o hojas carnosas necesitan riegos menos frecuentes.",
+      "fuente": "AOS, Oncidium Culture Sheet, https://www.aos.org/orchid-care/care-sheets/oncidium-culture-sheet, consultada el 2026-09-19; la AOS no tiene hoja para Trichocentrum (antes en Oncidium); cuidado del género, no específico de la especie"
+    },
+    "temperatura": {
+      "texto": "De intermedia a cálida: noches de 13 a 16 °C y días de 27 a 29 °C.",
+      "fuente": "AOS, Oncidium Culture Sheet, https://www.aos.org/orchid-care/care-sheets/oncidium-culture-sheet, consultada el 2026-09-19; la AOS no tiene hoja para Trichocentrum (antes en Oncidium); cuidado del género, no específico de la especie"
+    },
+    "sustrato": {
+      "texto": "En invernadero, de sphagnum puro a mitad sphagnum y mitad corteza fina; las de hoja de mula y las de ramita, en montajes de corcho o helecho arbóreo o en macetas con medio grueso.",
+      "fuente": "AOS, Oncidium Culture Sheet, https://www.aos.org/orchid-care/care-sheets/oncidium-culture-sheet, consultada el 2026-09-19; la AOS no tiene hoja para Trichocentrum (antes en Oncidium); cuidado del género, no específico de la especie"
+    }
+  },
+  "fuentes": [
+    "iNaturalist, observaciones de grado de investigación de Trichocentrum brachyphyllum en Chiapas (nativa, no cautiva), https://www.inaturalist.org/observations?place_id=97003&taxon_name=Trichocentrum%20brachyphyllum&quality_grade=research, consultada el 2026-09-19",
+    "AOS, Oncidium Culture Sheet, https://www.aos.org/orchid-care/care-sheets/oncidium-culture-sheet, consultada el 2026-09-19; la AOS no tiene hoja para Trichocentrum (antes en Oncidium); cuidado del género, no específico de la especie"
+  ]
+}
