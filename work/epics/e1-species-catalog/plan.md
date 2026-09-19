@@ -8,14 +8,14 @@
 | 2 | s1.2 | risk-first | — | — | — | s1.3, s1.6: esquema y carga validada, el contrato central de la épica |
 | 3 | s1.3 | dependency | — | — | s1.1 (hard), s1.2 (hard) | s1.4, s1.5: ficha visible de una especie |
 | 4 | s1.4 | quick-win | — | — | s1.3 (hard) | búsqueda sobre el catálogo; no depende de nada del humano |
-| 5 | s1.5 | risk-first | — | — | s1.1 (hard), s1.3 (hard), s1.6 (hard) | primera prueba real de la métrica líder en el VPS |
-| 6 | s1.6 | risk-first | — | — | s1.2 (hard) | especie real con fuentes, que s1.5 muestra en línea y sobre la que se mide must-perf-001 |
+| 5 | s1.6 | risk-first | — | — | s1.2 (hard) | especie real con fuentes, que s1.5 muestra en línea y sobre la que se mide must-perf-001 |
+| 6 | s1.5 | risk-first | — | — | s1.1 (hard), s1.3 (hard), s1.6 (hard) | primera prueba real de la métrica líder en el VPS |
 
 `Priority` y `Component` quedan en `—`: el proyecto no tiene tracker ni binding que nombre los valores.
 
 **Rationale:** s1.1 abre como esqueleto: prueba el stack y los gates de extremo a extremo con lo mínimo. s1.2 va enseguida porque el esquema con fuente obligatoria es el contrato del que dependen ficha, búsqueda y semilla. s1.3 cierra el primer camino completo (JSON validado a ficha). El despliegue (s1.5) se adelanta antes de la búsqueda: el brief pide desplegar temprano, y sus incógnitas (datos del VPS, forma de despliegue) son las de mayor riesgo, así que conviene encontrarlas con la mitad del trabajo pendiente y no al final; no puede ir antes de s1.3 porque su criterio es ver una especie en su ficha en línea. s1.4 es la victoria rápida sobre lo ya desplegado. s1.6 va al final porque depende de que el humano aporte especies y fuentes reales, y nada más la espera.
 
-**Re-plan (2026-09-19, tras s1.3):** s1.4 pasa antes de s1.5, y s1.5 depende ahora de s1.6. El criterio de s1.5 es ver una especie real en su ficha en línea, y ninguna especie real con fuentes existe hasta s1.6; ambas necesitan datos que solo el humano puede aportar (especies y fuentes; datos del VPS). Así se agota primero lo que no depende de nadie y ambas preguntas llegan juntas en un solo stop.
+**Re-plan (2026-09-19, tras s1.3):** el orden pasa a s1.4, s1.6, s1.5: s1.5 depende de s1.6 y va después. El criterio de s1.5 es ver una especie real en su ficha en línea, y ninguna especie real con fuentes existe hasta s1.6; ambas necesitan datos que solo el humano puede aportar (especies y fuentes; datos del VPS). Así se agota primero lo que no depende de nadie y ambas preguntas llegan juntas en un solo stop.
 
 ## Milestones
 
@@ -47,9 +47,9 @@ None. Las historias se recorren en secuencia; s1.2 y s1.1 no tienen dependencia 
 | s1.1 | done | S | S |
 | s1.2 | done | M | M |
 | s1.3 | done | M | M |
-| s1.5 | todo | M | — |
 | s1.4 | todo | S | — |
 | s1.6 | todo | S | — |
+| s1.5 | todo | M | — |
 
 ## Sequencing risks
 
