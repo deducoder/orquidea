@@ -26,10 +26,10 @@ Una función pura `procesar_foto(datos: bytes) -> FotoProcesada` en `orquidea.da
 ```python
 from orquidea.datos.fotos import FotoInvalida, procesar_foto
 
-foto = procesar_foto(open("orquidea.jpg", "rb").read())   # 4000x3000 con GPS
-Image.open(io.BytesIO(foto.imagen)).size                  # (1600, 1200)
-Image.open(io.BytesIO(foto.miniatura)).size               # (320, 240)
-Image.open(io.BytesIO(foto.imagen)).getexif()             # vacío
+foto = procesar_foto(open("orquidea.jpg", "rb").read())  # 4000x3000 con GPS
+Image.open(io.BytesIO(foto.imagen)).size  # (1600, 1200)
+Image.open(io.BytesIO(foto.miniatura)).size  # (320, 240)
+Image.open(io.BytesIO(foto.imagen)).getexif()  # vacío
 ```
 
 ### Expected output (success + error)
@@ -46,11 +46,12 @@ procesar_foto(imagen de 20000x20000)     -> FotoInvalida("La foto es demasiado g
 ### Key data structures (if applicable)
 
 ```python
-TAMANO_MAXIMO = 10 * 1024 * 1024      # bytes del archivo subido
-PIXELES_MAXIMOS = 64_000_000           # ancho x alto; un teléfono de 50 MP cabe
+TAMANO_MAXIMO = 10 * 1024 * 1024  # bytes del archivo subido
+PIXELES_MAXIMOS = 64_000_000  # ancho x alto; un teléfono de 50 MP cabe
 ANCHO_MAXIMO = 1600
 LADO_MINIATURA = 320
 FORMATOS = frozenset({"JPEG", "PNG", "WEBP"})
+
 
 @dataclass(frozen=True)
 class FotoProcesada:
