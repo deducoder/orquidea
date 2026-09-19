@@ -11,10 +11,10 @@
     <a href="/especies/{{ item.especie.id }}"><i>{{ item.especie.nombre_cientifico }}</i></a>
     {% elif item.ejemplar.especie_id %}
     {{ item.ejemplar.especie_id }} <small>(esa especie ya no está en el catálogo)</small>
-    {% else %}
-    {{ item.ejemplar.nombre }}
     {% endif %}
+    {% if item.ejemplar.especie_id and item.ejemplar.nombre %}«{{ item.ejemplar.nombre }}»{% elif not item.ejemplar.especie_id %}{{ item.ejemplar.nombre }}{% endif %}
     <small>Agregado el {{ item.ejemplar.creado | fecha }}</small>
+    <a href="/coleccion/{{ item.ejemplar.id }}/editar">Editar</a>
     {% if item.ejemplar.notas %}
     <p style="white-space: pre-line">{{ item.ejemplar.notas }}</p>
     {% endif %}
