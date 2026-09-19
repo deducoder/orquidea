@@ -26,12 +26,12 @@ def hashes_de_sesion() -> list[str]:
         conexion.close()
 
 
-def acceder(client: TestClient, contrasena: str = CONTRASENA) -> Response:
-    return client.post("/acceso", data={"contrasena": contrasena}, follow_redirects=False)
+def acceder(anonimo: TestClient, contrasena: str = CONTRASENA) -> Response:
+    return anonimo.post("/acceso", data={"contrasena": contrasena}, follow_redirects=False)
 
 
-def test_el_formulario_de_acceso_pide_solo_la_contrasena(client: TestClient) -> None:
-    respuesta = client.get("/acceso")
+def test_el_formulario_de_acceso_pide_solo_la_contrasena(anonimo: TestClient) -> None:
+    respuesta = anonimo.get("/acceso")
 
     assert respuesta.status_code == 200
     assert 'type="password"' in respuesta.text
@@ -40,8 +40,8 @@ def test_el_formulario_de_acceso_pide_solo_la_contrasena(client: TestClient) -> 
     assert 'autocomplete="current-password"' in respuesta.text
 
 
-def test_la_contrasena_correcta_crea_la_sesion_y_redirige(client: TestClient) -> None:
-    respuesta = acceder(client)
+def test_la_contrasena_correcta_crea_la_sesion_y_redirige(anonimo: TestClient) -> None:
+    respuesta = acceder(anonimo)
 
     assert respuesta.status_code == 303
     assert respuesta.headers["location"] == "/"
@@ -50,8 +50,8 @@ def test_la_contrasena_correcta_crea_la_sesion_y_redirige(client: TestClient) ->
     assert identificador not in hashes_de_sesion()
 
 
-def test_la_cookie_es_httponly_samesite_lax_y_secure(client: TestClient) -> None:
-    cookie = acceder(client).headers["set-cookie"].lower()
+def test_la_cookie_es_httponly_samesite_lax_y_secure(anonimo: TestClient) -> None:
+    cookie = acceder(anonimo).headers["set-cookie"].lower()
 
     assert "httponly" in cookie
     assert "samesite=lax" in cookie
@@ -62,19 +62,19 @@ def test_la_cookie_es_httponly_samesite_lax_y_secure(client: TestClient) -> None
 
 
 def test_la_cookie_sin_secure_solo_si_el_entorno_lo_desactiva(
-    client: TestClient, monkeypatch: pytest.MonkeyPatch
+    anonimo: TestClient, monkeypatch: pytest.MonkeyPatch
 ) -> None:
     monkeypatch.setenv("ORQUIDEA_COOKIE_SEGURA", "0")
 
-    cookie = acceder(client).headers["set-cookie"].lower()
+    cookie = acceder(anonimo).headers["set-cookie"].lower()
 
     assert cookie.startswith("sesion=")
     assert "secure" not in cookie
     assert "httponly" in cookie
 
 
-def test_una_contrasena_incorrecta_muestra_el_error_y_no_crea_sesion(client: TestClient) -> None:
-    respuesta = acceder(client, "otra")
+def test_una_contrasena_incorrecta_muestra_el_error_y_no_crea_sesion(anonimo: TestClient) -> None:
+    respuesta = acceder(anonimo, "otra")
 
     assert respuesta.status_code == 401
     assert "Contraseña incorrecta" in respuesta.text
@@ -85,26 +85,26 @@ def test_una_contrasena_incorrecta_muestra_el_error_y_no_crea_sesion(client: Tes
 
 @pytest.mark.parametrize("configurado", [None, "", "basura"])
 def test_sin_hash_valido_configurado_el_acceso_falla_cerrado(
-    client: TestClient, monkeypatch: pytest.MonkeyPatch, configurado: str | None
+    anonimo: TestClient, monkeypatch: pytest.MonkeyPatch, configurado: str | None
 ) -> None:
     if configurado is None:
         monkeypatch.delenv("ORQUIDEA_PASSWORD_HASH")
     else:
         monkeypatch.setenv("ORQUIDEA_PASSWORD_HASH", configurado)
 
-    respuesta = acceder(client)
+    respuesta = acceder(anonimo)
 
     assert respuesta.status_code == 401
     assert hashes_de_sesion() == []
 
 
-def test_cerrar_la_sesion_borra_la_fila_y_la_cookie(client: TestClient) -> None:
-    acceder(client)
+def test_cerrar_la_sesion_borra_la_fila_y_la_cookie(anonimo: TestClient) -> None:
+    acceder(anonimo)
     otra = TestClient(app, base_url="https://testserver")
     acceder(otra)
     assert len(hashes_de_sesion()) == 2
 
-    respuesta = client.post("/salir", follow_redirects=False)
+    respuesta = anonimo.post("/salir", follow_redirects=False)
 
     assert respuesta.status_code == 303
     assert respuesta.headers["location"] == "/acceso"
@@ -113,35 +113,35 @@ def test_cerrar_la_sesion_borra_la_fila_y_la_cookie(client: TestClient) -> None:
     assert len(hashes_de_sesion()) == 1
 
 
-def test_cerrar_sin_sesion_redirige_sin_error(client: TestClient) -> None:
-    respuesta = client.post("/salir", follow_redirects=False)
+def test_cerrar_sin_sesion_redirige_sin_error(anonimo: TestClient) -> None:
+    respuesta = anonimo.post("/salir", follow_redirects=False)
 
     assert respuesta.status_code == 303
     assert respuesta.headers["location"] == "/acceso"
 
 
-def test_cinco_fallos_bloquean_incluso_la_contrasena_correcta(client: TestClient) -> None:
+def test_cinco_fallos_bloquean_incluso_la_contrasena_correcta(anonimo: TestClient) -> None:
     for _ in range(5):
-        assert acceder(client, "otra").status_code == 401
+        assert acceder(anonimo, "otra").status_code == 401
 
-    respuesta = acceder(client)
+    respuesta = acceder(anonimo)
 
     assert respuesta.status_code == 429
     assert "Demasiados intentos" in respuesta.text
     assert hashes_de_sesion() == []
 
 
-def test_cuatro_fallos_y_un_acierto_no_bloquean(client: TestClient) -> None:
+def test_cuatro_fallos_y_un_acierto_no_bloquean(anonimo: TestClient) -> None:
     for _ in range(4):
-        acceder(client, "otra")
+        acceder(anonimo, "otra")
 
-    assert acceder(client).status_code == 303
+    assert acceder(anonimo).status_code == 303
     for _ in range(4):
-        assert acceder(client, "otra").status_code == 401
+        assert acceder(anonimo, "otra").status_code == 401
 
 
-def test_el_acceso_no_redirige_a_una_url_dada_por_el_usuario(client: TestClient) -> None:
-    respuesta = client.post(
+def test_el_acceso_no_redirige_a_una_url_dada_por_el_usuario(anonimo: TestClient) -> None:
+    respuesta = anonimo.post(
         "/acceso?siguiente=https://malo.example",
         data={"contrasena": CONTRASENA, "siguiente": "https://malo.example"},
         follow_redirects=False,
@@ -151,14 +151,14 @@ def test_el_acceso_no_redirige_a_una_url_dada_por_el_usuario(client: TestClient)
 
 
 def test_los_accesos_se_registran_sin_la_contrasena(
-    client: TestClient, caplog: pytest.LogCaptureFixture
+    anonimo: TestClient, caplog: pytest.LogCaptureFixture
 ) -> None:
     with caplog.at_level(logging.INFO, logger="orquidea.acceso"):
-        acceder(client, "secreto-erroneo")
-        acceder(client)
+        acceder(anonimo, "secreto-erroneo")
+        acceder(anonimo)
         for _ in range(5):
-            acceder(client, "x")
-        acceder(client)
+            acceder(anonimo, "x")
+        acceder(anonimo)
 
     mensajes = [registro.getMessage() for registro in caplog.records]
     assert "acceso fallido" in mensajes

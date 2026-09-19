@@ -16,24 +16,23 @@ from orquidea.autenticacion import LimiteDeIntentos, verificar_contrasena
 from orquidea.catalogo.busqueda import buscar
 from orquidea.datos.base import abrir_base, conectar, ruta_de_la_base
 from orquidea.datos.catalogo import DIRECTORIO_CATALOGO, cargar_catalogo
-from orquidea.datos.sesiones import ANTIGUEDAD_MAXIMA, cerrar, crear
+from orquidea.datos.sesiones import ANTIGUEDAD_MAXIMA, cerrar, crear, obtener
 
 BASE_DIR = Path(__file__).parent
 registro = logging.getLogger("orquidea.acceso")
+
+
+class SesionRequerida(Exception):
+    pass
+
+
+RUTAS_PUBLICAS = frozenset({"/acceso", "/salud"})
 
 
 @asynccontextmanager
 async def ciclo_de_vida(app: FastAPI) -> AsyncIterator[None]:
     abrir_base(app.state.ruta_base).close()
     yield
-
-
-app = FastAPI(lifespan=ciclo_de_vida)
-app.state.catalogo = cargar_catalogo(DIRECTORIO_CATALOGO)
-app.state.ruta_base = ruta_de_la_base()
-app.state.limite = LimiteDeIntentos()
-app.mount("/static", StaticFiles(directory=BASE_DIR / "static"), name="static")
-templates = Jinja2Templates(directory=BASE_DIR / "templates")
 
 
 def base_de_datos(request: Request) -> Iterator[sqlite3.Connection]:
@@ -54,6 +53,39 @@ def _cookie_segura() -> bool:
 def _nombre_de_cookie() -> str:
     # El prefijo __Host- exige Secure: solo se usa cuando la cookie lo lleva.
     return "__Host-sesion" if _cookie_segura() else "sesion"
+
+
+def exigir_sesion(request: Request, conexion: Base) -> None:
+    """Dependencia global: toda ruta la exige salvo las declaradas en `RUTAS_PUBLICAS`."""
+    ruta = request.scope.get("route")
+    if ruta is not None and ruta.path in RUTAS_PUBLICAS:
+        return
+    identificador = request.cookies.get(_nombre_de_cookie())
+    sesion = obtener(conexion, identificador, int(time.time())) if identificador else None
+    if sesion is None:
+        raise SesionRequerida
+    request.state.sesion = sesion
+
+
+app = FastAPI(
+    lifespan=ciclo_de_vida,
+    dependencies=[Depends(exigir_sesion)],
+    docs_url=None,
+    redoc_url=None,
+    openapi_url=None,
+)
+app.state.catalogo = cargar_catalogo(DIRECTORIO_CATALOGO)
+app.state.ruta_base = ruta_de_la_base()
+app.state.limite = LimiteDeIntentos()
+app.mount("/static", StaticFiles(directory=BASE_DIR / "static"), name="static")
+templates = Jinja2Templates(directory=BASE_DIR / "templates")
+
+
+@app.exception_handler(SesionRequerida)
+def sin_sesion(request: Request, _: Exception) -> Response:
+    if request.headers.get("hx-request") == "true":
+        return Response(status_code=401, headers={"HX-Redirect": "/acceso"})
+    return RedirectResponse("/acceso", status_code=303)
 
 
 def _formulario_de_acceso(request: Request, estado: int, mensaje: str = "") -> HTMLResponse:
