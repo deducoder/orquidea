@@ -1,7 +1,9 @@
+import os
 import re
 import sqlite3
 from pathlib import Path
 
+RUTA_POR_DEFECTO = Path("data/orquidea.sqlite3")
 MIGRACIONES = Path(__file__).parent / "migraciones"
 
 _NOMBRE = re.compile(r"^(\d{4})-.+\.sql$")
@@ -9,6 +11,10 @@ _NOMBRE = re.compile(r"^(\d{4})-.+\.sql$")
 
 class MigracionFallida(Exception):
     pass
+
+
+def ruta_de_la_base() -> Path:
+    return Path(os.environ.get("ORQUIDEA_DB") or RUTA_POR_DEFECTO)
 
 
 def _pendientes(carpeta: Path, aplicada: int) -> list[tuple[int, Path]]:
@@ -37,8 +43,11 @@ def _aplicar(conexion: sqlite3.Connection, numero: int, archivo: Path) -> None:
 
 
 def abrir_base(ruta: Path, migraciones: Path = MIGRACIONES) -> sqlite3.Connection:
+    ruta.parent.mkdir(parents=True, exist_ok=True)
     conexion = sqlite3.connect(ruta, isolation_level=None)
     try:
+        conexion.execute("PRAGMA foreign_keys = ON")
+        conexion.execute("PRAGMA journal_mode = WAL")
         aplicada = int(conexion.execute("PRAGMA user_version").fetchone()[0])
         for numero, archivo in _pendientes(migraciones, aplicada):
             _aplicar(conexion, numero, archivo)

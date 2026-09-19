@@ -3,7 +3,7 @@ from pathlib import Path
 
 import pytest
 
-from orquidea.datos.base import MigracionFallida, abrir_base
+from orquidea.datos.base import MigracionFallida, abrir_base, ruta_de_la_base
 
 
 def migraciones(carpeta: Path, **archivos: str) -> Path:
@@ -107,3 +107,36 @@ def test_un_nombre_de_migracion_invalido_falla(tmp_path: Path) -> None:
 
     with pytest.raises(MigracionFallida, match="cero-uno.sql"):
         abrir_base(tmp_path / "o.sqlite3", carpeta)
+
+
+def test_ruta_de_la_base_usa_orquidea_db(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setenv("ORQUIDEA_DB", "/datos/o.sqlite3")
+
+    assert ruta_de_la_base() == Path("/datos/o.sqlite3")
+
+
+@pytest.mark.parametrize("valor", [None, ""])
+def test_ruta_de_la_base_sin_variable_usa_el_valor_por_defecto(
+    monkeypatch: pytest.MonkeyPatch, valor: str | None
+) -> None:
+    if valor is None:
+        monkeypatch.delenv("ORQUIDEA_DB", raising=False)
+    else:
+        monkeypatch.setenv("ORQUIDEA_DB", valor)
+
+    assert ruta_de_la_base() == Path("data/orquidea.sqlite3")
+
+
+def test_crea_la_carpeta_de_la_base(tmp_path: Path) -> None:
+    ruta = tmp_path / "no" / "existe" / "o.sqlite3"
+
+    abrir_base(ruta, tmp_path).close()
+
+    assert ruta.is_file()
+
+
+def test_la_conexion_activa_claves_foraneas_y_wal(tmp_path: Path) -> None:
+    conexion = abrir_base(tmp_path / "o.sqlite3", tmp_path)
+
+    assert conexion.execute("PRAGMA foreign_keys").fetchone() == (1,)
+    assert conexion.execute("PRAGMA journal_mode").fetchone() == ("wal",)
