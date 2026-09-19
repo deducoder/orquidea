@@ -1,0 +1,30 @@
+{
+  "id": "brassavola-nodosa",
+  "nombre_cientifico": "Brassavola nodosa",
+  "nombres_comunes": [
+    "Dama de noche"
+  ],
+  "descripcion": "Orquídea del género Brassavola, nativa de Chiapas: iNaturalist la registra 20 veces con grado de investigación en el estado, lo que la ubica entre las 100 más registradas con cuidados documentados. Los cuidados de la ficha son los documentados para el género, no medidos para esta especie.",
+  "cuidados": {
+    "luz": {
+      "texto": "Luz muy brillante y difusa.",
+      "fuente": "AOS, página del género Brassavola (Care and Culture Card), https://www.aos.org/explore/brassavola, consultada el 2026-09-19; cuidado del género, no específico de la especie"
+    },
+    "riego": {
+      "texto": "Riego regular durante todo el año; en maceta, las raíces deben secarse entre riegos.",
+      "fuente": "AOS, página del género Brassavola (Care and Culture Card), https://www.aos.org/explore/brassavola, consultada el 2026-09-19; cuidado del género, no específico de la especie"
+    },
+    "temperatura": {
+      "texto": "Temperaturas cálidas.",
+      "fuente": "AOS, página del género Brassavola (Care and Culture Card), https://www.aos.org/explore/brassavola, consultada el 2026-09-19; cuidado del género, no específico de la especie"
+    },
+    "sustrato": {
+      "texto": "En tablillas sin material que retenga humedad; en maceta con mezcla de grado medio si se dejan secar las raíces.",
+      "fuente": "AOS, página del género Brassavola (Care and Culture Card), https://www.aos.org/explore/brassavola, consultada el 2026-09-19; cuidado del género, no específico de la especie"
+    }
+  },
+  "fuentes": [
+    "iNaturalist, observaciones de grado de investigación de Brassavola nodosa en Chiapas (nativa, no cautiva), https://www.inaturalist.org/observations?place_id=97003&taxon_name=Brassavola%20nodosa&quality_grade=research, consultada el 2026-09-19",
+    "AOS, página del género Brassavola (Care and Culture Card), https://www.aos.org/explore/brassavola, consultada el 2026-09-19; cuidado del género, no específico de la especie"
+  ]
+}

@@ -47,3 +47,13 @@ names it.
 ### 2026-09-19 · story-start step 4 · Answered (P5 above)
 **Decided:** s1.6 obtiene los datos por investigación (`research`), con las 100 especies nativas de Chiapas más conocidas y populares; s1.5 despliega a un VPS con Dokploy sobre Debian 13.
 **Why:** answer from the supervisor, verbatim: "Debemos hacer un research para buscar los datos. Tengo un VPS Dokploy debian 13. Pongamos las 100 más conocidas y populares"
+
+### 2026-09-19 · story-implement step 1 · s1.6: ofrecer el despacho del bloque
+**Decided:** no despachar; la sesión de épica implementa s1.6 ella misma.
+**Why:** `plan.md` de la épica, `## Delegation`, fila s1.6: `—`; y `delegate`: "never delegate on your own initiative without asking first". El mold T1 de T2 es una tarea de la propia historia.
+**Would have stopped:** una fila de Delegation con bloque para s1.6, o un stop añadido en el binding (`Added stops: none`).
+
+### 2026-09-19 · story-design step 3 · s1.6: regla de "más conocidas y populares" y datos de género
+**Decided:** "más conocidas y populares" se operacionaliza como las especies nativas de Chiapas con más observaciones de grado de investigación en iNaturalist que además tienen una fuente de cuidados utilizable; los cuidados citan la AOS a nivel de género y lo declaran en cada dato.
+**Why:** answer del supervisor: "Pongamos las 100 más conocidas y populares"; ninguna medida de popularidad comercial es accesible y `must-data-001` exige una fuente real por dato, así que se eligió la medida objetiva y reproducible descrita en `work/research/chiapas-orchid-seed/report.md`. No contradice ningún criterio `[stated]`: el 100 se cumple.
+**Would have stopped:** P4 si no hubiera 100 con fuente; no fue el caso (100 con fuente). Queda para revisión del humano: la regla de popularidad y que los cuidados sean de género, ambos marcados en la retrospectiva de s1.6.

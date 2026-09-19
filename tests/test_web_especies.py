@@ -144,3 +144,13 @@ def test_formulario_de_busqueda_funciona_sin_javascript_y_con_htmx(
     assert 'hx-get="/especies"' in html
     assert 'hx-target="#resultados"' in html
     assert 'id="resultados"' in html
+
+
+def test_la_aplicacion_sirve_el_catalogo_real(client: TestClient) -> None:
+    lista = client.get("/especies")
+    ficha = client.get("/especies/epidendrum-radicans")
+
+    assert lista.status_code == 200
+    assert lista.text.count('href="/especies/') >= 100
+    assert ficha.status_code == 200
+    assert "Reedstem Epidendrum Culture" in ficha.text

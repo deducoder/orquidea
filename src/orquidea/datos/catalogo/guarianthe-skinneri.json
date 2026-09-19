@@ -1,0 +1,30 @@
+{
+  "id": "guarianthe-skinneri",
+  "nombre_cientifico": "Guarianthe skinneri",
+  "nombres_comunes": [
+    "Flor de Candelaria"
+  ],
+  "descripcion": "Orquídea del género Guarianthe, nativa de Chiapas: iNaturalist la registra 61 veces con grado de investigación en el estado, lo que la ubica entre las 100 más registradas con cuidados documentados. Los cuidados de la ficha son los documentados para el género, no medidos para esta especie.",
+  "cuidados": {
+    "luz": {
+      "texto": "En invernadero, del 20 % al 35 % de sol pleno (de 21,530 a 37,700 lux).",
+      "fuente": "AOS, Cattleya Culture Sheet, https://www.aos.org/orchid-care/care-sheets/cattleya-culture-sheet, consultada el 2026-09-19; la AOS no tiene hoja para Guarianthe (afín a Cattleya) y advierte que su hoja puede no ser representativa de todo el género o la alianza; cuidado del género, no específico de la especie"
+    },
+    "riego": {
+      "texto": "Ciclos rápidos de mojado y secado: dejar secar entre riegos y regar en cuanto el medio se seque.",
+      "fuente": "AOS, Cattleya Culture Sheet, https://www.aos.org/orchid-care/care-sheets/cattleya-culture-sheet, consultada el 2026-09-19; la AOS no tiene hoja para Guarianthe (afín a Cattleya) y advierte que su hoja puede no ser representativa de todo el género o la alianza; cuidado del género, no específico de la especie"
+    },
+    "temperatura": {
+      "texto": "Noches de 12.7 a 22.2 °C y días de 21.1 a 29.4 °C, con una caída de 5.5 a 8.3 °C de noche.",
+      "fuente": "AOS, Cattleya Culture Sheet, https://www.aos.org/orchid-care/care-sheets/cattleya-culture-sheet, consultada el 2026-09-19; la AOS no tiene hoja para Guarianthe (afín a Cattleya) y advierte que su hoja puede no ser representativa de todo el género o la alianza; cuidado del género, no específico de la especie"
+    },
+    "sustrato": {
+      "texto": "En invernadero, mezcla de corteza de grado medio a grueso.",
+      "fuente": "AOS, Cattleya Culture Sheet, https://www.aos.org/orchid-care/care-sheets/cattleya-culture-sheet, consultada el 2026-09-19; la AOS no tiene hoja para Guarianthe (afín a Cattleya) y advierte que su hoja puede no ser representativa de todo el género o la alianza; cuidado del género, no específico de la especie"
+    }
+  },
+  "fuentes": [
+    "iNaturalist, observaciones de grado de investigación de Guarianthe skinneri en Chiapas (nativa, no cautiva), https://www.inaturalist.org/observations?place_id=97003&taxon_name=Guarianthe%20skinneri&quality_grade=research, consultada el 2026-09-19",
+    "AOS, Cattleya Culture Sheet, https://www.aos.org/orchid-care/care-sheets/cattleya-culture-sheet, consultada el 2026-09-19; la AOS no tiene hoja para Guarianthe (afín a Cattleya) y advierte que su hoja puede no ser representativa de todo el género o la alianza; cuidado del género, no específico de la especie"
+  ]
+}

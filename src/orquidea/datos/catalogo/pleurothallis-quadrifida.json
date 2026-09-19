@@ -1,0 +1,28 @@
+{
+  "id": "pleurothallis-quadrifida",
+  "nombre_cientifico": "Pleurothallis quadrifida",
+  "nombres_comunes": [],
+  "descripcion": "Orquídea del género Pleurothallis, nativa de Chiapas: iNaturalist la registra 45 veces con grado de investigación en el estado, lo que la ubica entre las 100 más registradas con cuidados documentados. Los cuidados de la ficha son los documentados para el género, no medidos para esta especie.",
+  "cuidados": {
+    "luz": {
+      "texto": "Luz media y humedad alta.",
+      "fuente": "AOS, página del género Pleurothallis (Care and Culture Card), https://www.aos.org/explore/pleurothallis, consultada el 2026-09-19; cuidado del género, no específico de la especie"
+    },
+    "riego": {
+      "texto": "Riego regular durante todo el año; las raíces no deben secarse por periodos largos.",
+      "fuente": "AOS, página del género Pleurothallis (Care and Culture Card), https://www.aos.org/explore/pleurothallis, consultada el 2026-09-19; cuidado del género, no específico de la especie"
+    },
+    "temperatura": {
+      "texto": "De frescas a cálidas, según la especie.",
+      "fuente": "AOS, página del género Pleurothallis (Care and Culture Card), https://www.aos.org/explore/pleurothallis, consultada el 2026-09-19; cuidado del género, no específico de la especie"
+    },
+    "sustrato": {
+      "texto": "En macetas con mezcla fina para plántulas o en tablillas con material que retenga humedad.",
+      "fuente": "AOS, página del género Pleurothallis (Care and Culture Card), https://www.aos.org/explore/pleurothallis, consultada el 2026-09-19; cuidado del género, no específico de la especie"
+    }
+  },
+  "fuentes": [
+    "iNaturalist, observaciones de grado de investigación de Pleurothallis quadrifida en Chiapas (nativa, no cautiva), https://www.inaturalist.org/observations?place_id=97003&taxon_name=Pleurothallis%20quadrifida&quality_grade=research, consultada el 2026-09-19",
+    "AOS, página del género Pleurothallis (Care and Culture Card), https://www.aos.org/explore/pleurothallis, consultada el 2026-09-19; cuidado del género, no específico de la especie"
+  ]
+}

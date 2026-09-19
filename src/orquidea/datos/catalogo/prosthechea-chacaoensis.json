@@ -1,0 +1,28 @@
+{
+  "id": "prosthechea-chacaoensis",
+  "nombre_cientifico": "Prosthechea chacaoensis",
+  "nombres_comunes": [],
+  "descripcion": "Orquídea del género Prosthechea, nativa de Chiapas: iNaturalist la registra 44 veces con grado de investigación en el estado, lo que la ubica entre las 100 más registradas con cuidados documentados. La AOS describe las plantas del género como epífitas, pocas veces terrestres. Los cuidados de la ficha son los documentados para el género, no medidos para esta especie.",
+  "cuidados": {
+    "luz": {
+      "texto": "Luz brillante y difusa; las especies de altura de México, como P. citrina y P. mariae, piden luz muy brillante.",
+      "fuente": "AOS, página del género Prosthechea (Care and Culture Card), https://www.aos.org/explore/prosthechea, consultada el 2026-09-19; cuidado del género, no específico de la especie"
+    },
+    "riego": {
+      "texto": "Riego regular durante todo el año.",
+      "fuente": "AOS, página del género Prosthechea (Care and Culture Card), https://www.aos.org/explore/prosthechea, consultada el 2026-09-19; cuidado del género, no específico de la especie"
+    },
+    "temperatura": {
+      "texto": "Temperaturas intermedias; las especies de altura de México piden temperaturas frescas.",
+      "fuente": "AOS, página del género Prosthechea (Care and Culture Card), https://www.aos.org/explore/prosthechea, consultada el 2026-09-19; cuidado del género, no específico de la especie"
+    },
+    "sustrato": {
+      "texto": "En macetas o canastas con mezcla de grado medio para epífitas; las de porte colgante, en tablillas con un poco de material que retenga humedad en las raíces.",
+      "fuente": "AOS, página del género Prosthechea (Care and Culture Card), https://www.aos.org/explore/prosthechea, consultada el 2026-09-19; cuidado del género, no específico de la especie"
+    }
+  },
+  "fuentes": [
+    "iNaturalist, observaciones de grado de investigación de Prosthechea chacaoensis en Chiapas (nativa, no cautiva), https://www.inaturalist.org/observations?place_id=97003&taxon_name=Prosthechea%20chacaoensis&quality_grade=research, consultada el 2026-09-19",
+    "AOS, página del género Prosthechea (Care and Culture Card), https://www.aos.org/explore/prosthechea, consultada el 2026-09-19; cuidado del género, no específico de la especie"
+  ]
+}

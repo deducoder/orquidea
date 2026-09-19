@@ -1,0 +1,30 @@
+{
+  "id": "bletia-purpurea",
+  "nombre_cientifico": "Bletia purpurea",
+  "nombres_comunes": [
+    "Orquídea púrpura"
+  ],
+  "descripcion": "Orquídea del género Bletia, nativa de Chiapas: iNaturalist la registra 123 veces con grado de investigación en el estado, lo que la ubica entre las 100 más registradas con cuidados documentados. La AOS describe las plantas del género como terrestres. Los cuidados de la ficha son los documentados para el género, no medidos para esta especie.",
+  "cuidados": {
+    "luz": {
+      "texto": "Luz plena.",
+      "fuente": "AOS, página del género Bletia (Care and Culture Card), https://www.aos.org/explore/bletia, consultada el 2026-09-19; cuidado del género, no específico de la especie"
+    },
+    "riego": {
+      "texto": "Riego regular durante el crecimiento; después de la floración, mantenimiento hasta que broten nuevos vástagos.",
+      "fuente": "AOS, página del género Bletia (Care and Culture Card), https://www.aos.org/explore/bletia, consultada el 2026-09-19; cuidado del género, no específico de la especie"
+    },
+    "temperatura": {
+      "texto": "Temperaturas cálidas.",
+      "fuente": "AOS, página del género Bletia (Care and Culture Card), https://www.aos.org/explore/bletia, consultada el 2026-09-19; cuidado del género, no específico de la especie"
+    },
+    "sustrato": {
+      "texto": "En macetas con marga arenosa.",
+      "fuente": "AOS, página del género Bletia (Care and Culture Card), https://www.aos.org/explore/bletia, consultada el 2026-09-19; cuidado del género, no específico de la especie"
+    }
+  },
+  "fuentes": [
+    "iNaturalist, observaciones de grado de investigación de Bletia purpurea en Chiapas (nativa, no cautiva), https://www.inaturalist.org/observations?place_id=97003&taxon_name=Bletia%20purpurea&quality_grade=research, consultada el 2026-09-19",
+    "AOS, página del género Bletia (Care and Culture Card), https://www.aos.org/explore/bletia, consultada el 2026-09-19; cuidado del género, no específico de la especie"
+  ]
+}

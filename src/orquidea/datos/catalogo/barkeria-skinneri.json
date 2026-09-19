@@ -1,0 +1,28 @@
+{
+  "id": "barkeria-skinneri",
+  "nombre_cientifico": "Barkeria skinneri",
+  "nombres_comunes": [],
+  "descripcion": "Orquídea del género Barkeria, nativa de Chiapas: iNaturalist la registra 16 veces con grado de investigación en el estado, lo que la ubica entre las 100 más registradas con cuidados documentados. Los cuidados de la ficha son los documentados para el género, no medidos para esta especie.",
+  "cuidados": {
+    "luz": {
+      "texto": "Luz plena en todo momento.",
+      "fuente": "AOS, página del género Barkeria (Care and Culture Card), https://www.aos.org/explore/barkeria, consultada el 2026-09-19; cuidado del género, no específico de la especie"
+    },
+    "riego": {
+      "texto": "Riego regular durante el crecimiento, dejando secar las raíces entre riegos; en el reposo, cuando pierden hojas, riego escaso.",
+      "fuente": "AOS, página del género Barkeria (Care and Culture Card), https://www.aos.org/explore/barkeria, consultada el 2026-09-19; cuidado del género, no específico de la especie"
+    },
+    "temperatura": {
+      "texto": "De intermedias a cálidas durante el crecimiento.",
+      "fuente": "AOS, página del género Barkeria (Care and Culture Card), https://www.aos.org/explore/barkeria, consultada el 2026-09-19; cuidado del género, no específico de la especie"
+    },
+    "sustrato": {
+      "texto": "En macetas o canastas con mezcla gruesa de buen drenaje, o en tablillas sin material que retenga humedad.",
+      "fuente": "AOS, página del género Barkeria (Care and Culture Card), https://www.aos.org/explore/barkeria, consultada el 2026-09-19; cuidado del género, no específico de la especie"
+    }
+  },
+  "fuentes": [
+    "iNaturalist, observaciones de grado de investigación de Barkeria skinneri en Chiapas (nativa, no cautiva), https://www.inaturalist.org/observations?place_id=97003&taxon_name=Barkeria%20skinneri&quality_grade=research, consultada el 2026-09-19",
+    "AOS, página del género Barkeria (Care and Culture Card), https://www.aos.org/explore/barkeria, consultada el 2026-09-19; cuidado del género, no específico de la especie"
+  ]
+}

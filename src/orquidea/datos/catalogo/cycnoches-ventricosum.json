@@ -1,0 +1,28 @@
+{
+  "id": "cycnoches-ventricosum",
+  "nombre_cientifico": "Cycnoches ventricosum",
+  "nombres_comunes": [],
+  "descripcion": "Orquídea del género Cycnoches, nativa de Chiapas: iNaturalist la registra 20 veces con grado de investigación en el estado, lo que la ubica entre las 100 más registradas con cuidados documentados. Los cuidados de la ficha son los documentados para el género, no medidos para esta especie.",
+  "cuidados": {
+    "luz": {
+      "texto": "Luz brillante.",
+      "fuente": "AOS, página del género Cycnoches (Care and Culture Card), https://www.aos.org/explore/cycnoches, consultada el 2026-09-19; cuidado del género, no específico de la especie"
+    },
+    "riego": {
+      "texto": "Riego y fertilización abundantes durante el crecimiento, una vez que los brotes miden unos 2.5 cm; menos al madurar los pseudobulbos.",
+      "fuente": "AOS, página del género Cycnoches (Care and Culture Card), https://www.aos.org/explore/cycnoches, consultada el 2026-09-19; cuidado del género, no específico de la especie"
+    },
+    "temperatura": {
+      "texto": "De intermedias a cálidas.",
+      "fuente": "AOS, página del género Cycnoches (Care and Culture Card), https://www.aos.org/explore/cycnoches, consultada el 2026-09-19; cuidado del género, no específico de la especie"
+    },
+    "sustrato": {
+      "texto": "En macetas con mezcla de grado medio para epífitas y un componente que retenga humedad.",
+      "fuente": "AOS, página del género Cycnoches (Care and Culture Card), https://www.aos.org/explore/cycnoches, consultada el 2026-09-19; cuidado del género, no específico de la especie"
+    }
+  },
+  "fuentes": [
+    "iNaturalist, observaciones de grado de investigación de Cycnoches ventricosum en Chiapas (nativa, no cautiva), https://www.inaturalist.org/observations?place_id=97003&taxon_name=Cycnoches%20ventricosum&quality_grade=research, consultada el 2026-09-19",
+    "AOS, página del género Cycnoches (Care and Culture Card), https://www.aos.org/explore/cycnoches, consultada el 2026-09-19; cuidado del género, no específico de la especie"
+  ]
+}

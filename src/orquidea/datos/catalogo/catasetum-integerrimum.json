@@ -1,0 +1,30 @@
+{
+  "id": "catasetum-integerrimum",
+  "nombre_cientifico": "Catasetum integerrimum",
+  "nombres_comunes": [
+    "Orquídea cola de pato"
+  ],
+  "descripcion": "Orquídea del género Catasetum, nativa de Chiapas: iNaturalist la registra 104 veces con grado de investigación en el estado, lo que la ubica entre las 100 más registradas con cuidados documentados. Los cuidados de la ficha son los documentados para el género, no medidos para esta especie.",
+  "cuidados": {
+    "luz": {
+      "texto": "Luz fuerte: de 32,250 a 64,500 lúmenes (3,000 a 6,000 pies-vela); en invernadero, de 40 % a 70 % de sombra.",
+      "fuente": "AOS, Catasetum Culture Sheet, https://www.aos.org/orchid-care/care-sheets/catasetum-culture-sheet, consultada el 2026-09-19; cuidado del género, no específico de la especie"
+    },
+    "riego": {
+      "texto": "Riego abundante mientras se forman hojas nuevas, reduciéndolo al madurar el pseudobulbo y suspendiéndolo cuando caen las hojas.",
+      "fuente": "AOS, Catasetum Culture Sheet, https://www.aos.org/orchid-care/care-sheets/catasetum-culture-sheet, consultada el 2026-09-19; cuidado del género, no específico de la especie"
+    },
+    "temperatura": {
+      "texto": "No debe bajar de 18.3 °C; en crecimiento, días de 26.6 a 37.7 °C y noches de 18.3 a 23.8 °C.",
+      "fuente": "AOS, Catasetum Culture Sheet, https://www.aos.org/orchid-care/care-sheets/catasetum-culture-sheet, consultada el 2026-09-19; cuidado del género, no específico de la especie"
+    },
+    "sustrato": {
+      "texto": "Medio rico y húmedo durante el crecimiento: mezcla fina de corteza o sphagnum en macetas pequeñas; también en tablillas para mantenerlas secas en reposo.",
+      "fuente": "AOS, Catasetum Culture Sheet, https://www.aos.org/orchid-care/care-sheets/catasetum-culture-sheet, consultada el 2026-09-19; cuidado del género, no específico de la especie"
+    }
+  },
+  "fuentes": [
+    "iNaturalist, observaciones de grado de investigación de Catasetum integerrimum en Chiapas (nativa, no cautiva), https://www.inaturalist.org/observations?place_id=97003&taxon_name=Catasetum%20integerrimum&quality_grade=research, consultada el 2026-09-19",
+    "AOS, Catasetum Culture Sheet, https://www.aos.org/orchid-care/care-sheets/catasetum-culture-sheet, consultada el 2026-09-19; cuidado del género, no específico de la especie"
+  ]
+}

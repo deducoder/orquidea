@@ -1,0 +1,31 @@
+{
+  "id": "epidendrum-radicans",
+  "nombre_cientifico": "Epidendrum radicans",
+  "nombres_comunes": [
+    "Estrella de fuego"
+  ],
+  "descripcion": "Orquídea del género Epidendrum, nativa de Chiapas: iNaturalist la registra 153 veces con grado de investigación en el estado, lo que la ubica entre las 100 más registradas con cuidados documentados. Los cuidados de la ficha son los documentados para el género, no medidos para esta especie.",
+  "cuidados": {
+    "luz": {
+      "texto": "Luz igual o mayor que la de los cattleyas: de 2,500 a 3,500 pies-vela (60-70 % de sombra); con poca luz la planta se alarga y no florece.",
+      "fuente": "AOS, Reedstem Epidendrum Culture (Cal-Orchid), https://www.aos.org/orchid-care/orchid-care-basics/reedstem-epidendrum-culture, consultada el 2026-09-19; cuidado del grupo de Epidendrum de tallo de caña, medido en un invernadero de California"
+    },
+    "riego": {
+      "texto": "Dos estaciones: en crecimiento (desde marzo) cada cuatro o cinco días, sin encharcar; al final de la temporada (septiembre-octubre) cada siete u ocho días. Regla práctica: un riego a la semana.",
+      "fuente": "AOS, Reedstem Epidendrum Culture (Cal-Orchid), https://www.aos.org/orchid-care/orchid-care-basics/reedstem-epidendrum-culture, consultada el 2026-09-19; cuidado del grupo de Epidendrum de tallo de caña, medido en un invernadero de California"
+    },
+    "temperatura": {
+      "texto": "Noches con mínimo de 10 °C (50 °F) en invernadero; las líneas nuevas prosperan con temperaturas moderadas.",
+      "fuente": "AOS, Reedstem Epidendrum Culture (Cal-Orchid), https://www.aos.org/orchid-care/orchid-care-basics/reedstem-epidendrum-culture, consultada el 2026-09-19; cuidado del grupo de Epidendrum de tallo de caña, medido en un invernadero de California"
+    },
+    "sustrato": {
+      "texto": "Corteza de abeto fina y mediana en partes casi iguales, con 15 a 20 % de perlita gruesa.",
+      "fuente": "AOS, Reedstem Epidendrum Culture (Cal-Orchid), https://www.aos.org/orchid-care/orchid-care-basics/reedstem-epidendrum-culture, consultada el 2026-09-19; cuidado del grupo de Epidendrum de tallo de caña, medido en un invernadero de California"
+    }
+  },
+  "fuentes": [
+    "iNaturalist, observaciones de grado de investigación de Epidendrum radicans en Chiapas (nativa, no cautiva), https://www.inaturalist.org/observations?place_id=97003&taxon_name=Epidendrum%20radicans&quality_grade=research, consultada el 2026-09-19",
+    "AOS, página del género Epidendrum (Care and Culture Card), https://www.aos.org/explore/epidendrum, consultada el 2026-09-19; cuidado del género, no específico de la especie",
+    "AOS, Reedstem Epidendrum Culture (Cal-Orchid), https://www.aos.org/orchid-care/orchid-care-basics/reedstem-epidendrum-culture, consultada el 2026-09-19; cuidado del grupo de Epidendrum de tallo de caña, medido en un invernadero de California"
+  ]
+}

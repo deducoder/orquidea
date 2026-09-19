@@ -48,7 +48,7 @@ None. Las historias se recorren en secuencia; s1.2 y s1.1 no tienen dependencia 
 | s1.2 | done | M | M |
 | s1.3 | done | M | M |
 | s1.4 | done | S | S |
-| s1.6 | todo | S | — |
+| s1.6 | done | S | S |
 | s1.5 | todo | M | — |
 
 ## Sequencing risks

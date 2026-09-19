@@ -1,0 +1,28 @@
+{
+  "id": "isochilus-aurantiacus",
+  "nombre_cientifico": "Isochilus aurantiacus",
+  "nombres_comunes": [],
+  "descripcion": "Orquídea del género Isochilus, nativa de Chiapas: iNaturalist la registra 39 veces con grado de investigación en el estado, lo que la ubica entre las 100 más registradas con cuidados documentados. Los cuidados de la ficha son los documentados para el género, no medidos para esta especie.",
+  "cuidados": {
+    "luz": {
+      "texto": "Luz brillante pero no directa.",
+      "fuente": "AOS, página del género Isochilus (Care and Culture Card), https://www.aos.org/explore/isochilus, consultada el 2026-09-19; cuidado del género, no específico de la especie"
+    },
+    "riego": {
+      "texto": "Riego parejo, sin dejar que se seque del todo entre riegos.",
+      "fuente": "AOS, página del género Isochilus (Care and Culture Card), https://www.aos.org/explore/isochilus, consultada el 2026-09-19; cuidado del género, no específico de la especie"
+    },
+    "temperatura": {
+      "texto": "Temperaturas intermedias.",
+      "fuente": "AOS, página del género Isochilus (Care and Culture Card), https://www.aos.org/explore/isochilus, consultada el 2026-09-19; cuidado del género, no específico de la especie"
+    },
+    "sustrato": {
+      "texto": "En medio fino, en macetas pequeñas o canastas.",
+      "fuente": "AOS, página del género Isochilus (Care and Culture Card), https://www.aos.org/explore/isochilus, consultada el 2026-09-19; cuidado del género, no específico de la especie"
+    }
+  },
+  "fuentes": [
+    "iNaturalist, observaciones de grado de investigación de Isochilus aurantiacus en Chiapas (nativa, no cautiva), https://www.inaturalist.org/observations?place_id=97003&taxon_name=Isochilus%20aurantiacus&quality_grade=research, consultada el 2026-09-19",
+    "AOS, página del género Isochilus (Care and Culture Card), https://www.aos.org/explore/isochilus, consultada el 2026-09-19; cuidado del género, no específico de la especie"
+  ]
+}

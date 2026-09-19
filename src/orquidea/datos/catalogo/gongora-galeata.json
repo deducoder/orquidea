@@ -1,0 +1,30 @@
+{
+  "id": "gongora-galeata",
+  "nombre_cientifico": "Gongora galeata",
+  "nombres_comunes": [
+    "vaquita"
+  ],
+  "descripcion": "Orquídea del género Gongora, nativa de Chiapas: iNaturalist la registra 12 veces con grado de investigación en el estado, lo que la ubica entre las 100 más registradas con cuidados documentados. Los cuidados de la ficha son los documentados para el género, no medidos para esta especie.",
+  "cuidados": {
+    "luz": {
+      "texto": "De 21,500 a 43,000 lúmenes (2,000 a 4,000 pies-vela) en la mayoría de las especies; más luz durante la dormancia.",
+      "fuente": "AOS, Gongora Culture Sheet, https://www.aos.org/orchid-care/care-sheets/gongora-culture-sheet, consultada el 2026-09-19; cuidado del género, no específico de la especie"
+    },
+    "riego": {
+      "texto": "No debe secarse durante el crecimiento: sustrato siempre húmedo, secándose apenas entre riegos; las deciduas se dejan secar en dormancia.",
+      "fuente": "AOS, Gongora Culture Sheet, https://www.aos.org/orchid-care/care-sheets/gongora-culture-sheet, consultada el 2026-09-19; cuidado del género, no específico de la especie"
+    },
+    "temperatura": {
+      "texto": "En las especies de hoja perenne, noches de 16 °C y días de 21 a 27 °C; las deciduas toleran hasta 35 °C de día y 10 °C de noche en reposo.",
+      "fuente": "AOS, Gongora Culture Sheet, https://www.aos.org/orchid-care/care-sheets/gongora-culture-sheet, consultada el 2026-09-19; cuidado del género, no específico de la especie"
+    },
+    "sustrato": {
+      "texto": "Mezcla fina de corteza de abeto y perlita (3:1) o sphagnum, siempre en canastas colgantes.",
+      "fuente": "AOS, Gongora Culture Sheet, https://www.aos.org/orchid-care/care-sheets/gongora-culture-sheet, consultada el 2026-09-19; cuidado del género, no específico de la especie"
+    }
+  },
+  "fuentes": [
+    "iNaturalist, observaciones de grado de investigación de Gongora galeata en Chiapas (nativa, no cautiva), https://www.inaturalist.org/observations?place_id=97003&taxon_name=Gongora%20galeata&quality_grade=research, consultada el 2026-09-19",
+    "AOS, Gongora Culture Sheet, https://www.aos.org/orchid-care/care-sheets/gongora-culture-sheet, consultada el 2026-09-19; cuidado del género, no específico de la especie"
+  ]
+}
