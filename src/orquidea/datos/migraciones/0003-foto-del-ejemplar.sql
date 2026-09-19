@@ -1,0 +1,1 @@
+ALTER TABLE ejemplares ADD COLUMN foto TEXT;

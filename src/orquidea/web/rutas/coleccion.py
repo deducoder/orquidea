@@ -6,13 +6,13 @@ from fastapi import APIRouter, Form, HTTPException, Request
 from fastapi.responses import HTMLResponse, RedirectResponse, Response
 
 from orquidea.coleccion.modelo import Ejemplar, EjemplarInvalido, resolver, validar_ejemplar
+from orquidea.datos.almacen_fotos import quitar_con_foto
 from orquidea.datos.ejemplares import (
     actualizar,
     agregar,
     agregar_sin_especie,
     listar,
     obtener,
-    quitar,
 )
 from orquidea.web.plantillas import templates
 from orquidea.web.sesion import Base
@@ -161,7 +161,7 @@ def confirmar_baja(request: Request, id: int, conexion: Base) -> HTMLResponse:
 
 
 @router.post("/coleccion/{id}/quitar")
-def quitar_ejemplar(id: int, conexion: Base) -> RedirectResponse:
-    if not quitar(conexion, id):
+def quitar_ejemplar(request: Request, id: int, conexion: Base) -> RedirectResponse:
+    if not quitar_con_foto(conexion, request.app.state.directorio_fotos, id):
         raise HTTPException(status_code=404, detail="Ejemplar no encontrado")
     return RedirectResponse("/coleccion", status_code=303)

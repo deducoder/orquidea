@@ -19,3 +19,8 @@ names it.
 **Decided:** no despachar; la sesión de épica implementa s3.1 ella misma; con `> Pause: none` la reformulación va en el reporte y las tareas siguen con el gate en verde y el commit hecho.
 **Why:** `plan.md` de la épica, `## Delegation`, fila s3.1: `—`; y `delegate`: "never delegate on your own initiative without asking first". Plan de la historia: `> Pause: none (default)`.
 **Would have stopped:** una fila de Delegation con bloque para s3.1, o un stop añadido en el binding (`Added stops: none`).
+
+### 2026-09-19 · story-implement step 1 · s3.3: ofrecer el despacho del bloque
+**Decided:** no despachar; la sesión de épica implementa s3.3 ella misma; con `> Pause: none` la reformulación va en el reporte y las tareas siguen con el gate en verde y el commit hecho.
+**Why:** `plan.md` de la épica, `## Delegation`, fila s3.3: `—`; y `delegate`: "never delegate on your own initiative without asking first". Plan de la historia: `> Pause: none (default)`.
+**Would have stopped:** una fila de Delegation con bloque para s3.3, o un stop añadido en el binding (`Added stops: none`).

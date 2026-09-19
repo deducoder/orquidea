@@ -4,11 +4,12 @@ from pathlib import Path
 import pytest
 
 from orquidea.coleccion.modelo import Ejemplar
-from orquidea.datos.base import abrir_base
+from orquidea.datos.base import MIGRACIONES, abrir_base
 from orquidea.datos.ejemplares import (
     actualizar,
     agregar,
     agregar_sin_especie,
+    fijar_foto,
     listar,
     obtener,
     quitar,
@@ -177,3 +178,49 @@ def test_quitar_un_id_inexistente_devuelve_false_y_no_borra_nada(
 
     assert quitar(conexion, 999) is False
     assert listar(conexion) == [uno]
+
+
+def test_un_ejemplar_nuevo_no_tiene_foto(conexion: sqlite3.Connection) -> None:
+    ejemplar = agregar(conexion, "epidendrum-radicans", AHORA)
+
+    assert ejemplar.foto is None
+    assert obtener(conexion, ejemplar.id) == ejemplar
+
+
+def test_fijar_foto_la_guarda_y_la_quita_solo_en_ese_ejemplar(
+    conexion: sqlite3.Connection,
+) -> None:
+    uno = agregar(conexion, "epidendrum-radicans", AHORA)
+    otro = agregar(conexion, "epidendrum-radicans", AHORA)
+
+    assert fijar_foto(conexion, uno.id, "Xq3vT") is True
+    assert [e.foto for e in listar(conexion)] == ["Xq3vT", None]
+    assert obtener(conexion, uno.id) == uno.model_copy(update={"foto": "Xq3vT"})
+    assert obtener(conexion, otro.id) == otro
+
+    assert fijar_foto(conexion, uno.id, None) is True
+    assert obtener(conexion, uno.id) == uno
+
+
+def test_fijar_foto_de_un_ejemplar_inexistente_devuelve_false(
+    conexion: sqlite3.Connection,
+) -> None:
+    assert fijar_foto(conexion, 999, "Xq3vT") is False
+
+
+def test_la_migracion_de_la_foto_conserva_los_ejemplares(tmp_path: Path) -> None:
+    anteriores = tmp_path / "hasta-0002"
+    anteriores.mkdir()
+    for archivo in sorted(MIGRACIONES.glob("000[12]-*.sql")):
+        (anteriores / archivo.name).write_text(archivo.read_text(encoding="utf-8"))
+    ruta = tmp_path / "o.sqlite3"
+    vieja = abrir_base(ruta, anteriores)
+    vieja.execute(
+        "INSERT INTO ejemplares (especie_id, nombre, creado) VALUES ('epidendrum-radicans', '', ?)",
+        (AHORA,),
+    )
+    vieja.close()
+
+    (ejemplar,) = listar(abrir_base(ruta))
+
+    assert (ejemplar.especie_id, ejemplar.foto) == ("epidendrum-radicans", None)
