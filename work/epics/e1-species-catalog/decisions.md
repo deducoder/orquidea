@@ -29,3 +29,8 @@ names it.
 **Decided:** el orden de la secuencia pasa a s1.4, s1.5, s1.6 con s1.5 dependiendo de s1.6 (que a su vez espera datos del humano); `plan.md` re-escrito por `chore(e1): re-plan`.
 **Why:** `plan.md`, "Sequencing risks": los datos del VPS y los datos botánicos con fuentes no están escritos en ningún artefacto; y `scope.md`, criterio `[stated]` del brief: "una especie de ejemplo se ve en su ficha, desplegada en el VPS", que necesita una especie real con fuentes (`must-data-001`), inventarla violaría la guardia. Ordenar así deja s1.4 hecha antes del stop.
 **Would have stopped:** que el reorden contradijera un criterio `[stated]` del brief (P4): no lo hace, el orden no es un criterio.
+
+### 2026-09-19 · epic-plan step 2 · Corrección del re-plan: el orden es s1.4, s1.6, s1.5
+**Decided:** corrige la entrada anterior ("Re-plan: s1.4 antes que s1.5, s1.5 depende de s1.6"): la secuencia queda s1.4, s1.6, s1.5, porque s1.5 depende de s1.6 y no puede ir antes; la tabla de Progress sigue el mismo orden.
+**Why:** `plan.md`, columna `Depends on` de s1.5: `s1.6 (hard)`; una dependencia dura no puede quedar después de lo que depende de ella. Reversa la parte del orden de la entrada anterior; su razón (agotar primero lo que no espera al humano) sigue en pie.
+**Would have stopped:** nada: es una corrección de coherencia interna del plan.
