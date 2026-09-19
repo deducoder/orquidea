@@ -15,6 +15,7 @@
     {% if item.ejemplar.especie_id and item.ejemplar.nombre %}«{{ item.ejemplar.nombre }}»{% elif not item.ejemplar.especie_id %}{{ item.ejemplar.nombre }}{% endif %}
     <small>Agregado el {{ item.ejemplar.creado | fecha }}</small>
     <a href="/coleccion/{{ item.ejemplar.id }}/editar">Editar</a>
+    <a href="/coleccion/{{ item.ejemplar.id }}/quitar">Quitar</a>
     {% if item.ejemplar.notas %}
     <p style="white-space: pre-line">{{ item.ejemplar.notas }}</p>
     {% endif %}

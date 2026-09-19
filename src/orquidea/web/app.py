@@ -25,6 +25,7 @@ from orquidea.datos.ejemplares import (
     agregar_sin_especie,
     listar,
     obtener,
+    quitar,
 )
 from orquidea.datos.sesiones import ANTIGUEDAD_MAXIMA, cerrar, crear
 from orquidea.datos.sesiones import obtener as obtener_sesion
@@ -337,6 +338,20 @@ def editar_ejemplar(
     except EjemplarInvalido as fallo:
         return _formulario_de_edicion(request, 422, ejemplar, nombre, notas, str(fallo))
     actualizar(conexion, id, nombre_limpio, notas_limpias)
+    return RedirectResponse("/coleccion", status_code=303)
+
+
+@app.get("/coleccion/{id}/quitar", response_class=HTMLResponse)
+def confirmar_baja(request: Request, id: int, conexion: Base) -> HTMLResponse:
+    ejemplar = _ejemplar_o_404(conexion, id)
+    (resuelto,) = resolver([ejemplar], request.app.state.catalogo)
+    return templates.TemplateResponse(request, "confirmar_baja.html", {"item": resuelto})
+
+
+@app.post("/coleccion/{id}/quitar")
+def quitar_ejemplar(id: int, conexion: Base) -> RedirectResponse:
+    if not quitar(conexion, id):
+        raise HTTPException(status_code=404, detail="Ejemplar no encontrado")
     return RedirectResponse("/coleccion", status_code=303)
 
 

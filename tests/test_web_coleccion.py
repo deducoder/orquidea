@@ -543,3 +543,98 @@ def test_el_nombre_es_requerido_en_el_formulario_solo_sin_especie(client: TestCl
 
     assert " required" in campo_nombre(propio)
     assert " required" not in campo_nombre(del_catalogo)
+
+
+def quitar_ejemplar(client: TestClient, sesion: Sesion, id: int) -> Response:
+    return client.post(
+        f"/coleccion/{id}/quitar", data={"csrf": sesion.csrf}, follow_redirects=False
+    )
+
+
+def test_la_confirmacion_de_baja_muestra_el_ejemplar_y_no_quita_nada(
+    client: TestClient, sesion: Sesion
+) -> None:
+    app.state.catalogo = [especie()]
+    id = alta(RADICANS, "Mi primera")
+
+    respuesta = client.get(f"/coleccion/{id}/quitar")
+
+    assert respuesta.status_code == 200
+    assert "Epidendrum radicans" in respuesta.text
+    assert "Mi primera" in respuesta.text
+    formulario = re.search(
+        rf'<form method="post" action="/coleccion/{id}/quitar">.*?</form>', respuesta.text, re.S
+    )
+    assert formulario is not None
+    assert f'name="csrf" value="{sesion.csrf}"' in formulario.group()
+    assert fila(id) is not None
+
+
+def test_la_confirmacion_de_un_ejemplar_propio_muestra_su_nombre(client: TestClient) -> None:
+    id = alta(None, "Cattleya de mi abuela")
+
+    assert "Cattleya de mi abuela" in client.get(f"/coleccion/{id}/quitar").text
+
+
+def test_confirmar_la_baja_quita_solo_ese_ejemplar(client: TestClient, sesion: Sesion) -> None:
+    app.state.catalogo = [especie()]
+    uno = alta(RADICANS, "", "notas de uno")
+    otro = alta(RADICANS, "", "notas del otro")
+    propio = alta(None, "Mi rara")
+
+    respuesta = quitar_ejemplar(client, sesion, uno)
+
+    assert respuesta.status_code == 303
+    assert respuesta.headers["location"] == "/coleccion"
+    assert fila(uno) is None
+    assert fila(otro) == (RADICANS, "", "notas del otro")
+    assert fila(propio) == (None, "Mi rara", "")
+    assert "notas del otro" in client.get("/coleccion").text
+
+
+def test_quitar_un_id_inexistente_da_404_en_get_y_post(client: TestClient, sesion: Sesion) -> None:
+    alta(None, "Mi rara")
+
+    assert client.get("/coleccion/999/quitar").status_code == 404
+    assert quitar_ejemplar(client, sesion, 999).status_code == 404
+    assert len(ejemplares_propios()) == 1
+
+
+def test_quitar_con_un_id_no_numerico_da_422(client: TestClient) -> None:
+    assert client.get("/coleccion/abc/quitar").status_code == 422
+
+
+def test_quitar_sin_token_da_403_y_la_fila_sigue(client: TestClient) -> None:
+    id = alta(None, "Mi rara")
+
+    assert client.post(f"/coleccion/{id}/quitar").status_code == 403
+    assert fila(id) is not None
+
+
+def test_quitar_sin_sesion_redirige_al_acceso_y_la_fila_sigue(anonimo: TestClient) -> None:
+    id = alta(None, "Mi rara")
+
+    respuesta = anonimo.post(f"/coleccion/{id}/quitar", follow_redirects=False)
+
+    assert respuesta.status_code == 303
+    assert respuesta.headers["location"] == "/acceso"
+    assert fila(id) is not None
+
+
+def test_la_confirmacion_escapa_el_nombre(client: TestClient) -> None:
+    id = alta(None, "<script>alert(1)</script>")
+
+    html = client.get(f"/coleccion/{id}/quitar").text
+
+    assert "<script>alert(1)</script>" not in html
+
+
+def test_la_lista_trae_quitar_en_cada_ejemplar(client: TestClient) -> None:
+    app.state.catalogo = [especie()]
+    uno = alta(RADICANS)
+    propio = alta(None, "Mi rara")
+
+    html = client.get("/coleccion").text
+
+    assert f'href="/coleccion/{uno}/quitar"' in html
+    assert f'href="/coleccion/{propio}/quitar"' in html
