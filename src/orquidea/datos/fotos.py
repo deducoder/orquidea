@@ -3,8 +3,18 @@ from dataclasses import dataclass
 
 from PIL import Image, ImageOps
 
+TAMANO_MAXIMO = 10 * 1024 * 1024
+PIXELES_MAXIMOS = 64_000_000
 ANCHO_MAXIMO = 1600
 LADO_MINIATURA = 320
+FORMATOS = frozenset({"JPEG", "PNG", "WEBP"})
+
+# Pillow avisa a partir de este tope y lanza `DecompressionBombError` al doble.
+Image.MAX_IMAGE_PIXELS = PIXELES_MAXIMOS
+
+
+class FotoInvalida(ValueError):
+    pass
 
 
 @dataclass(frozen=True)
@@ -21,8 +31,33 @@ def _jpeg(imagen: Image.Image, calidad: int) -> bytes:
     return salida.getvalue()
 
 
+def _abrir(datos: bytes) -> Image.Image:
+    if len(datos) > TAMANO_MAXIMO:
+        raise FotoInvalida(f"La foto no puede pasar de {TAMANO_MAXIMO // (1024 * 1024)} MB.")
+    try:
+        # Solo lee la cabecera: el tipo sale de lo que Pillow decodifica, no del nombre.
+        origen = Image.open(io.BytesIO(datos))
+    except Image.DecompressionBombError as fallo:
+        raise FotoInvalida("La foto es demasiado grande en píxeles.") from fallo
+    except OSError as fallo:
+        raise FotoInvalida("El archivo no es una imagen válida.") from fallo
+    if origen.format not in FORMATOS:
+        raise FotoInvalida("Solo se admiten fotos JPEG, PNG o WebP.")
+    if origen.width * origen.height > PIXELES_MAXIMOS:
+        raise FotoInvalida("La foto es demasiado grande en píxeles.")
+    return origen
+
+
 def procesar_foto(datos: bytes) -> FotoProcesada:
-    origen = Image.open(io.BytesIO(datos))
+    origen = _abrir(datos)
+    try:
+        return _reconstruir(origen)
+    except (OSError, SyntaxError, ValueError) as fallo:
+        # Un archivo truncado o corrupto solo falla al decodificar los píxeles.
+        raise FotoInvalida("El archivo no es una imagen válida.") from fallo
+
+
+def _reconstruir(origen: Image.Image) -> FotoProcesada:
     # La orientación vive en el EXIF: se aplica a los píxeles antes de descartarlo.
     girada = ImageOps.exif_transpose(origen)
     if girada.mode in ("RGBA", "LA", "P"):

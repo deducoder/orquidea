@@ -1,11 +1,14 @@
 import io
 
+import pytest
 from PIL import ExifTags, Image
 from PIL.PngImagePlugin import PngInfo
 
 from orquidea.datos.fotos import (
     ANCHO_MAXIMO,
     LADO_MINIATURA,
+    TAMANO_MAXIMO,
+    FotoInvalida,
     procesar_foto,
 )
 
@@ -123,3 +126,46 @@ def test_un_webp_se_convierte_a_jpeg_reducido() -> None:
 
     assert _abrir(foto.imagen).size == (ANCHO_MAXIMO, 1067)
     _sin_rastro(foto.imagen)
+
+
+def test_bytes_que_no_son_una_imagen_se_rechazan() -> None:
+    with pytest.raises(FotoInvalida, match="no es una imagen válida"):
+        procesar_foto(b"no soy una imagen")
+
+
+def test_un_formato_no_admitido_se_rechaza() -> None:
+    entrada = io.BytesIO()
+    Image.new("RGB", (50, 50)).save(entrada, "GIF")
+
+    with pytest.raises(FotoInvalida, match="JPEG, PNG o WebP"):
+        procesar_foto(entrada.getvalue())
+
+
+def test_un_jpeg_truncado_se_rechaza_sin_que_escape_la_excepcion_de_pillow() -> None:
+    completo = _jpeg(1000, 800, con_metadatos=False)
+
+    with pytest.raises(FotoInvalida, match="no es una imagen válida"):
+        procesar_foto(completo[: len(completo) // 2])
+
+
+def test_un_archivo_demasiado_grande_se_rechaza_antes_de_abrirlo() -> None:
+    with pytest.raises(FotoInvalida, match="10 MB"):
+        procesar_foto(b"\xff" * (TAMANO_MAXIMO + 1))
+
+
+@pytest.mark.filterwarnings("ignore::PIL.Image.DecompressionBombWarning")
+def test_una_imagen_con_demasiados_pixeles_se_rechaza_sin_decodificarla() -> None:
+    entrada = io.BytesIO()
+    Image.new("1", (9000, 9000)).save(entrada, "PNG")  # 81 MP: pesa poco y decodifica mucho
+    assert len(entrada.getvalue()) < TAMANO_MAXIMO
+
+    with pytest.raises(FotoInvalida, match="demasiado grande en píxeles"):
+        procesar_foto(entrada.getvalue())
+
+
+def test_una_bomba_de_descompresion_se_rechaza_igual() -> None:
+    entrada = io.BytesIO()
+    Image.new("1", (12000, 12000)).save(entrada, "PNG")  # 144 MP: Pillow ya la llama bomba
+
+    with pytest.raises(FotoInvalida, match="demasiado grande en píxeles"):
+        procesar_foto(entrada.getvalue())
