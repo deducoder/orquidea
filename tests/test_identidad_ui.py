@@ -85,9 +85,10 @@ def _cadena(primitivas: str, semanticos: str, design: str) -> tuple[list[str], i
 
 
 def _leer_cadena() -> tuple[str, str, str]:
-    return tuple(  # type: ignore[return-value]
+    primitivas, semanticos, design = (
         (UI / n).read_text(encoding="utf-8") for n in ("primitives.md", "semantics.md", "DESIGN.md")
     )
+    return primitivas, semanticos, design
 
 
 def test_la_cadena_de_colores_esta_atada() -> None:
@@ -128,5 +129,6 @@ def test_un_color_que_cambia_en_un_eslabon_rompe_la_cadena(
     assert any(nombrado in r for r in rotos), rotos
 
 
-def test_sin_tablas_no_hay_verde() -> None:
+def test_sin_tablas_la_poblacion_es_cero() -> None:
+    # sin tablas no hay nada roto que nombrar: el verde lo impide el `comparados == 13` de arriba
     assert _cadena("", "", "") == ([], 0)
