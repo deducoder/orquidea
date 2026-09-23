@@ -205,6 +205,19 @@ def test_el_tope_de_la_identidad_incluye_la_frontera(
     assert medicion.main(["--identidad", str(tmp_path)]) == 1
 
 
+def test_los_archivos_ocultos_no_son_recursos_de_la_identidad(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    (tmp_path / ".gitkeep").write_bytes(b"")
+    (tmp_path / ".cache").mkdir()
+    (tmp_path / ".cache" / "hoja.css").write_bytes(b"body {}")
+
+    codigo = medicion.main(["--identidad", str(tmp_path)])
+
+    assert codigo == 2
+    assert "nada que medir" in capsys.readouterr().out
+
+
 @pytest.mark.parametrize("vacio", [True, False])
 def test_sin_recursos_de_identidad_no_hay_verde(
     tmp_path: Path, capsys: pytest.CaptureFixture[str], vacio: bool

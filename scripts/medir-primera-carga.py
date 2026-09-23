@@ -167,8 +167,15 @@ def medir_ficha(riegos: int, floraciones: int) -> MedicionDeFicha:
 
 
 def medir_identidad(directorio: Path) -> MedicionDeIdentidad:
-    """Cada archivo bajo `directorio`, en gzip; un directorio que no existe no tiene ninguno."""
-    archivos = sorted(r for r in directorio.rglob("*") if r.is_file())
+    """Cada archivo bajo `directorio`, en gzip; un directorio que no existe no tiene ninguno.
+
+    Los ocultos (`.gitkeep`, o lo que cuelga de un directorio oculto) no son recursos de la
+    identidad: contarlos daría un verde con población sin haber medido nada de ella."""
+    archivos = sorted(
+        r
+        for r in directorio.rglob("*")
+        if r.is_file() and not any(p.startswith(".") for p in r.relative_to(directorio).parts)
+    )
     return MedicionDeIdentidad(
         tuple(
             (r.relative_to(directorio).as_posix(), len(gzip.compress(r.read_bytes())))
