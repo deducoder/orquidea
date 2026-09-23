@@ -17,3 +17,4 @@
 - [Cifras de retrospectiva de la salida del comando](cifras-de-retrospectiva-de-la-salida-del-comando.md) — contar con un comando, no de memoria
 - [Rango de epic-review desde el diseño](rango-de-epic-review-desde-el-disenio.md) — base = padre del commit de diseño, no del brief
 - [Supervisar orchestrate](orchestrate-supervision-mechanics.md) — nombre tras renombre, espera en bucle, push no sale con terminal activa
+- [Afirmar presencia no ve el lugar](afirmar-presencia-no-ve-el-lugar.md) — `x in html` deja pasar duplicados mal ubicados
