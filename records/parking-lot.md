@@ -47,6 +47,9 @@ wrote it. Retirement moves an entry to `## Retired` with its reason.
 - **En gemba-design 0.21.0, la plantilla `semantics.md` de la técnica `ui` pide una columna `Variant`, pero `invariance.py` no acepta `—` en ella.** Con una identidad sin variante (Orquídea, ADR-012), la columna llena de `—` hace que `invariance.py` salga con 2 por `unreadable variant value '—'`, no por `no subject`. Solo sale "sin sujeto" cuando la tabla no trae columna `Variant`, y eso contradice la plantilla. En `governance/identity/ui/semantics.md` se quitó la columna y se explicó por qué. `palette.md` conserva su columna con `—`, que ningún eslabón pasa por `invariance.py`. El arreglo es del addon: tratar una columna de variante vacía o con `—` como "sin sujeto", o que la plantilla diga que se omite. No es de Orquídea.
   *Origin:* s5.5 (e5), `story-implement` T3 y `survival-review`, 2026-09-22 — salida de `invariance.py governance/identity/ui/semantics.md texto fondo`.
   *Promotion:* al reportarlo en el repositorio de gemba-design, o cuando una versión del addon lo corrija: entonces se vuelve a poner la columna en `semantics.md` si la plantilla lo sigue pidiendo.
+- **En gemba-design 0.21.0, `design-md.py` solo acepta referencias ASCII (`^\{([a-z][A-Za-z0-9.-]*)\}$`), y el spec de DESIGN.md (`alpha`) no lo exige.** Un componente con `{colors.acción-fondo}` sale `refused` (exit 1). En Orquídea se resolvió con identificadores ASCII (ADR-014): `semantics.md` usa `linea` y `accion-*`. El límite del generador, más estrecho que el formato, es del addon: aceptar las letras de un identificador YAML, o decir en la técnica `ui` que los identificadores de rol van en ASCII antes de que un eslabón los fije.
+  *Origin:* s5.6 (e5), `story-design`, 2026-09-22 — lectura de `design-md.py` contra los roles de `semantics.md`.
+  *Promotion:* al reportarlo en el repositorio de gemba-design, o cuando una versión del addon lo corrija; en Orquídea no hace falta deshacer nada.
 
 ## Retired
 
