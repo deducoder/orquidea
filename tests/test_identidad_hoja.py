@@ -43,7 +43,7 @@ def tokens_de_design() -> dict[str, str]:
         clave, _, valor = linea.strip().partition(":")
         ruta = [*ruta[:nivel], clave]
         valor = valor.strip().strip('"')
-        if valor and ruta[0] in ("colors", "typography", "spacing"):
+        if valor and ruta[0] in ("colors", "typography", "spacing", "rounded"):
             nombre = "-".join(ruta).replace("fontSize", "font-size")
             tokens["--" + nombre.replace("lineHeight", "line-height")] = valor
     return tokens
@@ -115,6 +115,7 @@ def test_el_lector_de_design_md_encuentra_los_tokens() -> None:
     assert tokens["--typography-step-0-font-size"] == "16px"
     assert tokens["--typography-step-2-line-height"] == "36px"
     assert tokens["--spacing-step-6"] == "48px"
+    assert tokens["--rounded-recto"] == "0px"  # ADR-016
     assert not any(t.startswith("--components") for t in tokens)
 
 

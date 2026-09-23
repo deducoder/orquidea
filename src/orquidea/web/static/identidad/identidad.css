@@ -28,6 +28,7 @@
   --spacing-step-3: 24px;
   --spacing-step-4: 32px;
   --spacing-step-6: 48px;
+  --rounded-recto: 0px;
   --familia: system-ui, -apple-system, "Segoe UI", Roboto, "Noto Sans", sans-serif;
 }
 
@@ -137,7 +138,7 @@ select {
   color: var(--colors-texto);
   background: var(--colors-campo-fondo);
   border: 1px solid var(--colors-campo-borde);
-  border-radius: 0;
+  border-radius: var(--rounded-recto);
   padding: var(--spacing-step-1);
   min-height: var(--spacing-step-6);
   min-width: var(--spacing-step-6);
@@ -150,7 +151,7 @@ button {
   background: var(--colors-acción-fondo);
   color: var(--colors-acción-texto);
   border: 0;
-  border-radius: 0;
+  border-radius: var(--rounded-recto);
   padding: 0 var(--spacing-step-2);
   min-height: var(--spacing-step-6);
   min-width: var(--spacing-step-6);
@@ -181,6 +182,7 @@ button:active {
 .tarjetas > li {
   background: var(--colors-superficie);
   border: 1px solid var(--colors-línea);
+  border-radius: var(--rounded-recto);
   padding: var(--spacing-step-2);
   margin: 0 0 var(--spacing-step-2);
 }
