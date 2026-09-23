@@ -249,3 +249,43 @@ def test_argumentos_ilegibles_salen_con_2(tmp_path: Path, argumentos: list[str])
     argumentos = [sujeto if a == "PALETA" else a for a in argumentos]
 
     assert primitivas.main(argumentos) == 2
+
+
+# --- el entregable ---------------------------------------------------------------------------
+
+RAIZ = Path(__file__).parent.parent
+PRIMITIVAS = RAIZ / "governance" / "identity" / "ui" / "primitives.md"
+PALETA_REAL = RAIZ / "governance" / "identity" / "palette.md"
+
+
+def _filas_de(texto: str, primeras: tuple[str, ...]) -> list[str]:
+    """Las filas (cabecera incluida) de las tablas cuyo encabezado empieza por una de `primeras`."""
+    filas: list[str] = []
+    en_tabla = False
+    for linea in texto.splitlines():
+        if not linea.startswith("|"):
+            en_tabla = False
+            continue
+        primera = linea.strip("|").split("|")[0].strip()
+        if primera in primeras:
+            en_tabla = True
+        if en_tabla and not primera.startswith("---"):
+            filas.append(linea.strip())
+    return filas
+
+
+def test_primitives_md_es_lo_que_la_regla_registrada_produce(
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    texto = PRIMITIVAS.read_text(encoding="utf-8")
+    regla = next(
+        f.split("|")[2].strip().strip("`")
+        for f in _filas_de(texto, ("Parameter",))
+        if f.split("|")[1].strip() == "regla"
+    )
+
+    assert primitivas.main([str(PALETA_REAL), "--regla", regla]) == 0
+    esperadas = _filas_de(capsys.readouterr().out, ("Step", "Identity role"))
+    escritas = _filas_de(texto, ("Step", "Identity role"))
+    assert len(escritas) == 36 + 7 + 2  # sin tablas no hay verde
+    assert escritas == esperadas
