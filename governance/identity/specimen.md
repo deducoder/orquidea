@@ -74,7 +74,7 @@ De 0.2° a 16 px: con el teléfono a 35 cm y 160 px CSS por pulgada (parámetros
 
 | Judged | Verdict | Judged by, and when |
 |--------|---------|---------------------|
-| Whether the pairing has character of its own | no por sí sola: el carácter lo pone la estructura del Cuaderno de campo (ADR-010), no la familia | `unsigned` — propuesto por el agente; pendiente de la firma del humano |
+| Whether the pairing has character of its own | no por sí sola: el carácter lo pone la estructura del Cuaderno de campo (ADR-010), no la familia | Daniel Efraín Domínguez Urbina, 2026-09-22 (lectura propuesta por el agente, firmada por el humano) |
 | Whether it suits this commission | sí: 0 KB, negrita e itálica diseñadas y la tipografía de las apps del teléfono (S3) | Daniel Efraín Domínguez Urbina, 2026-09-22, al elegir (A) |
 
 ## What was tried and rejected
