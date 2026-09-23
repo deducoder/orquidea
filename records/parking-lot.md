@@ -61,6 +61,9 @@ wrote it. Retirement moves an entry to `## Retired` with its reason.
   *Origin:* e5, `epic-review` (quality-review a escala de épica), 2026-09-23 — mutación plantada en `semantics.md`.
   *Promotion:* antes del primer cambio de paleta o de roles, o en la siguiente historia que toque `governance/identity/ui/`.
 
+- **Tres scripts de `scripts/` tienen cada uno su lector de tablas markdown:** `contraste-de-lectura.py` (`tablas`/`filas`), `derivar-primitivas.py` (`_roles_de`) y `comprobar-medidas.py` (`_filas`), además de los de las pruebas. Cada uno encuentra la tabla por la primera celda de la cabecera, con diferencias pequeñas (quitar comillas invertidas, filas separadoras). Son scripts sueltos cargados por ruta, y compartir el lector exige un módulo común y manejo de `sys.path`, un costo que hoy no se paga con tres usos.
+  *Origin:* e5, `epic-close` (architecture-review a escala de épica), 2026-09-23.
+  *Promotion:* un cuarto script que lea tablas, o un defecto que aparezca en un lector y no en los otros.
 ## Retired
 
 ### 2026-09-23 · s5.7 (e5) · Ninguna prueba afirmaba el `<title>` de las páginas salvo el de inicio

@@ -110,11 +110,11 @@ Imprime una línea con el formato `scrypt$N$r$p$sal$hash`; pégala como valor de
 
 | Path | What lives here |
 |------|-----------------|
-| `src/orquidea/` | El código de la aplicación: `catalogo/` y `coleccion/` (dominio), `autenticacion.py` (contraseña e intentos), `datos/` (SQLite con migraciones, sesiones, ejemplares, fotos, riegos, floraciones y los JSON del catálogo) y `web/` (la aplicación, la sesión, un router por área en `rutas/` y las plantillas) |
+| `src/orquidea/` | El código de la aplicación: `catalogo/` y `coleccion/` (dominio), `autenticacion.py` (contraseña e intentos), `datos/` (SQLite con migraciones, sesiones, ejemplares, fotos, riegos, floraciones y los JSON del catálogo) y `web/` (la aplicación, la sesión, un router por área en `rutas/`, las plantillas y la hoja de la identidad en `static/identidad/`) |
 | `tests/` | Pruebas unitarias |
-| `scripts/` | Gate entry points (see Development) y `medir-primera-carga.py` (ver Fotos e Historial de cuidados) |
+| `scripts/` | Gate entry points (see Development), `medir-primera-carga.py` (ver Fotos e Historial de cuidados) y los instrumentos de la identidad: `contraste-de-lectura.py`, `derivar-primitivas.py`, `derivar-medidas.py` y `comprobar-medidas.py` |
 | `Dockerfile` | Imagen para desplegar en Dokploy (ver Despliegue con Dokploy) |
-| `governance/` | Vision, requirements, guardrails, architecture (see below) |
+| `governance/` | Vision, requirements, guardrails, architecture (see below) y la identidad visual en `identity/` (paleta, espécimen y, en `ui/`, la interfaz derivada con su `DESIGN.md` generado) |
 | `conventions/` | Bindings de esta instancia (autonomía, notificaciones, seguridad) |
 | `work/` | Work in progress — one directory per epic / story / bug / spike |
 | `records/decisions/` | ADRs — the decisions and their rationale |
