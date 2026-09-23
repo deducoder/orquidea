@@ -208,6 +208,8 @@ def _rampa_hsl(roles: dict[str, str], rampa: str) -> list[str]:
 
 
 def derivar(roles: dict[str, str], regla: str) -> Derivacion:
+    if regla not in REGLAS:
+        raise ValueError(f"regla desconocida: {regla}")
     primitivas: list[tuple[str, str, str]] = []
     asignaciones: list[Asignacion] = []
     for rampa in RAMPAS:
@@ -216,7 +218,7 @@ def derivar(roles: dict[str, str], regla: str) -> Derivacion:
             valores = _rampa_anclas(roles, rampa, anclados)
         elif regla == "oklch":
             valores = _rampa_oklch(roles, rampa)
-        else:
+        elif regla == "hsl":
             valores = _rampa_hsl(roles, rampa)
         nombres = [f"{rampa}-{e}" for e in ESCALONES]
         primitivas += [(n, v, rampa) for n, v in zip(nombres, valores, strict=True)]

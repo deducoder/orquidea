@@ -168,7 +168,8 @@ def test_en_empate_se_toma_el_escalon_mas_oscuro() -> None:
 def test_dos_roles_no_comparten_escalon() -> None:
     rejilla = primitivas.rejilla()
 
-    assert primitivas.mas_cercano(rejilla[3], rejilla, ocupados={3}) in {2, 4}
+    # 2 y 4 quedan a la misma distancia: el empate va al más oscuro
+    assert primitivas.mas_cercano(rejilla[3], rejilla, ocupados={3}) == 4
 
 
 @pytest.mark.parametrize("regla", ["anclas", "oklch", "hsl"])
@@ -181,6 +182,11 @@ def test_cada_rol_de_la_paleta_se_asigna_una_vez_y_el_desvio_se_mide(regla: str)
     for a in derivacion.asignaciones:
         assert a.valor == pasos[a.escalon]
         assert a.desvio == pytest.approx(primitivas.delta_e(PALETA[a.rol], a.valor))
+
+
+def test_una_regla_desconocida_no_cae_en_otra() -> None:
+    with pytest.raises(ValueError, match="anclass"):
+        primitivas.derivar(PALETA, "anclass")
 
 
 def test_con_anclas_el_desvio_es_cero() -> None:
