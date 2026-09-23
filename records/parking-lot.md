@@ -38,6 +38,9 @@ wrote it. Retirement moves an entry to `## Retired` with its reason.
 - **La aplicación no comprime sus respuestas: el presupuesto de peso depende del proxy.** La ficha con 500 riegos y 500 floraciones en curso pesa 500 476 bytes sin comprimir y 14 459 en gzip (medido con `uvicorn` real); `must-perf-001` se cuenta en gzip "como lo serviría un proxy" (decisión de e3), pero la aplicación no lleva `GZipMiddleware` y no se ha verificado que el proxy de Dokploy comprima.
   *Origin:* e4, `story-implement` de s4.4 (medición de la ficha llena), 2026-09-19; documentado en el README por s4.6.
   *Promotion:* al verificar el despliegue real (mismo momento que la entrada de `docker build`): si el proxy no comprime, añadir `GZipMiddleware` (o la compresión del proxy) con un ADR; o si la lista o la ficha se sienten lentas con datos reales.
+- **Quitar `'unsafe-inline'` de `style-src` en la CSP.** Hoy la CSP lo permite porque cuatro plantillas llevan atributos `style`; s5.7 (e5) los mueve a `identidad.css`, y desde entonces ya nada lo necesita. Quitarlo toca `CONTENT_SECURITY_POLICY` en `web/app.py` y la prueba `test_la_csp_no_permite_scripts_en_linea`, que hoy afirma su presencia; htmx inyecta estilos en línea para sus indicadores salvo que se configure `htmx.config.includeIndicatorStyles = false`, y eso hay que comprobarlo antes.
+  *Origin:* e5, `epic-design`, 2026-09-22 — recorrido de las plantillas y de la CSP.
+  *Promotion:* al cerrar s5.7, si ninguna plantilla conserva un atributo `style`: una historia o arreglo con su prueba de CSP y la comprobación de htmx.
 
 ## Retired
 
