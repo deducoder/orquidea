@@ -49,7 +49,7 @@ None. s5.3 (`palette.md`, su ADR) y s5.4 (`specimen.md`, su ADR, fuentes en `/st
 | s5.2 | done | S | S |
 | s5.4 | done | M | S |
 | s5.3 | done | S | S |
-| s5.5 | todo | S | |
+| s5.5 | done | S | S |
 | s5.6 | todo | M | |
 | s5.7 | todo | M | |
 

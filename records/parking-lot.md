@@ -44,6 +44,9 @@ wrote it. Retirement moves an entry to `## Retired` with its reason.
 - **Ninguna prueba afirma el `<title>` de las páginas salvo el de inicio.** Una prueba parametrizada que recorra las páginas (catálogo, especie, colección, ejemplar, alta, edición, baja, acceso) y afirme que el contenido de `<title>` es texto sin `<` ni `>` cerraría la clase de b1, no solo su instancia; hoy solo `tests/test_web_inicio.py:13` y la regresión de b1 lo miran.
   *Origin:* b1, `bug-review`, 2026-09-22 — prevención de la clase (afirmación de presencia que no ve el lugar).
   *Promotion:* s5.7 (e5), que toca todas las plantillas: agregarla ahí como red de las plantillas vestidas.
+- **En gemba-design 0.21.0, la plantilla `semantics.md` de la técnica `ui` pide una columna `Variant`, pero `invariance.py` no acepta `—` en ella.** Con una identidad sin variante (Orquídea, ADR-012), la columna llena de `—` hace que `invariance.py` salga con 2 por `unreadable variant value '—'`, no por `no subject`. Solo sale "sin sujeto" cuando la tabla no trae columna `Variant`, y eso contradice la plantilla. En `governance/identity/ui/semantics.md` se quitó la columna y se explicó por qué. `palette.md` conserva su columna con `—`, que ningún eslabón pasa por `invariance.py`. El arreglo es del addon: tratar una columna de variante vacía o con `—` como "sin sujeto", o que la plantilla diga que se omite. No es de Orquídea.
+  *Origin:* s5.5 (e5), `story-implement` T3 y `survival-review`, 2026-09-22 — salida de `invariance.py governance/identity/ui/semantics.md texto fondo`.
+  *Promotion:* al reportarlo en el repositorio de gemba-design, o cuando una versión del addon lo corrija: entonces se vuelve a poner la columna en `semantics.md` si la plantilla lo sigue pidiendo.
 
 ## Retired
 
