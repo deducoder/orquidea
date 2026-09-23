@@ -2,7 +2,7 @@
 type: adr
 id: ADR-014
 title: "Escala tipográfica, espaciado y componentes de Orquídea"
-status: proposed
+status: accepted
 date: 2026-09-22
 epic: e5
 published: no — el proyecto no tiene espacio de documentación externo; el ADR vive solo en el repositorio
@@ -12,7 +12,7 @@ published: no — el proyecto no tiene espacio de documentación externo; el ADR
 
 ## Status
 
-Proposed.
+Accepted.
 
 ## Context
 
@@ -112,7 +112,7 @@ Medidas con `scripts/comprobar-medidas.py`, `tokens.py targets`, `pairs` y `prov
 | Tamaños (px) y altura de línea | medido | 16/24, 20/32, 25/36 | 16/24, 24/36, 36/56 | 13/20, 16/24, 19/28, 23/36 |
 | M1 · piso y colapso | `mechanical` | sí — 3 escalones y 3 roles de lectura medidos, 0 bajo el piso, 0 colapsados (`ran:`) | sí — 3 y 3, 0 y 0 (`ran:`) | **no** — 4 escalones y 3 roles medidos, 1 bajo el piso: `date` en el escalón -1 = 13px (`ran:`) |
 | M3 · regeneración | `mechanical` | sí — la misma tabla al correr otra vez (`cmp`, `ran:`), y la prueba del script | sí — ídem, prueba del script | sí — ídem, prueba del script |
-| M4 · una jerarquía | `judgement` | pendiente de la lámina | pendiente de la lámina | no se lleva a la lámina: falla M1 |
+| M4 · una jerarquía | `judgement` | **sí** — elegida | no — no elegida (el título de 36 px domina 360 px) | no se lleva a la lámina: falla M1 |
 
 | Criterio | Estrato | Espaciado (A) d = 3 | Espaciado (B) d = 2 | Espaciado (C) d = 6 |
 |---|---|---|---|---|
@@ -121,7 +121,7 @@ Medidas con `scripts/comprobar-medidas.py`, `tokens.py targets`, `pairs` y `prov
 | `target-size` (SC 2.5.8) | `mechanical` | sí — `targets`: 4 judged, 0 below 24x24 (`ran:`) | sí — 4, 0 (`ran:`) | **no** — 4 judged, 4 below 24x24 (`ran:`) |
 | M3 · `provenance` | `mechanical` | sí — 12 tokens, 0 fuera de escala (`ran:`) | sí — 12, 0 (`ran:`) | sí — 12, 0 (`ran:`) |
 | `contrast` de los componentes | `mechanical` | sí — 8 pares, 0 bajo 7:1; el más bajo, `error` sobre `fondo` 8.38:1 (`ran:`) | sí — los mismos 8 pares (`ran:`) | sí — los mismos 8 pares (`ran:`) |
-| M4 · una familia | `judgement` | pendiente de la lámina | pendiente de la lámina | no se lleva a la lámina: falla M2 |
+| M4 · una familia | `judgement` | **sí** — elegida | no — no elegida | no se lleva a la lámina: falla M2 |
 
 `design-md.py` sobre las tres combinaciones: 10 componentes, 8 pares, 4 objetivos, 0 literales en la prosa y 0 tablas `Component` ignoradas. Los tokens son 21, 20 y 22 (13 colores, 3 escalones y 5, 4 o 6 pasos).
 
@@ -175,12 +175,38 @@ exit=1
 
 ## Decision
 
-Sin resolver.
+**Escala (A), razón 1.25, con el espaciado (A), d = 3.** La eligió y firmó Daniel Efraín Domínguez Urbina el 2026-09-22, en elección forzada entre A·A, A·B, B·A y B·B sobre la lámina a 360 px (`$S/lamina-medidas.html`, que solo existe en el scratchpad).
+
+1. Escala: 16, 20 y 25 px con alturas de línea 24, 32 y 36. `text`, `binomial` y `date` van al escalón 0, `subtitulo` al 1 y `titulo` al 2. La produce `scripts/derivar-medidas.py escala --base 16 --razon 1.25 --escalones 0,1,2 --roles text=0,binomial=0,date=0,subtitulo=1,titulo=2`.
+2. Espaciado: unidad de 8 px, pasos 8, 16, 24, 32 y 48; control de 48 × 48. Lo produce `… espaciado --base 16 --divisor 3 --multiplicadores 1,2,3,4,6 --control 6`.
+3. Los diez componentes de la tabla de arriba, con `2u` como paso 2, `1u` como paso 1 y `C` como paso 6.
+4. `governance/identity/ui/DESIGN.md` se genera con `design-md.py --spec-version alpha --name Orquídea`, dos `--decision` (ADR-013 y ADR-014) y tres `--gap` (bordes y foco sin componente; peso y cifras tabulares en `specimen.md`; excepción *inline* de los enlaces), sobre `semantics.md`, `type-scale.md`, `spacing.md` y `components.md`. Salida del generador: 21 tokens, 10 componentes, 8 pares, 4 objetivos, 0 literales, 1 tabla `Component` ignorada (la de medición). Regenerado dos veces, sale idéntico.
+5. Medido sobre lo producido:
+   - M1: 3 escalones y 3 roles, 0 bajo el piso, 0 colapsados.
+   - M2: 4 objetivos, 0 bajo 44 px.
+   - `target-size`: 4, 0 bajo 24 × 24.
+   - `provenance`: 12 tokens, 0 fuera de escala.
+   - `contrast`: 8 pares, 0 bajo 7:1, el más bajo 8.38:1.
+   - M1 y M2 también corren en el gate (`tests/test_identidad_ui.py`), igual que la regeneración de las tablas de escala y espaciado (`tests/test_derivar_medidas.py`).
+6. Los identificadores de token van en ASCII (arriba), y `semantics.md` ya los usa.
 
 ## Consequences
 
-Se escriben al decidir.
+**Positive:**
+- s5.7 lee un solo archivo generado y verificado. Cada valor de la hoja de estilos puede ser un token de `DESIGN.md`, y un cambio de regla se re-deriva, no se parcha.
+- Todos los controles miden 48 × 48, sobre el 44 de AAA y el 24 de AA: el pulgar en campo tiene margen.
+- M1 y M2 son parte del gate: una edición que baje un control o un rol de lectura lo pone en rojo.
+
+**Negative / costs:**
+- El formato no compone bordes, foco, peso ni cifras tabulares. s5.7 los toma de `colors` y de `specimen.md` por token, y la prueba que compare la hoja con los tokens tiene que contarlos.
+- Los formularios en línea de la ficha (quitar un riego, terminar una floración) con botones de 48 × 48 pueden no caber en fila a 360 px; s5.7 los apila o los deja en su propia línea, sin bajar el control.
+- La regeneración de `DESIGN.md` depende del generador del addon, que vive fuera del repositorio. No está en el gate: se verifica a mano con el comando de arriba y `cmp`.
+- `rounded` no se deriva: las esquinas quedan sin token, y s5.7 no las redondea o lo decide con un ADR nuevo.
 
 ## Alternatives considered
 
-Las candidatas de arriba; las que pierdan se registran aquí con su razón.
+- **Escala (B), razón 1.5:** 16, 24 y 36 px; pasa M1 y perdió M4.
+- **Escala (C), razón 1.2 con fechas un escalón abajo:** la fecha a 13 px, bajo el piso (M1 en rojo).
+- **Espaciado (B), d = 2:** unidad de 12 px, control de 48; pasa M2 y perdió M4.
+- **Espaciado (C), d = 6:** controles de 20 × 20 (M2 y `target-size` en rojo).
+- **Mantener los identificadores con acento, o copiar el generador:** ver *Identificadores de token en ASCII*.
