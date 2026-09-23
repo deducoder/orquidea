@@ -67,15 +67,15 @@ header a,
 .accion {
   display: inline-flex;
   align-items: center;
-  justify-content: center;
   min-height: var(--spacing-step-6);
   min-width: var(--spacing-step-6);
   color: var(--colors-enlace);
 }
 
-/* en la cabecera los enlaces se separan del borde; fuera de ella un enlace suelto se alinea con el
-   texto de al lado, y el objetivo sigue en 48 por min-width (ADR-016) */
+/* en la cabecera los enlaces se centran y se separan del borde; fuera de ella un enlace suelto se
+   alinea con el texto de al lado, y el objetivo sigue en 48 por min-width (ADR-016) */
 header a {
+  justify-content: center;
   padding: 0 var(--spacing-step-1);
 }
 

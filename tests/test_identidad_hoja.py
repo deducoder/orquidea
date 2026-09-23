@@ -186,6 +186,8 @@ def test_un_enlace_accion_no_se_sangra_respecto_del_texto() -> None:
     assert accion["min-width"] == "var(--spacing-step-6)"
     sangrias = ("padding", "padding-left", "padding-inline", "padding-inline-start")
     assert not any(p in sangrias for p in accion)
+    # un enlace más corto que su objetivo de 48 no se centra dentro de él: eso también lo sangra
+    assert accion.get("justify-content", "normal") in ("normal", "flex-start", "start", "left")
 
 
 # --- las plantillas --------------------------------------------------------------------------
