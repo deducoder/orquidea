@@ -54,7 +54,10 @@ def piso(texto: str, minimo: int, lectura: list[str]) -> int:
     if not filas:
         print("0 escalón(es) medidos — nada que juzgar")
         return 2
-    escalones = [(f[0], _px(f[1]), [r.strip() for r in f[-1].split(",")]) for f in filas]
+    for fila in filas:
+        if len(fila) < 4:
+            raise ValueError(f"fila incompleta de la escala: {fila}")
+    escalones = [(f[0], _px(f[1]), [r.strip() for r in f[3].split(",")]) for f in filas]
     bajo = 0
     for rol in lectura:
         donde = [(id_, tamano) for id_, tamano, roles in escalones if rol in roles]
@@ -85,6 +88,8 @@ def objetivos(texto: str, minimo: int) -> int:
         return 2
     bajo = 0
     for fila in filas:
+        if len(fila) < 3:
+            raise ValueError(f"fila incompleta de objetivos: {fila}")
         nombre, ancho, alto = fila[0], _px(fila[1]), _px(fila[2])
         faltan = [d for d, v in (("ancho", ancho), ("alto", alto)) if v < minimo]
         bajo += bool(faltan)

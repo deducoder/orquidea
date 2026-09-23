@@ -83,6 +83,7 @@ def test_dos_escalones_con_el_mismo_tamano_colapsan(
         ("Sin tablas.\n", "0 escalón(es)"),
         (ESCALA.replace("text, binomial, date", "text, binomial"), "date"),  # un rol sin escalón
         (ESCALA.replace("16px | 24px", "dieciséis | 24px"), "dieciséis"),  # tamaño ilegible
+        (ESCALA.replace("| 1 | 20px | 32px | subtitulo |", "| 1 |"), "fila"),  # fila corta
     ],
 )
 def test_piso_sin_sujeto_o_ilegible_sale_con_2_y_lo_nombra(
@@ -141,6 +142,7 @@ def test_exactamente_en_el_minimo_pasa(tmp_path: Path) -> None:
         "Sin tablas.\n",
         "| Target | Width | Height |\n|---|---|---|\n",
         OBJETIVOS.replace("| 48 | 48 |\n| campo", "| ancho | 48 |\n| campo"),
+        OBJETIVOS.replace("| boton | 48 | 48 |", "| boton | 48 |"),  # fila corta: no es un rojo
     ],
 )
 def test_objetivos_sin_sujeto_o_ilegible_sale_con_2(tmp_path: Path, texto: str) -> None:
