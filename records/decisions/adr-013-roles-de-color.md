@@ -70,15 +70,52 @@ Aprobados con los criterios. Cada uno es, en cada contexto (`papel`, `hoja`), un
 
 ### La rejilla
 
-Las celdas medibles son lo que cada regla produce: `pending: measured when run`, se llenan corriendo la regla, sin tocar criterio ni parámetro.
+Corridas el 2026-09-22 con `uv run python scripts/derivar-primitivas.py governance/identity/palette.md --regla {anclas|oklch|hsl}` hacia el scratchpad (`$S/primitivas-{regla}.md`); los trece roles resueltos por la tabla de arriba en `$S/roles-{regla}.md`, y medidos con `scripts/contraste-de-lectura.py`, `tokens.py pairs` y `tokens.py provenance` (gemba-design 0.21.0, `conventions/mechanical/instruments/`). Cifras copiadas de la salida vista. Criterios y parámetros sin tocar desde el commit que abrió este registro.
 
 | Criterio | Estrato | (A) Anclas OKLCH | (B) Uniforme OKLCH | (C) Uniforme HSL |
 |---|---|---|---|---|
-| R1 · texto ≥ 7:1 | `mechanical` | pending: measured when run | pending: measured when run | pending: measured when run |
-| `component-contrast` | `mechanical` | pending: measured when run | pending: measured when run | pending: measured when run |
-| R2 · reproducible y desde un escalón | `mechanical` | pending: measured when run | pending: measured when run | pending: measured when run |
-| Desvío máximo de un rol de identidad | medido, informativo | pending: measured when run | pending: measured when run | pending: measured when run |
-| R3 · se lee como Cuaderno de campo | `judgement` | pendiente de la lámina | pendiente de la lámina | pendiente de la lámina |
+| R1 · texto ≥ 7:1 | `mechanical` | sí — 10 pares, 0 bajo; el más bajo, `error` sobre `fondo` 8.38:1 (`ran:`) | **no** — 10 pares, 1 bajo: `texto-secundario` sobre `fondo` 6.86:1 (`ran:`) | sí — 10 pares, 0 bajo; el más bajo, `error` sobre `fondo` 7.40:1 (`ran:`) |
+| `component-contrast` | `mechanical` | sí — 12 pares de componente, 0 bajo 3:1; el más bajo, `campo-borde` y `línea` sobre `fondo` 3.34:1 (`ran:`) | **no** — 2 bajo: `línea` y `campo-borde` sobre `fondo` 2.76:1 (`ran:`) | sí — 0 bajo; el más bajo, `campo-borde` y `línea` sobre `fondo` 3.30:1 (`ran:`) |
+| R2 · reproducible y desde un escalón | `mechanical` | sí — la salida es la misma al correr otra vez (prueba del script); `provenance`: 13 tokens, 0 fuera de escala (`ran:`) | sí — ídem, 13 tokens, 0 fuera (`ran:`) | sí — ídem, 13 tokens, 0 fuera (`ran:`) |
+| Desvío máximo de un rol de identidad | medido, informativo | 0.000 en los siete (por construcción) | 0.039 — `papel` sale `#EFE6D5` en lugar de `#F7F3EA` | 0.100 — `tinta` sale `#38342E` en lugar de `#1E1C19`; `papel` sale `#EEEDEB` |
+| R3 · se lee como Cuaderno de campo | `judgement` | pendiente de la lámina | no se lleva a la lámina: falla R1 | pendiente de la lámina |
+
+### Contraejemplos
+
+- **R1 — rojo, visto, sobre (B).** El desvío de la regla oscurece el papel y aclara la tinta suave a la vez:
+
+```
+$ uv run python scripts/contraste-de-lectura.py $S/roles-oklch.md
+…
+texto-secundario sobre fondo (texto): 6.86:1  necesita 7:1  NO
+…
+10 par(es) de texto juzgado(s), 1 bajo el umbral
+exit=1
+```
+
+- **`component-contrast` — rojo, visto, sobre (B).** El margen fino que se midió al abrir este registro (3.34:1) no aguanta el desvío:
+
+```
+$ python3 $G/tokens.py pairs $S/roles-oklch.md
+pairs: 22 pair(s) judged, 2 below threshold
+…
+  línea/fondo  2.76:1  need 3.0:1  component  FAIL
+  campo-borde/fondo  2.76:1  need 3.0:1  component  FAIL
+exit=1
+```
+
+- **R2 (`provenance`) — rojo, visto, sobre una muestra construida para romperlo:** los roles de (A) con `acción-presionada` escrito como el literal `#1A3050`, que no es escalón de ninguna rampa.
+
+```
+$ python3 $G/tokens.py provenance $S/roles-literal.md
+provenance: 13 token(s) judged, 1 not from the declared scale
+…
+  acción-presionada #1A3050 names literal, which no scale declares  FAIL
+exit=1
+```
+
+- **R2 (regeneración)** — su rojo es el de la prueba que compara `primitives.md` con la salida del script; el archivo no existe antes de elegir, así que se ve en rojo al escribir esa prueba, antes de `primitives.md`.
+- **R3 — no aplica: no hay oráculo.** Se juzga en elección forzada entre (A) y (C) sobre la lámina del formulario de alta.
 
 ## Decision
 
