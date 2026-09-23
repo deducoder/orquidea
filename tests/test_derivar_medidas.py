@@ -155,3 +155,75 @@ def test_argumentos_ilegibles_salen_con_2_sin_tabla(
 ) -> None:
     assert medidas.main(argumentos) == 2
     assert "| Step |" not in capsys.readouterr().out
+
+
+# --- los entregables -------------------------------------------------------------------------
+
+UI = Path(__file__).parent.parent / "governance" / "identity" / "ui"
+
+
+def _parametros(texto: str) -> dict[str, str]:
+    """Las filas de la tabla `Parameter | Value | …`: nombre → valor, sin comillas invertidas."""
+    filas: dict[str, str] = {}
+    en_tabla = False
+    for linea in texto.splitlines():
+        if not linea.startswith("|"):
+            en_tabla = False
+            continue
+        celdas = [c.strip() for c in linea.strip("|").split("|")]
+        if celdas[0] == "Parameter":
+            en_tabla = True
+        elif en_tabla and not celdas[0].startswith("---"):
+            filas[celdas[0]] = celdas[1].strip("`")
+    return filas
+
+
+def _tabla(texto: str, cabecera: str) -> list[str]:
+    """Las filas de la tabla cuya cabecera es exactamente `cabecera`, separador excluido."""
+    lineas = texto.splitlines()
+    inicio = lineas.index(cabecera)
+    filas = []
+    for linea in lineas[inicio:]:
+        if not linea.startswith("|"):
+            break
+        if not linea.startswith("|---"):
+            filas.append(linea)
+    return filas
+
+
+@pytest.mark.parametrize(
+    ("archivo", "subcomando", "opciones", "cabecera", "filas"),
+    [
+        (
+            "type-scale.md",
+            "escala",
+            ("base", "razon", "escalones", "roles"),
+            "| Step | Size | Line height | Roles |",
+            1 + 3,
+        ),
+        (
+            "spacing.md",
+            "espaciado",
+            ("base", "divisor", "multiplicadores", "control"),
+            "| Step | Value | Where it is used |",
+            1 + 5,
+        ),
+    ],
+)
+def test_el_entregable_es_lo_que_la_regla_registrada_produce(
+    capsys: pytest.CaptureFixture[str],
+    archivo: str,
+    subcomando: str,
+    opciones: tuple[str, ...],
+    cabecera: str,
+    filas: int,
+) -> None:
+    texto = (UI / archivo).read_text(encoding="utf-8")
+    parametros = _parametros(texto)
+    argumentos = [subcomando] + [x for o in opciones for x in (f"--{o}", parametros[o])]
+
+    assert medidas.main(argumentos) == 0
+    esperadas = [f for f in capsys.readouterr().out.splitlines() if not f.startswith("|---")]
+    escritas = _tabla(texto, cabecera)
+    assert len(escritas) == filas  # sin tabla no hay verde
+    assert escritas == esperadas
