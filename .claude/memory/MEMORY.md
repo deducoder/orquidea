@@ -23,3 +23,6 @@
 - [Hechos de plataforma antes de aceptar](afirmaciones-de-plataforma-se-verifican-antes-de-aceptar.md) — en una rejilla, verificar lo que trae el sistema antes de `accepted`
 - [Regla con respaldo no se ve en rojo](regla-con-respaldo-no-se-ve-en-rojo.md) — respaldo: ninguno al abrir el ADR de una regla ui
 - [Rutas de entregables desde la convención](rutas-de-entregables-desde-la-convencion.md) — piezas ui en governance/identity/ui/
+- [Medio hacia arriba no es round](redondeo-medio-hacia-arriba-no-es-round.md) — probar con .5 de parte entera par
+- [Excepción sin capturar sale con 1](excepcion-sin-capturar-sale-con-1.md) — en scripts 0/1/2 lo ilegible sale con 2
+- [Qué lee design-md.py](design-md-py-que-lee.md) — comando en ADR-014; no pasarle primitives.md
