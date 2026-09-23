@@ -8,12 +8,12 @@ colors:
   texto-secundario: "#4A453E"
   enlace: "#1F3A5F"
   error: "#8A1C1C"
-  linea: "#8C8475"
+  línea: "#8C8475"
   campo-fondo: "#FFFFFF"
   campo-borde: "#8C8475"
-  accion-fondo: "#1F3A5F"
-  accion-texto: "#FFFFFF"
-  accion-presionada: "#0C274A"
+  acción-fondo: "#1F3A5F"
+  acción-texto: "#FFFFFF"
+  acción-presionada: "#0C274A"
   foco: "#1F3A5F"
 typography:
   step-0:
@@ -25,6 +25,8 @@ typography:
   step-2:
     fontSize: 25px
     lineHeight: 36px
+rounded:
+  recto: "0px"
 spacing:
   step-1: 8px
   step-2: 16px
@@ -40,6 +42,7 @@ components:
     backgroundColor: "{colors.superficie}"
     textColor: "{colors.texto}"
     typography: "{typography.step-0}"
+    rounded: "{rounded.recto}"
     padding: "{spacing.step-2}"
   titulo:
     backgroundColor: "{colors.fondo}"
@@ -50,32 +53,36 @@ components:
     textColor: "{colors.texto}"
     typography: "{typography.step-1}"
   boton:
-    backgroundColor: "{colors.accion-fondo}"
-    textColor: "{colors.accion-texto}"
+    backgroundColor: "{colors.acción-fondo}"
+    textColor: "{colors.acción-texto}"
     typography: "{typography.step-0}"
+    rounded: "{rounded.recto}"
     padding: "{spacing.step-2}"
-    height: "{spacing.step-6}"
-    width: "{spacing.step-6}"
+    minHeight: "{spacing.step-6}"
+    minWidth: "{spacing.step-6}"
   boton-presionado:
-    backgroundColor: "{colors.accion-presionada}"
-    textColor: "{colors.accion-texto}"
+    backgroundColor: "{colors.acción-presionada}"
+    textColor: "{colors.acción-texto}"
     typography: "{typography.step-0}"
+    rounded: "{rounded.recto}"
     padding: "{spacing.step-2}"
-    height: "{spacing.step-6}"
-    width: "{spacing.step-6}"
+    minHeight: "{spacing.step-6}"
+    minWidth: "{spacing.step-6}"
   campo:
     backgroundColor: "{colors.campo-fondo}"
     textColor: "{colors.texto}"
     typography: "{typography.step-0}"
+    rounded: "{rounded.recto}"
     padding: "{spacing.step-1}"
-    height: "{spacing.step-6}"
-    width: "{spacing.step-6}"
+    borderColor: "{colors.campo-borde}"
+    minHeight: "{spacing.step-6}"
+    minWidth: "{spacing.step-6}"
   enlace-navegacion:
     backgroundColor: "{colors.fondo}"
     textColor: "{colors.enlace}"
     typography: "{typography.step-0}"
-    height: "{spacing.step-6}"
-    width: "{spacing.step-6}"
+    minHeight: "{spacing.step-6}"
+    minWidth: "{spacing.step-6}"
   aviso:
     backgroundColor: "{colors.fondo}"
     textColor: "{colors.error}"
@@ -102,12 +109,12 @@ The values are the tokens above and are normative; this text cites them by refer
 - {colors.texto-secundario}
 - {colors.enlace}
 - {colors.error}
-- {colors.linea}
+- {colors.línea}
 - {colors.campo-fondo}
 - {colors.campo-borde}
-- {colors.accion-fondo}
-- {colors.accion-texto}
-- {colors.accion-presionada}
+- {colors.acción-fondo}
+- {colors.acción-texto}
+- {colors.acción-presionada}
 - {colors.foco}
 
 ## Typography
@@ -130,18 +137,18 @@ Not derived: see Known Gaps.
 
 ## Shapes
 
-Not derived: see Known Gaps.
+- {rounded.recto}: botones, campos y tarjetas
 
 ## Components
 
 - pagina: backgroundColor is {colors.fondo}, textColor is {colors.texto}, typography is {typography.step-0}
-- tarjeta: backgroundColor is {colors.superficie}, textColor is {colors.texto}, typography is {typography.step-0}, padding is {spacing.step-2}
+- tarjeta: backgroundColor is {colors.superficie}, textColor is {colors.texto}, typography is {typography.step-0}, rounded is {rounded.recto}, padding is {spacing.step-2}
 - titulo: backgroundColor is {colors.fondo}, textColor is {colors.texto}, typography is {typography.step-2}
 - subtitulo: backgroundColor is {colors.fondo}, textColor is {colors.texto}, typography is {typography.step-1}
-- boton: backgroundColor is {colors.accion-fondo}, textColor is {colors.accion-texto}, typography is {typography.step-0}, padding is {spacing.step-2}, height is {spacing.step-6}, width is {spacing.step-6}
-- boton-presionado: backgroundColor is {colors.accion-presionada}, textColor is {colors.accion-texto}, typography is {typography.step-0}, padding is {spacing.step-2}, height is {spacing.step-6}, width is {spacing.step-6}
-- campo: backgroundColor is {colors.campo-fondo}, textColor is {colors.texto}, typography is {typography.step-0}, padding is {spacing.step-1}, height is {spacing.step-6}, width is {spacing.step-6}
-- enlace-navegacion: backgroundColor is {colors.fondo}, textColor is {colors.enlace}, typography is {typography.step-0}, height is {spacing.step-6}, width is {spacing.step-6}
+- boton: backgroundColor is {colors.acción-fondo}, textColor is {colors.acción-texto}, typography is {typography.step-0}, rounded is {rounded.recto}, padding is {spacing.step-2}, minHeight is {spacing.step-6}, minWidth is {spacing.step-6}
+- boton-presionado: backgroundColor is {colors.acción-presionada}, textColor is {colors.acción-texto}, typography is {typography.step-0}, rounded is {rounded.recto}, padding is {spacing.step-2}, minHeight is {spacing.step-6}, minWidth is {spacing.step-6}
+- campo: backgroundColor is {colors.campo-fondo}, textColor is {colors.texto}, typography is {typography.step-0}, rounded is {rounded.recto}, padding is {spacing.step-1}, borderColor is {colors.campo-borde}, minHeight is {spacing.step-6}, minWidth is {spacing.step-6}
+- enlace-navegacion: backgroundColor is {colors.fondo}, textColor is {colors.enlace}, typography is {typography.step-0}, minHeight is {spacing.step-6}, minWidth is {spacing.step-6}
 - aviso: backgroundColor is {colors.fondo}, textColor is {colors.error}, typography is {typography.step-0}
 - fecha: backgroundColor is {colors.superficie}, textColor is {colors.texto-secundario}, typography is {typography.step-0}
 
@@ -162,31 +169,24 @@ Generated from the same tokens as the frontmatter, for the instruments of the me
 | texto-secundario | #4A453E |
 | enlace | #1F3A5F |
 | error | #8A1C1C |
-| linea | #8C8475 |
+| línea | #8C8475 |
 | campo-fondo | #FFFFFF |
 | campo-borde | #8C8475 |
-| accion-fondo | #1F3A5F |
-| accion-texto | #FFFFFF |
-| accion-presionada | #0C274A |
+| acción-fondo | #1F3A5F |
+| acción-texto | #FFFFFF |
+| acción-presionada | #0C274A |
 | foco | #1F3A5F |
 
 | Foreground | Ground | Kind |
 |------------|--------|------|
 | texto | fondo | text |
 | texto | superficie | text |
-| accion-texto | accion-fondo | text |
-| accion-texto | accion-presionada | text |
+| acción-texto | acción-fondo | text |
+| acción-texto | acción-presionada | text |
 | texto | campo-fondo | text |
 | enlace | fondo | text |
 | error | fondo | text |
 | texto-secundario | superficie | text |
-
-| Target | Width | Height |
-|--------|-------|--------|
-| boton | 48 | 48 |
-| boton-presionado | 48 | 48 |
-| campo | 48 | 48 |
-| enlace-navegacion | 48 | 48 |
 
 | Step | Value |
 |------|-------|
@@ -200,26 +200,33 @@ Generated from the same tokens as the frontmatter, for the instruments of the me
 |-------|-------|------|
 | components.tarjeta.padding | 16px | spacing.step-2 |
 | components.boton.padding | 16px | spacing.step-2 |
-| components.boton.height | 48px | spacing.step-6 |
-| components.boton.width | 48px | spacing.step-6 |
+| components.boton.minHeight | 48px | spacing.step-6 |
+| components.boton.minWidth | 48px | spacing.step-6 |
 | components.boton-presionado.padding | 16px | spacing.step-2 |
-| components.boton-presionado.height | 48px | spacing.step-6 |
-| components.boton-presionado.width | 48px | spacing.step-6 |
+| components.boton-presionado.minHeight | 48px | spacing.step-6 |
+| components.boton-presionado.minWidth | 48px | spacing.step-6 |
 | components.campo.padding | 8px | spacing.step-1 |
-| components.campo.height | 48px | spacing.step-6 |
-| components.campo.width | 48px | spacing.step-6 |
-| components.enlace-navegacion.height | 48px | spacing.step-6 |
-| components.enlace-navegacion.width | 48px | spacing.step-6 |
+| components.campo.minHeight | 48px | spacing.step-6 |
+| components.campo.minWidth | 48px | spacing.step-6 |
+| components.enlace-navegacion.minHeight | 48px | spacing.step-6 |
+| components.enlace-navegacion.minWidth | 48px | spacing.step-6 |
 
 ## Decisions
 
 - ADR-013: roles de color de la interfaz
 - ADR-014: escala tipográfica, espaciado y componentes
+- ADR-016: la identidad en el vocabulario de gemba-design 0.23.0
 
 ## Known Gaps
 
 - Radius, elevation and motion are not derived: no rule from an attribute to a value is published.
 - Whatever needs a rendered interface is not measured: zoom, reflow, text spacing and focus.
-- Los bordes (campo-borde, linea, error como borde) y el anillo de foco son tokens de colors sin componente: el vocabulario del formato no tiene color de borde.
+- A component property outside the closed vocabulary — a declared `minWidth`/`minHeight` among them — is accepted and resolved like any other, but the mechanical stratum measures a target only from a literal `height`/`width`: a component with no literal box has no target row, and a declared minimum is never checked against it.
+- Iconography has nowhere to declare a family or a style: neither `Dimension` nor `number`, the only types the spec gives a token, hold a name like "Material Symbols" or "outlined".
+- El anillo de foco (rol foco) no tiene componente: el formato no compone estados de foco.
 - El peso (700 en titulo y subtitulo) y las cifras tabulares de date viven en specimen.md: el formato no los compone en typography.
 - Los enlaces dentro de un párrafo se apoyan en la excepción inline de WCAG 2.2 SC 2.5.8 y 2.5.5; no son objetivos declarados.
+- Trazo: 1 px en el borde del campo y en los separadores, 2 px en el anillo de foco (components.md); el formato no tiene grosores.
+- Elevación: dos planos separados solo por tono, superficie sobre fondo (components.md); el formato no tiene elevación.
+- Retícula: una columna con margen lateral de spacing.step-2 (components.md); el formato no tiene retícula.
+- Medida: sin tope, el renglón ocupa el ancho de la página menos su margen (components.md, ADR-016); el formato no tiene medida.

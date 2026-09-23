@@ -10,12 +10,12 @@
   --colors-texto-secundario: #4A453E;
   --colors-enlace: #1F3A5F;
   --colors-error: #8A1C1C;
-  --colors-linea: #8C8475;
+  --colors-línea: #8C8475;
   --colors-campo-fondo: #FFFFFF;
   --colors-campo-borde: #8C8475;
-  --colors-accion-fondo: #1F3A5F;
-  --colors-accion-texto: #FFFFFF;
-  --colors-accion-presionada: #0C274A;
+  --colors-acción-fondo: #1F3A5F;
+  --colors-acción-texto: #FFFFFF;
+  --colors-acción-presionada: #0C274A;
   --colors-foco: #1F3A5F;
   --typography-step-0-font-size: 16px;
   --typography-step-0-line-height: 24px;
@@ -28,6 +28,7 @@
   --spacing-step-3: 24px;
   --spacing-step-4: 32px;
   --spacing-step-6: 48px;
+  --rounded-recto: 0px;
   --familia: system-ui, -apple-system, "Segoe UI", Roboto, "Noto Sans", sans-serif;
 }
 
@@ -59,18 +60,23 @@ header {
   align-items: center;
   gap: var(--spacing-step-1);
   padding: 0 var(--spacing-step-1);
-  border-bottom: 1px solid var(--colors-linea);
+  border-bottom: 1px solid var(--colors-línea);
 }
 
 header a,
 .accion {
   display: inline-flex;
   align-items: center;
-  justify-content: center;
   min-height: var(--spacing-step-6);
   min-width: var(--spacing-step-6);
-  padding: 0 var(--spacing-step-1);
   color: var(--colors-enlace);
+}
+
+/* en la cabecera los enlaces se centran y se separan del borde; fuera de ella un enlace suelto se
+   alinea con el texto de al lado, y el objetivo sigue en 48 por min-width (ADR-016) */
+header a {
+  justify-content: center;
+  padding: 0 var(--spacing-step-1);
 }
 
 header form {
@@ -137,7 +143,7 @@ select {
   color: var(--colors-texto);
   background: var(--colors-campo-fondo);
   border: 1px solid var(--colors-campo-borde);
-  border-radius: 0;
+  border-radius: var(--rounded-recto);
   padding: var(--spacing-step-1);
   min-height: var(--spacing-step-6);
   min-width: var(--spacing-step-6);
@@ -147,17 +153,17 @@ select {
 /* boton y boton-presionado */
 button {
   font: inherit;
-  background: var(--colors-accion-fondo);
-  color: var(--colors-accion-texto);
+  background: var(--colors-acción-fondo);
+  color: var(--colors-acción-texto);
   border: 0;
-  border-radius: 0;
+  border-radius: var(--rounded-recto);
   padding: 0 var(--spacing-step-2);
   min-height: var(--spacing-step-6);
   min-width: var(--spacing-step-6);
 }
 
 button:active {
-  background: var(--colors-accion-presionada);
+  background: var(--colors-acción-presionada);
 }
 
 /* el anillo de foco: 2 px, separado del control por el fondo (ADR-015) */
@@ -172,7 +178,8 @@ button:active {
   font-weight: 700;
 }
 
-/* tarjeta: cada ejemplar de la colección es una hoja sobre el papel */
+/* tarjeta: cada ejemplar de la colección es una hoja sobre el papel, apartada solo por tono
+   (elevación de ADR-016) */
 .tarjetas {
   list-style: none;
   padding: 0;
@@ -180,7 +187,7 @@ button:active {
 
 .tarjetas > li {
   background: var(--colors-superficie);
-  border: 1px solid var(--colors-linea);
+  border-radius: var(--rounded-recto);
   padding: var(--spacing-step-2);
   margin: 0 0 var(--spacing-step-2);
 }
@@ -218,7 +225,7 @@ button:active {
   flex-wrap: wrap;
   align-items: center;
   gap: var(--spacing-step-1);
-  border-top: 1px solid var(--colors-linea);
+  border-top: 1px solid var(--colors-línea);
   padding: var(--spacing-step-1) 0;
 }
 

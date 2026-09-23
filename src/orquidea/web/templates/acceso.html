@@ -4,8 +4,10 @@
 <h1>Acceso</h1>
 {% if mensaje %}<p role="alert">{{ mensaje }}</p>{% endif %}
 <form method="post" action="/acceso">
-  <label for="contrasena">Contraseña</label>
-  <input id="contrasena" type="password" name="contrasena" autocomplete="current-password" required autofocus>
+  <p>
+    <label for="contrasena">Contraseña</label>
+    <input id="contrasena" type="password" name="contrasena" autocomplete="current-password" required autofocus>
+  </p>
   <button type="submit">Entrar</button>
 </form>
 {% endblock %}

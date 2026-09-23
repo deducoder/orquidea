@@ -44,27 +44,44 @@ wrote it. Retirement moves an entry to `## Retired` with its reason.
 - **En gemba-design 0.21.0, la plantilla `semantics.md` de la técnica `ui` pide una columna `Variant`, pero `invariance.py` no acepta `—` en ella.** Con una identidad sin variante (Orquídea, ADR-012), la columna llena de `—` hace que `invariance.py` salga con 2 por `unreadable variant value '—'`, no por `no subject`. Solo sale "sin sujeto" cuando la tabla no trae columna `Variant`, y eso contradice la plantilla. En `governance/identity/ui/semantics.md` se quitó la columna y se explicó por qué. `palette.md` conserva su columna con `—`, que ningún eslabón pasa por `invariance.py`. El arreglo es del addon: tratar una columna de variante vacía o con `—` como "sin sujeto", o que la plantilla diga que se omite. No es de Orquídea.
   *Origin:* s5.5 (e5), `story-implement` T3 y `survival-review`, 2026-09-22 — salida de `invariance.py governance/identity/ui/semantics.md texto fondo`.
   *Promotion:* al reportarlo en el repositorio de gemba-design, o cuando una versión del addon lo corrija: entonces se vuelve a poner la columna en `semantics.md` si la plantilla lo sigue pidiendo.
-- **En gemba-design 0.21.0, `design-md.py` solo acepta referencias ASCII (`^\{([a-z][A-Za-z0-9.-]*)\}$`), y el spec de DESIGN.md (`alpha`) no lo exige.** Un componente con `{colors.acción-fondo}` sale `refused` (exit 1). En Orquídea se resolvió con identificadores ASCII (ADR-014): `semantics.md` usa `linea` y `accion-*`. El límite del generador, más estrecho que el formato, es del addon: aceptar las letras de un identificador YAML, o decir en la técnica `ui` que los identificadores de rol van en ASCII antes de que un eslabón los fije.
-  *Origin:* s5.6 (e5), `story-design`, 2026-09-22 — lectura de `design-md.py` contra los roles de `semantics.md`.
-  *Promotion:* al reportarlo en el repositorio de gemba-design, o cuando una versión del addon lo corrija; en Orquídea no hace falta deshacer nada.
-- **La interfaz vestida de e5 tiene dos juicios sin firmar y dos ajustes visuales sin decidir.**
-  - Sin firma (`unsigned`): el criterio 3 de ADR-009 (la foto es la protagonista: a todo el ancho en la ficha, miniatura de 96 px en la colección) y si el subtítulo de 20 px en negrita se distingue del cuerpo (ADR-015, decisión 5).
-  - Sin decidir: los enlaces con `accion` quedan 8 px hacia adentro del texto por el relleno de `enlace-navegacion`, y en Acceso el botón "Entrar" queda pegado al campo porque ese formulario no envuelve sus controles en `<p>`.
-
-  Se preguntó al cerrar T5 de s5.7 y el humano pidió cerrar sin responder. Las capturas a 360 px quedaron en el scratchpad de esa sesión, no en el repositorio.
-  *Origin:* s5.7 (e5), `story-implement` T5, 2026-09-23 — recorrido renderizado.
-  *Promotion:* cuando el humano recorra la aplicación en el teléfono (el mismo momento que la medición en "Slow 3G" que queda pendiente de e5): firma o rechazo de los dos juicios. Un ajuste que se decida hacer va como arreglo propio contra ADR-015.
 - **El tiempo de la primera carga con "Slow 3G" (`must-perf-001`, ≤ 5 s) no se ha medido nunca: e1, e2, e3 y e5 lo difirieron.** El peso sí se mide por script en cada épica. En e5: "Mi colección" con 25 fotos, 148.1 KB de 200, e identidad 1.6 KB de 50. El 2026-09-23 el servidor quedó listo para medir, con 25 ejemplares con foto, y el humano pidió cerrar sin medir.
   *Origin:* e5, `epic-review`, 2026-09-23 — stop previsto desde el diseño de e5, diferido por el humano como en e1–e3.
   *Promotion:* el primer despliegue real en Dokploy (el mismo momento que la entrada de `docker build`): medir en el teléfono o con DevTools en "Slow 3G" contra el servidor desplegado. Si pasa de 5 s, es un bug contra `must-perf-001`.
-- **El gate no ata la cadena de la identidad entre `semantics.md`, `primitives.md` y `DESIGN.md`.** En `epic-review` de e5 se cambió `accion-fondo` en `semantics.md` a `#1F3A60` y `./scripts/check` siguió en verde. La prueba de regeneración cubre `primitives.md`, y la de la hoja compara `identidad.css` con `DESIGN.md`. Pero `provenance` (roles contra escalones) solo corrió a mano, y nada compara los colores de `DESIGN.md` con `semantics.md`. Un cambio de paleta regenera las primitivas y deja los roles y la hoja con el valor viejo, sin rojo. El arreglo es una prueba en el proyecto que lea las tres tablas, sin depender del addon.
-  *Origin:* e5, `epic-review` (quality-review a escala de épica), 2026-09-23 — mutación plantada en `semantics.md`.
-  *Promotion:* antes del primer cambio de paleta o de roles, o en la siguiente historia que toque `governance/identity/ui/`.
-
 - **Tres scripts de `scripts/` tienen cada uno su lector de tablas markdown:** `contraste-de-lectura.py` (`tablas`/`filas`), `derivar-primitivas.py` (`_roles_de`) y `comprobar-medidas.py` (`_filas`), además de los de las pruebas. Cada uno encuentra la tabla por la primera celda de la cabecera, con diferencias pequeñas (quitar comillas invertidas, filas separadoras). Son scripts sueltos cargados por ruta, y compartir el lector exige un módulo común y manejo de `sys.path`, un costo que hoy no se paga con tres usos.
   *Origin:* e5, `epic-close` (architecture-review a escala de épica), 2026-09-23.
   *Promotion:* un cuarto script que lea tablas, o un defecto que aparezca en un lector y no en los otros.
+- **`precedence.py` (gemba-design 0.23.0) no puede juzgar un eslabón que se vuelve a correr contra un registro nuevo.** Compara la última edición `add`/`update` de cada registro citado con el **primer** commit de la pieza, el que la creó. En s1, `semantics.md` y `components.md` citan ADR-016, pero nacieron en e5: el veredicto es `FAIL — not before the piece: ADR-016` aunque el registro precede a toda tarea de s1. La técnica `ui` pide volver a correr el eslabón en el mismo archivo ("a change upstream is re-run downstream"), así que el caso es el esperado, no uno raro. El arreglo es del addon: comparar contra el primer commit que tocó la pieza después del `add` del registro, o juzgar por registro en lugar de por archivo.
+  *Origin:* s1, `story-implement` (antes de completar ADR-016), 2026-09-23 — `precedence.py check governance/identity/ui/components.md`.
+  *Promotion:* al reportarlo en el repositorio de gemba-design, o cuando una versión del addon lo corrija. Mientras tanto, la revisión lo lee a mano y lo dice.
+- **La técnica `adr` (gemba 0.23.0) solo sabe sustituir un registro entero.** ADR-016 reemplaza decisiones sueltas de ADR-013, ADR-014 y ADR-015 (identificadores ASCII, el hueco de bordes, `height`/`width` como mínimo, esquinas sin token). Marcar los tres como `superseded by ADR-016` diría que caen enteros, y no es así. Se dejaron `accepted`, y ADR-016 nombra cada decisión que reemplaza. Quien lea ADR-014 no ve que su decisión 6 ya no rige.
+  *Origin:* s1, `story-design`, 2026-09-23 — decidido por el humano con la recomendación del diseño.
+  *Promotion:* al reportarlo al método, o si una lectura de ADR-013 a ADR-015 aplica una decisión reemplazada.
+
+- **`work/epics/e5-visual-identity/docs.md` quedó desactualizado en dos puntos después de s1.** La línea 95 dice que `design-md.py` rechaza `{colors.acción-fondo}` (ASCII), y 0.23.0 lo acepta: los tokens ya van en español (ADR-016). La línea 93 dice que el gate no ata `semantics.md` a `primitives.md` ni `DESIGN.md` a sus tablas, y `test_la_cadena_de_colores_esta_atada` ya lo hace. El archivo es de `epic-close` de un epic cerrado, y la regla de un solo escritor impide corregirlo desde una historia.
+  *Origin:* s1, `story-implement` T7 y T9 (barridos del parking lot), 2026-09-23.
+  *Promotion:* la próxima vez que se genere documentación de desarrollador que cubra la identidad (el cierre de un epic que la toque, o una versión), o si alguien sigue esas dos líneas y pierde tiempo.
+
 ## Retired
+
+### 2026-09-23 · s1 · El gate no ataba la cadena de la identidad entre `semantics.md`, `primitives.md` y `DESIGN.md`
+**Why:** se cumplió la promoción ("la siguiente historia que toque `governance/identity/ui/`"). `test_la_cadena_de_colores_esta_atada` (`tests/test_identidad_ui.py`) comprueba que cada rol de `semantics.md` valga lo que su escalón en `primitives.md`, en la tabla `Role` y en la `Token`, y que los colores de `DESIGN.md` sean esos mismos 13 roles. Se vio en rojo con la mutación de la entrada (`acción-fondo` a `#1F3A60` en `semantics.md`). Reusa el lector `_filas` de `comprobar-medidas.py`: no suma un lector de tablas.
+**Swept:**
+- El `plan.md` de s1 (T9) la resuelve.
+- La retrospectiva de e5 (línea 78, donde nació el hallazgo) es un registro histórico y no se reescribe.
+- `work/epics/e5-visual-identity/docs.md:93` la describe como vigente ("Cambié un color en `semantics.md` y todo sigue en verde"). Es la documentación de e5, de `epic-close`, y no se cambia desde aquí; queda desactualizada, como la del límite ASCII.
+
+Nada más la cita.
+
+### 2026-09-23 · s1 · La interfaz vestida de e5 tenía dos juicios sin firmar y dos ajustes sin decidir
+**Why:** s1 la tomó en su alcance. Los dos juicios los firmó Daniel Efraín Domínguez Urbina el 2026-09-23, sobre capturas a 360 px con fotos reales: el criterio 3 de ADR-009, sí, y la decisión 5 de ADR-015, sí. Los dos ajustes se decidieron en ADR-016: los enlaces `accion` sin sangría y el campo de Acceso en su propio párrafo. La entrada pedía que un ajuste fuera un arreglo propio contra ADR-015; el humano lo juntó en s1.
+**Swept:** la citan como pendiente la retrospectiva de e5, el `scope.md` de s5.7 y el handoff `work/sessions/2026-09-23-e5-closed.md`: son registros históricos y no se reescriben. El `scope.md`, el `plan.md`, `components.md` y ADR-016 de s1 la resuelven. Nada más la cita.
+
+### 2026-09-23 · s1 · `design-md.py` de gemba-design 0.21.0 solo aceptaba referencias ASCII
+**Why:** se cumplió la promoción ("cuando una versión del addon lo corrija"). El generador de 0.23.0 acepta letras de cualquier escritura, y s1 renombró los tokens a `línea` y `acción-*` (ADR-016, que reemplaza la decisión 6 de ADR-014).
+**Swept:**
+- Registros históricos que no se reescriben: el `design.md` de s5.6, la retrospectiva de e5 y `work/epics/e5-visual-identity/docs.md:95`. Este último es la documentación de e5 y describe el límite como vigente; es de `epic-close`, y cambiarlo aquí rompería la regla de un solo escritor.
+- La memoria `design-md-py-que-lee` decía "solo acepta referencias ASCII": se corrige en esta misma historia.
+- El `scope.md` y el `plan.md` de s1 la resuelven.
 
 ### 2026-09-23 · s5.7 (e5) · Ninguna prueba afirmaba el `<title>` de las páginas salvo el de inicio
 **Why:** se cumplió la promoción ("s5.7, que toca todas las plantillas"). `tests/test_web_titulos.py` recorre las nueve páginas GET que devuelven HTML y afirma que su `<title>` es texto. Cuenta su cobertura contra `rutas_registradas`, así que una página nueva sin título probado la pone en rojo. Se vio en rojo con el bloque `title` de `especies.html` en la forma de b1.

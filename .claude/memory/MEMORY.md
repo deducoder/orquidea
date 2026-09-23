@@ -25,7 +25,10 @@
 - [Rutas de entregables desde la convención](rutas-de-entregables-desde-la-convencion.md) — piezas ui en governance/identity/ui/
 - [Medio hacia arriba no es round](redondeo-medio-hacia-arriba-no-es-round.md) — probar con .5 de parte entera par
 - [Excepción sin capturar sale con 1](excepcion-sin-capturar-sale-con-1.md) — en scripts 0/1/2 lo ilegible sale con 2
-- [Qué lee design-md.py](design-md-py-que-lee.md) — comando en ADR-014; no pasarle primitives.md
+- [Qué lee design-md.py](design-md-py-que-lee.md) — comando en ADR-016; no pasarle primitives.md
 - [No enviar el correo a servicios externos](no-enviar-el-correo-a-servicios-externos.md) — User-Agent genérico; preguntar si piden contacto
 - [Capturas a 360 px en Chrome de Windows](captura-360-en-chrome-de-windows.md) — iframe de 360; sesión con curl; --data-urlencode
 - [survival-review es tarea del plan](survival-review-es-tarea-del-plan.md) — se omitió en s5.2–s5.4; nombrarlo en cada plan de pieza
+- [Promociones del parking lot al diseñar](revisar-promociones-del-parking-lot-al-disenar.md) — grep de Promotion en story-design; s1 descubrió dos en T7
+- [Verificar el efecto en el render](verificar-el-efecto-en-el-render.md) — la prueba de padding no vio el centrado de flex
+- [precedence.py juzga por creación](precedence-py-juzga-por-creacion.md) — eslabón ui recalculado sale FAIL; leer el orden a mano

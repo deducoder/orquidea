@@ -43,7 +43,7 @@ def tokens_de_design() -> dict[str, str]:
         clave, _, valor = linea.strip().partition(":")
         ruta = [*ruta[:nivel], clave]
         valor = valor.strip().strip('"')
-        if valor and ruta[0] in ("colors", "typography", "spacing"):
+        if valor and ruta[0] in ("colors", "typography", "spacing", "rounded"):
             nombre = "-".join(ruta).replace("fontSize", "font-size")
             tokens["--" + nombre.replace("lineHeight", "line-height")] = valor
     return tokens
@@ -115,6 +115,7 @@ def test_el_lector_de_design_md_encuentra_los_tokens() -> None:
     assert tokens["--typography-step-0-font-size"] == "16px"
     assert tokens["--typography-step-2-line-height"] == "36px"
     assert tokens["--spacing-step-6"] == "48px"
+    assert tokens["--rounded-recto"] == "0px"  # ADR-016
     assert not any(t.startswith("--components") for t in tokens)
 
 
@@ -157,6 +158,36 @@ def test_sin_raiz_no_hay_verde() -> None:
     _, comparadas = problemas("a { color: var(--colors-fondo); }", TOKENS_CHICOS, "serif")
 
     assert comparadas == 0
+
+
+def _declaraciones(selector: str) -> dict[str, str]:
+    """Lo que declaran todas las reglas cuyo grupo de selectores incluye `selector`."""
+    css = HOJA.read_text(encoding="utf-8")
+    return {
+        p: v
+        for s, ds in reglas(css)
+        if selector in (x.strip() for x in s.split(","))
+        for p, v in ds
+    }
+
+
+def test_la_tarjeta_se_aparta_del_papel_solo_por_tono() -> None:
+    # elevación de ADR-016 (V4): superficie sobre fondo, sin borde
+    tarjeta = _declaraciones(".tarjetas > li")
+
+    assert tarjeta["background"] == "var(--colors-superficie)"
+    assert not any(p.startswith("border") and p != "border-radius" for p in tarjeta)
+
+
+def test_un_enlace_accion_no_se_sangra_respecto_del_texto() -> None:
+    # ADR-016: sin relleno horizontal; el objetivo sigue en 48 por min-width
+    accion = _declaraciones(".accion")
+
+    assert accion["min-width"] == "var(--spacing-step-6)"
+    sangrias = ("padding", "padding-left", "padding-inline", "padding-inline-start")
+    assert not any(p in sangrias for p in accion)
+    # un enlace más corto que su objetivo de 48 no se centra dentro de él: eso también lo sangra
+    assert accion.get("justify-content", "normal") in ("normal", "flex-start", "start", "left")
 
 
 # --- las plantillas --------------------------------------------------------------------------
