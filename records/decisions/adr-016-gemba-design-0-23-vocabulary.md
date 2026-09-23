@@ -2,7 +2,7 @@
 type: adr
 id: ADR-016
 title: "La identidad de Orquídea en el vocabulario de gemba-design 0.23.0"
-status: proposed
+status: accepted
 date: 2026-09-23
 epic: —
 published: no — el proyecto no tiene espacio de documentación externo; el ADR vive solo en el repositorio
@@ -12,7 +12,7 @@ published: no — el proyecto no tiene espacio de documentación externo; el ADR
 
 ## Status
 
-Proposed.
+Accepted.
 
 ## Context
 
@@ -195,12 +195,54 @@ exit=1
 
 ## Decision
 
-Sin resolver.
+**Mínimo (B), medida (A), elevación (B) y sangría (A)**, elegidas y firmadas por Daniel Efraín Domínguez Urbina el 2026-09-23 en elección forzada sobre las láminas. V3 no se cumple con la medida elegida, y se eligió así de todos modos.
+
+1. **Tokens en español:** `línea`, `acción-fondo`, `acción-texto` y `acción-presionada`, en `semantics.md`, `components.md`, `DESIGN.md` y `identidad.css`. Los valores no cambian. Reemplaza la decisión 6 de ADR-014.
+2. **Radio:** tabla `Level | Value | Where` en `components.md` con `recto | 0px`, citada por `boton`, `boton-presionado`, `campo` y `tarjeta`. La hoja la usa como `var(--rounded-recto)`. Reemplaza la decisión 3 de ADR-015 en lo que tenía de "sin token"; las esquinas siguen rectas.
+3. **Color de borde:** `borderColor` en `campo` (`{colors.campo-borde}`). Reemplaza el `--gap` de bordes de ADR-014. La tarjeta no lleva borde (V4). `error` como borde se sigue midiendo en `semantics.md`, y `components.md` dice que ningún componente lo usa.
+4. **Mínimo de control (B):** `minHeight` y `minWidth` = `{spacing.step-6}` en los cuatro controles, sin `height`/`width`. Reemplaza el uso de `height`/`width` como mínimo de ADR-014. Lo mide `scripts/comprobar-medidas.py objetivos`, que aprendió a leer los mínimos de la tabla `Token | Value | From`. `tokens.py targets` no tiene sujeto, y eso se dice.
+5. **Medida (A):** sin tope. El renglón ocupa el ancho de la página menos su margen.
+6. **Elevación (B):** dos planos, separados solo por tono (`superficie` sobre `fondo`). La tarjeta pierde su borde.
+7. **Sangría (A):** fuera de la cabecera, un enlace `accion` no tiene relleno horizontal y no se centra dentro de su objetivo; el objetivo sigue en 48 × 48 por `min-width`. En la cabecera los enlaces se centran y conservan su relleno.
+8. **Acceso:** el campo va en su propio `<p>`, como en los demás formularios.
+9. **Las catorce dimensiones** tienen respuesta en `components.md` (tabla `Dimension | Answer | Where`). Las que el formato no lleva (foco, trazo, elevación, retícula, medida) van como `--gap` del generador. La iconografía ya la trae el generador como hueco propio.
+10. **`DESIGN.md`** se genera con `design-md.py --spec-version alpha --name Orquídea`, con tres `--decision` (ADR-013, ADR-014, ADR-016) y siete `--gap`, sobre `semantics.md`, `type-scale.md`, `spacing.md` y `components.md`. Salida del generador: `22 token(s), 10 component(s), 8 pair(s), 0 target(s), 0 literal(s) in the prose, 1 Component table(s) ignored, 9 unrecognised component properties accepted`. Las 9 son `borderColor` × 1 y los mínimos × 4 × 2. El comando completo está en el `plan.md` de s1.
+11. **Recalculado sobre lo producido**, con las cifras copiadas de la salida:
+    - texto: 8 pares, 0 bajo 7:1, el más bajo 8.38:1 (`contraste-de-lectura.py`, `tokens.py pairs`); roles: 22 pares, 0 bajo su umbral;
+    - `provenance`: 12 tokens, 0 fuera de escala;
+    - objetivos: 4 por su mínimo, 0 bajo 44 px;
+    - piso: 3 escalones y 3 roles, 0 bajo 16 px, 0 colapsados;
+    - V1: 14 dimensiones, 0 sin respuesta, contra el catálogo de 0.23.0.
+
+    Contra e5 no cambió ninguna cifra; cambió qué instrumento mide los objetivos.
+12. **Los dos juicios que e5 dejó `unsigned`**, firmados por Daniel Efraín Domínguez Urbina el 2026-09-23 sobre capturas a 360 px con fotos reales: el criterio 3 de ADR-009 (la foto es la protagonista), **sí**; la decisión 5 de ADR-015 (el subtítulo se distingue del cuerpo), **sí**, sin ajuste por espacio.
 
 ## Consequences
 
-Se escriben al decidir.
+**Positive:**
+- Cada decisión visual que la hoja aplica está escrita en un entregable. Lo que el formato puede llevar está además en `DESIGN.md`, y lo que no, como hueco declarado con su valor.
+- La pregunta "¿falta alguna dimensión?" la contesta un script (`comprobar-dimensiones.py`), no la memoria.
+- Los mínimos de control se declaran como la hoja los aplica, y un mínimo bajo 44 px pone el gate en rojo.
+- La interfaz vestida de e5 queda sin juicios pendientes.
+
+**Negative / costs:**
+- **V3 no se cumple:** en escritorio el renglón pasa de 150 caracteres. Se eligió así; si un día molesta, las candidatas (B) y (C) están medidas arriba.
+- **La tarjeta se aparta del papel solo por 1.11:1 de tono.** En una pantalla con poco contraste o con mucho sol, puede no verse dónde empieza y dónde termina. Es un juicio firmado (V4), no un umbral.
+- **`tokens.py targets` ya no mide nada en `DESIGN.md`.** `target-size` depende del script propio del proyecto.
+- **Límite de la prueba de la hoja:** `border-radius: 0` escrito como literal no la pone en rojo, porque `0` está admitido (ADR-015). La mutación se corrió y sobrevivió; no hay prueba que distinga el token del literal cero.
+- **`precedence.py` da FAIL en `semantics.md` y `components.md`.** Compara ADR-016 con el primer commit de cada pieza (e5), no con el que la volvió a correr, así que un eslabón que se recalcula contra un registro nuevo siempre sale en rojo. Leído a mano: `add ADR-016` precede a toda tarea de s1, y la actualización con las elecciones precede a T5 y T6, que las aplicaron. El renombre (T3) tocó las dos piezas entre la primera y la segunda actualización; estaba decidido desde el `add`, pero con la regla estricta del script queda después de una edición. Va al parking lot como hallazgo del addon.
+- **`comprobar-dimensiones.py` depende del catálogo del plugin.** El gate prueba su comportamiento y las 14 filas del entregable; la comparación con el catálogo se corre a mano.
+- **Sin sustitución parcial en la técnica `adr`:** ADR-013, ADR-014 y ADR-015 siguen `accepted`, y quien los lea tiene que saber que este registro reemplaza decisiones sueltas de ellos. Va al parking lot como hallazgo del método.
 
 ## Alternatives considered
 
-Se escriben al decidir.
+- **Conservar los identificadores ASCII:** el único motivo era el límite del generador de 0.21.0.
+- **Renombrar la clase HTML `accion`:** es un selector, no un token.
+- **Mínimo (A), `height`/`width` fijos:** declara un ancho de 48 que la hoja no aplica.
+- **Mínimo (C), los dos:** la misma medida dos veces; `targets` seguiría midiendo, pero sobre una caja falsa.
+- **Medida (B) 34em y (C) 40em:** cumplen V3 (unos 68 y 80 caracteres a 1280 px); no se eligieron.
+- **Elevación (A) tono y borde, y (C) solo borde:** no se eligieron en V4.
+- **Sangría (B), como estaba:** el enlace quedaba 8 px hacia dentro del texto.
+- **Copiar o parchar `design-md.py`, `tokens.py` o `precedence.py`:** el addon prohíbe una segunda copia de sus instrumentos.
+- **Quitar ADR-016 del `decision:` de las piezas para que `precedence.py` pase:** escondería el rojo en lugar de reportarlo.
+- **Inventar tokens para lo que el formato no lleva** (un paso de `spacing` de 1 px, `spacing.step-medida`): serían valores que no vienen de la regla que dicen seguir.
