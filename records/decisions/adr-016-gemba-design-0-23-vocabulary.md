@@ -138,19 +138,28 @@ La (A) declara un ancho fijo de 48 px que la hoja no aplica: `min-width` deja cr
 |---|---|---|---|---|
 | Caracteres por renglón a 1280 px (estimado: ancho del texto entre 8 px, el ancho medio de 0.5 em a 16 px; el texto mide 1280 − 2 × 16 px de margen) | medido, informativo | 156 | 68 | 80 |
 | Caracteres por renglón a 360 px (mismo estimado; 328 px de texto) | medido, informativo | 41 | 41 | 41 |
-| V3 · el renglón no cruza la pantalla | `judgement` | pending | pending | pending |
+| V3 · el renglón no cruza la pantalla | `judgement` | **no se cumple** — elegida de todos modos | sí — no elegida | sí — no elegida |
 
 | Criterio | Estrato | Elevación (A) tono y borde | Elevación (B) solo tono | Elevación (C) solo borde |
 |---|---|---|---|---|
 | Contraste del borde `línea` sobre el plano vecino (`contrast.py`) | medido, informativo | 3.34:1 sobre `fondo`, 3.70:1 sobre `superficie` | — sin borde | 3.34:1 sobre `fondo` |
 | Contraste `superficie` sobre `fondo` (`contrast.py`) | medido, informativo | 1.11:1 | 1.11:1 | — sin tono |
-| V4 · papel y tinta | `judgement` | pending | pending | pending |
+| V4 · papel y tinta | `judgement` | no — no elegida | **sí** — elegida | no — no elegida |
 
 La tarjeta no es un componente interactivo, así que `component-contrast` (SC 1.4.11) no la obliga. Las cifras dicen lo que aparta cada plano, no un umbral. Con la (B), 1.11:1 es todo lo que separa la hoja del papel.
 
 | Criterio | Estrato | V1 · catorce dimensiones |
 |---|---|---|
 | Respondidas / sin respuesta | `mechanical` | 14 juzgadas, 0 sin respuesta, sobre la tabla propuesta en `$S/dimensiones.md` contra `conventions/interface-dimensions.md` de 0.23.0 (`ran:`) |
+
+### Las elecciones del humano
+
+Hechas por Daniel Efraín Domínguez Urbina el 2026-09-23, en elección forzada sobre las láminas (capturas de la app real con cada candidata, publicadas como página privada; las imágenes solo existen en el scratchpad):
+
+- **Mínimo de control: (B)**, solo `minHeight`/`minWidth`.
+- **V3 · medida: (A), sin tope. V3 no se cumple, y se elige (A) de todos modos** (lo dijo así el humano). V3 queda respondido con "no", sin reescribir el criterio para que (A) pase.
+- **V4 · elevación: (B)**, solo tono.
+- **Sangría de los enlaces `accion`: (A)**, sin relleno horizontal fuera de la cabecera.
 
 ### Contraejemplos
 
