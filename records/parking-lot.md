@@ -47,14 +47,19 @@ wrote it. Retirement moves an entry to `## Retired` with its reason.
 - **En gemba-design 0.21.0, `design-md.py` solo acepta referencias ASCII (`^\{([a-z][A-Za-z0-9.-]*)\}$`), y el spec de DESIGN.md (`alpha`) no lo exige.** Un componente con `{colors.acción-fondo}` sale `refused` (exit 1). En Orquídea se resolvió con identificadores ASCII (ADR-014): `semantics.md` usa `linea` y `accion-*`. El límite del generador, más estrecho que el formato, es del addon: aceptar las letras de un identificador YAML, o decir en la técnica `ui` que los identificadores de rol van en ASCII antes de que un eslabón los fije.
   *Origin:* s5.6 (e5), `story-design`, 2026-09-22 — lectura de `design-md.py` contra los roles de `semantics.md`.
   *Promotion:* al reportarlo en el repositorio de gemba-design, o cuando una versión del addon lo corrija; en Orquídea no hace falta deshacer nada.
-
-- **La interfaz vestida de e5 tiene tres juicios sin firmar y dos ajustes visuales sin decidir.**
+- **La interfaz vestida de e5 tiene dos juicios sin firmar y dos ajustes visuales sin decidir.**
   - Sin firma (`unsigned`): el criterio 3 de ADR-009 (la foto es la protagonista: a todo el ancho en la ficha, miniatura de 96 px en la colección) y si el subtítulo de 20 px en negrita se distingue del cuerpo (ADR-015, decisión 5).
   - Sin decidir: los enlaces con `accion` quedan 8 px hacia adentro del texto por el relleno de `enlace-navegacion`, y en Acceso el botón "Entrar" queda pegado al campo porque ese formulario no envuelve sus controles en `<p>`.
 
   Se preguntó al cerrar T5 de s5.7 y el humano pidió cerrar sin responder. Las capturas a 360 px quedaron en el scratchpad de esa sesión, no en el repositorio.
   *Origin:* s5.7 (e5), `story-implement` T5, 2026-09-23 — recorrido renderizado.
   *Promotion:* cuando el humano recorra la aplicación en el teléfono (el mismo momento que la medición en "Slow 3G" que queda pendiente de e5): firma o rechazo de los dos juicios. Un ajuste que se decida hacer va como arreglo propio contra ADR-015.
+- **El tiempo de la primera carga con "Slow 3G" (`must-perf-001`, ≤ 5 s) no se ha medido nunca: e1, e2, e3 y e5 lo difirieron.** El peso sí se mide por script en cada épica. En e5: "Mi colección" con 25 fotos, 148.1 KB de 200, e identidad 1.6 KB de 50. El 2026-09-23 el servidor quedó listo para medir, con 25 ejemplares con foto, y el humano pidió cerrar sin medir.
+  *Origin:* e5, `epic-review`, 2026-09-23 — stop previsto desde el diseño de e5, diferido por el humano como en e1–e3.
+  *Promotion:* el primer despliegue real en Dokploy (el mismo momento que la entrada de `docker build`): medir en el teléfono o con DevTools en "Slow 3G" contra el servidor desplegado. Si pasa de 5 s, es un bug contra `must-perf-001`.
+- **El gate no ata la cadena de la identidad entre `semantics.md`, `primitives.md` y `DESIGN.md`.** En `epic-review` de e5 se cambió `accion-fondo` en `semantics.md` a `#1F3A60` y `./scripts/check` siguió en verde. La prueba de regeneración cubre `primitives.md`, y la de la hoja compara `identidad.css` con `DESIGN.md`. Pero `provenance` (roles contra escalones) solo corrió a mano, y nada compara los colores de `DESIGN.md` con `semantics.md`. Un cambio de paleta regenera las primitivas y deja los roles y la hoja con el valor viejo, sin rojo. El arreglo es una prueba en el proyecto que lea las tres tablas, sin depender del addon.
+  *Origin:* e5, `epic-review` (quality-review a escala de épica), 2026-09-23 — mutación plantada en `semantics.md`.
+  *Promotion:* antes del primer cambio de paleta o de roles, o en la siguiente historia que toque `governance/identity/ui/`.
 
 ## Retired
 

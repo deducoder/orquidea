@@ -9,3 +9,5 @@ Cuando un criterio `[stated]` de un brief depende de algo fuera de la sesión (u
 
 **Why:** en e1 el despliegue y la medición con Slow 3G solo se descubrieron como no cumplibles en `epic-review`, con las seis historias ya hechas.
 **How to apply:** en el diseño de una épica, listar qué criterios `[stated]` necesitan al humano y preguntar por adelantado, junto con los datos que falten.
+
+En e5 (2026-09-23) el tiempo con "Slow 3G" se difirió por cuarta épica (e1, e2, e3, e5), aun con el servidor listo y 25 ejemplares con foto. Preverlo como stop no basta. La medición solo significa algo contra el despliegue real, así que queda ligada al primer despliegue en Dokploy (entrada del parking lot) y no se vuelve a pedir en cada `epic-review`.

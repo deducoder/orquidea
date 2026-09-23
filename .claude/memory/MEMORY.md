@@ -2,7 +2,7 @@
 - [Starlette TestClient usa httpx2](starlette-testclient-httpx2.md) — httpx2 en dev; ids locales s{N}.{M}
 - [Mutaciones sin bytecode; ruff formatea .md](mutation-checks-stale-bytecode.md) — falsos supervivientes
 - [Cuidados por género en la AOS](aos-genus-care-cards.md) — fuente del catálogo semilla y sus límites
-- [Criterios stated que dependen del humano](epic-stated-criteria-external.md) — preverlos como stop desde el diseño
+- [Criterios stated que dependen del humano](epic-stated-criteria-external.md) — preverlos como stop; Slow 3G ligado al despliegue
 - [ASVS al diseñar, no al revisar](asvs-checklist-at-design.md) — recorrer ASVS L2 en el design.md de historias de seguridad
 - [Concurrencia y proceso real en historias de seguridad](concurrency-and-real-process-in-security-stories.md) — hilos (scrypt) y registros bajo uvicorn, no solo lógica
 - [Pillow guarda el comentario JPEG](pillow-guarda-comentario-jpeg.md) — reconstruir desde píxeles; probar bytes, no API
@@ -28,3 +28,4 @@
 - [Qué lee design-md.py](design-md-py-que-lee.md) — comando en ADR-014; no pasarle primitives.md
 - [No enviar el correo a servicios externos](no-enviar-el-correo-a-servicios-externos.md) — User-Agent genérico; preguntar si piden contacto
 - [Capturas a 360 px en Chrome de Windows](captura-360-en-chrome-de-windows.md) — iframe de 360; sesión con curl; --data-urlencode
+- [survival-review es tarea del plan](survival-review-es-tarea-del-plan.md) — se omitió en s5.2–s5.4; nombrarlo en cada plan de pieza
