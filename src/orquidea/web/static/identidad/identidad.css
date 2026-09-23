@@ -70,8 +70,13 @@ header a,
   justify-content: center;
   min-height: var(--spacing-step-6);
   min-width: var(--spacing-step-6);
-  padding: 0 var(--spacing-step-1);
   color: var(--colors-enlace);
+}
+
+/* en la cabecera los enlaces se separan del borde; fuera de ella un enlace suelto se alinea con el
+   texto de al lado, y el objetivo sigue en 48 por min-width (ADR-016) */
+header a {
+  padding: 0 var(--spacing-step-1);
 }
 
 header form {
@@ -173,7 +178,8 @@ button:active {
   font-weight: 700;
 }
 
-/* tarjeta: cada ejemplar de la colección es una hoja sobre el papel */
+/* tarjeta: cada ejemplar de la colección es una hoja sobre el papel, apartada solo por tono
+   (elevación de ADR-016) */
 .tarjetas {
   list-style: none;
   padding: 0;
@@ -181,7 +187,6 @@ button:active {
 
 .tarjetas > li {
   background: var(--colors-superficie);
-  border: 1px solid var(--colors-línea);
   border-radius: var(--rounded-recto);
   padding: var(--spacing-step-2);
   margin: 0 0 var(--spacing-step-2);

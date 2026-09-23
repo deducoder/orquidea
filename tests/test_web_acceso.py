@@ -1,5 +1,6 @@
 import hashlib
 import logging
+import re
 import sqlite3
 import threading
 import time
@@ -42,6 +43,16 @@ def test_el_formulario_de_acceso_pide_solo_la_contrasena(anonimo: TestClient) ->
     assert 'name="contrasena"' in respuesta.text
     assert 'method="post"' in respuesta.text
     assert 'autocomplete="current-password"' in respuesta.text
+
+
+def test_el_campo_de_acceso_va_en_su_propio_parrafo(anonimo: TestClient) -> None:
+    # como en los demás formularios: el párrafo separa el campo del botón (ADR-016)
+    formulario = anonimo.get("/acceso").text.split('action="/acceso"')[1].split("</form>")[0]
+
+    assert re.search(
+        r'<p>\s*<label for="contrasena">[^<]*</label>\s*<input[^>]*>\s*</p>', formulario
+    )
+    assert re.search(r"</p>\s*<button", formulario)
 
 
 def test_la_contrasena_correcta_crea_la_sesion_y_redirige(anonimo: TestClient) -> None:

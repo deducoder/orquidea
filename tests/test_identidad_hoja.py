@@ -160,6 +160,34 @@ def test_sin_raiz_no_hay_verde() -> None:
     assert comparadas == 0
 
 
+def _declaraciones(selector: str) -> dict[str, str]:
+    """Lo que declaran todas las reglas cuyo grupo de selectores incluye `selector`."""
+    css = HOJA.read_text(encoding="utf-8")
+    return {
+        p: v
+        for s, ds in reglas(css)
+        if selector in (x.strip() for x in s.split(","))
+        for p, v in ds
+    }
+
+
+def test_la_tarjeta_se_aparta_del_papel_solo_por_tono() -> None:
+    # elevación de ADR-016 (V4): superficie sobre fondo, sin borde
+    tarjeta = _declaraciones(".tarjetas > li")
+
+    assert tarjeta["background"] == "var(--colors-superficie)"
+    assert not any(p.startswith("border") and p != "border-radius" for p in tarjeta)
+
+
+def test_un_enlace_accion_no_se_sangra_respecto_del_texto() -> None:
+    # ADR-016: sin relleno horizontal; el objetivo sigue en 48 por min-width
+    accion = _declaraciones(".accion")
+
+    assert accion["min-width"] == "var(--spacing-step-6)"
+    sangrias = ("padding", "padding-left", "padding-inline", "padding-inline-start")
+    assert not any(p in sangrias for p in accion)
+
+
 # --- las plantillas --------------------------------------------------------------------------
 
 PLANTILLAS = RAIZ / "src" / "orquidea" / "web" / "templates"
