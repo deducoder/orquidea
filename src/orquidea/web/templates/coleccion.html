@@ -3,11 +3,11 @@
 {% block content %}
 <h1>Mi colección</h1>
 {% if ejemplares %}
-<ul>
+<ul class="tarjetas">
   {% for item in ejemplares %}
   <li>
     {% if item.ejemplar.foto %}
-    <a href="/coleccion/{{ item.ejemplar.id }}"><img src="/coleccion/{{ item.ejemplar.id }}/foto/miniatura" alt="Foto de {{ item.ejemplar.nombre or (item.especie.nombre_cientifico if item.especie else 'este ejemplar') }}" loading="lazy" width="96" height="96" style="object-fit: cover"></a>
+    <a href="/coleccion/{{ item.ejemplar.id }}"><img src="/coleccion/{{ item.ejemplar.id }}/foto/miniatura" alt="Foto de {{ item.ejemplar.nombre or (item.especie.nombre_cientifico if item.especie else 'este ejemplar') }}" loading="lazy" width="96" height="96" class="miniatura"></a>
     {% endif %}
     {% if item.especie %}
     <a href="/especies/{{ item.especie.id }}"><i>{{ item.especie.nombre_cientifico }}</i></a>
@@ -25,7 +25,7 @@
     <a href="/coleccion/{{ item.ejemplar.id }}/editar">Editar</a>
     <a href="/coleccion/{{ item.ejemplar.id }}/quitar">Quitar</a>
     {% if item.ejemplar.notas %}
-    <p style="white-space: pre-line">{{ item.ejemplar.notas }}</p>
+    <p class="notas">{{ item.ejemplar.notas }}</p>
     {% endif %}
   </li>
   {% endfor %}

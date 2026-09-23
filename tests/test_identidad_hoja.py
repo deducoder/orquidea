@@ -9,6 +9,7 @@ import re
 from pathlib import Path
 
 import pytest
+from fastapi.testclient import TestClient
 
 RAIZ = Path(__file__).parent.parent
 HOJA = RAIZ / "src" / "orquidea" / "web" / "static" / "identidad" / "identidad.css"
@@ -156,3 +157,36 @@ def test_sin_raiz_no_hay_verde() -> None:
     _, comparadas = problemas("a { color: var(--colors-fondo); }", TOKENS_CHICOS, "serif")
 
     assert comparadas == 0
+
+
+# --- las plantillas --------------------------------------------------------------------------
+
+PLANTILLAS = RAIZ / "src" / "orquidea" / "web" / "templates"
+
+
+def test_ninguna_plantilla_lleva_estilo_en_linea() -> None:
+    plantillas = sorted(PLANTILLAS.glob("*.html"))
+    con_estilo = [
+        f"{p.name}:{n}"
+        for p in plantillas
+        for n, linea in enumerate(p.read_text(encoding="utf-8").splitlines(), 1)
+        if re.search(r"\sstyle\s*=", linea)
+    ]
+
+    assert len(plantillas) >= 10  # sin plantillas no hay verde
+    assert con_estilo == []
+
+
+def test_la_base_enlaza_la_hoja_de_la_identidad_en_el_head() -> None:
+    base = (PLANTILLAS / "base.html").read_text(encoding="utf-8")
+    cabeza = base.split("<head>")[1].split("</head>")[0]
+
+    assert '<link rel="stylesheet" href="/static/identidad/identidad.css">' in cabeza
+
+
+def test_la_hoja_se_sirve_como_css(client: TestClient) -> None:
+    respuesta = client.get("/static/identidad/identidad.css")
+
+    assert respuesta.status_code == 200
+    assert respuesta.headers["content-type"].startswith("text/css")
+    assert "--colors-fondo" in respuesta.text

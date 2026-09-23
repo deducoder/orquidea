@@ -106,7 +106,7 @@ def test_dos_ejemplares_de_la_misma_especie_aparecen_como_dos_entradas(client: T
 
     html = client.get("/coleccion").text
 
-    assert html.count("<li") == 3
+    assert len(re.findall(r"<li[\s>]", html)) == 3  # no cuenta el <link> de la hoja
     assert html.count(f'href="/especies/{RADICANS}"') == 2
     assert html.count("Epidendrum radicans") == 2
     assert 'href="/especies/laelia-anceps"' in html
@@ -246,8 +246,9 @@ def test_la_planta_propia_se_lista_sin_enlace_y_con_sus_notas(client: TestClient
     html = client.get("/coleccion").text
 
     assert "Cattleya de mi abuela" in html
-    assert "Regalo de 2019\nflorece en enero" in html
-    assert 'style="white-space: pre-line"' in html
+    notas = re.search(r'<p class="notas">(.*?)</p>', html, re.S)
+    assert notas is not None
+    assert notas.group(1) == "Regalo de 2019\nflorece en enero"
     assert "/especies/" not in html
 
 

@@ -9,13 +9,13 @@
 {% if item.especie %}<p><a href="/especies/{{ item.especie.id }}">Ver la ficha de la especie</a></p>{% endif %}
 <p><small>Agregado el {{ item.ejemplar.creado | fecha }}</small></p>
 {% if item.ejemplar.notas %}
-<p style="white-space: pre-line">{{ item.ejemplar.notas }}</p>
+<p class="notas">{{ item.ejemplar.notas }}</p>
 {% endif %}
 {% if error %}<p role="alert">{{ error }}</p>{% endif %}
 <section>
   <h2>Foto</h2>
   {% if item.ejemplar.foto %}
-  <p><img src="/coleccion/{{ item.ejemplar.id }}/foto" alt="Foto de {{ item.ejemplar.nombre or (item.especie.nombre_cientifico if item.especie else 'este ejemplar') }}" style="max-width: 100%; height: auto"></p>
+  <p><img src="/coleccion/{{ item.ejemplar.id }}/foto" alt="Foto de {{ item.ejemplar.nombre or (item.especie.nombre_cientifico if item.especie else 'este ejemplar') }}" class="foto"></p>
   {% else %}
   <p>Aún no tiene foto.</p>
   {% endif %}
@@ -50,11 +50,11 @@
     <button type="submit">Registrar riego</button>
   </form>
   {% if riegos %}
-  <ul>
+  <ul class="historial">
     {% for riego in riegos %}
     <li>
       {{ riego.fecha }}
-      <form method="post" action="/coleccion/{{ item.ejemplar.id }}/riegos/{{ riego.id }}/quitar" style="display: inline">
+      <form method="post" action="/coleccion/{{ item.ejemplar.id }}/riegos/{{ riego.id }}/quitar" class="en-linea">
         {% include "_csrf.html" %}
         <button type="submit">Quitar</button>
       </form>
@@ -81,19 +81,19 @@
     <button type="submit">Registrar floración</button>
   </form>
   {% if floraciones %}
-  <ul>
+  <ul class="historial">
     {% for floracion in floraciones %}
     <li>
       {{ floracion.inicio }} — {% if floracion.fin %}{{ floracion.fin }}{% else %}en curso{% endif %}
       {% if not floracion.fin %}
-      <form method="post" action="/coleccion/{{ item.ejemplar.id }}/floraciones/{{ floracion.id }}/fin" style="display: inline">
+      <form method="post" action="/coleccion/{{ item.ejemplar.id }}/floraciones/{{ floracion.id }}/fin" class="en-linea">
         {% include "_csrf.html" %}
         <label for="fin-{{ floracion.id }}">Terminó el</label>
         <input id="fin-{{ floracion.id }}" name="fin" type="date" min="{{ floracion.inicio }}" max="{{ hoy }}" required>
         <button type="submit">Terminar</button>
       </form>
       {% endif %}
-      <form method="post" action="/coleccion/{{ item.ejemplar.id }}/floraciones/{{ floracion.id }}/quitar" style="display: inline">
+      <form method="post" action="/coleccion/{{ item.ejemplar.id }}/floraciones/{{ floracion.id }}/quitar" class="en-linea">
         {% include "_csrf.html" %}
         <button type="submit">Quitar</button>
       </form>
