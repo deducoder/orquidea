@@ -2,17 +2,17 @@
 type: adr
 id: ADR-009
 title: "Criterio del encargo de identidad visual de Orquídea"
-status: proposed
+status: accepted
 date: 2026-09-22
 epic: e5
-published: pendiente — se resuelve al completar el registro
+published: no — el proyecto no tiene espacio de documentación externo; el ADR vive solo en el repositorio
 ---
 
 # ADR-009: Criterio del encargo de identidad visual de Orquídea
 
 ## Status
 
-Proposed.
+Accepted.
 
 ## Context
 
@@ -120,4 +120,33 @@ exit=2
 
 ## Decision
 
-Sin resolver. Se completa, en este mismo archivo, cuando existan los rojos de los criterios medibles y el entregable `commission.md`.
+**Option (A):** toda la identidad visual de Orquídea se juzga contra el catálogo de supervivencia, resuelto una vez arriba, y contra tres criterios de adecuación:
+
+1. **Peso** (`mechanical`): los archivos bajo `src/orquidea/web/static/identidad/`, en gzip, suman ≤ 50 KB. Instrumento: `scripts/medir-primera-carga.py --identidad DIR`.
+2. **Contraste de lectura** (`mechanical`): todo par de texto de tamaño normal (`Kind = text`) llega a ≥ 7:1; el texto grande queda en el piso de `contrast` y los componentes en `component-contrast`. Instrumento: `scripts/contraste-de-lectura.py SUJETO.md`, sobre las tablas del formato de `tokens.py pairs`.
+3. **La foto es la protagonista** (`judgement`): se responde en cada pieza que lo toque como elección forzada contra este criterio, firmada por el humano.
+
+Cada pieza (s5.2 a s5.7) propone sus propios criterios y declara si derivan de uno de estos, por su número, o si son propios de la pieza. Nada obliga a que una pieza recoja todos.
+
+El entregable es `commission.md` en `governance/identity/`. La mitad juzgada (el perímetro, esta opción y el alcance del criterio 2) la firmó Daniel Efraín Domínguez Urbina el 2026-09-22.
+
+Diferido, y hasta cuándo: conectar la comprobación del criterio 1 al gate sobre los recursos reales se hace en s5.7, cuando existan; hasta entonces el directorio no existe y la comprobación daría 2 (nada que medir), que no es un verde.
+
+## Consequences
+
+**Positive:**
+- Cada pieza de e5 puede demostrar con `git log` que su criterio es anterior a ella: este registro se commiteó en `proposed` (`docs(s5.1): add ADR-009`) antes de cualquier comprobación o entregable.
+- Los dos criterios medibles tienen instrumento y se vieron en rojo sobre sujetos que los violan; s5.3 a s5.7 se miden sin escribir nada nuevo.
+- `must-perf-001` gana un subpresupuesto explícito para la identidad, que deja tres cuartas partes de los 200 KB al HTML, htmx y las miniaturas.
+
+**Negative / costs:**
+- 7:1 en todo el texto normal restringe mucho la paleta: el gris medio que suele usarse para texto secundario (`#767676`, 4.54:1) queda fuera, y los tonos de acento solo sirven en componentes o en texto grande. Se acepta porque el texto pequeño es justo el que se lee bajo el sol.
+- 50 KB puede dejar fuera una fuente web con itálica verdadera; la pila de fuentes del sistema es una opción real en `typography`, no un último recurso.
+- La fórmula WCAG está copiada en el proyecto (`scripts/contraste-de-lectura.py`) además de en el addon; si el addon la cambia, la divergencia se ve en el caso de control `#767676` = 4.54:1, que es el mismo en las dos pruebas.
+- El criterio 3 depende de una firma del humano en cada pieza; una firma que no llega se escribe `unsigned` y la entrega la cuenta como sin responder.
+
+## Alternatives considered
+
+- **(B) Solo el catálogo:** nada diría qué debe lograr esta identidad para su uso en campo, y el peso de las fuentes quedaría sin tope propio dentro de `must-perf-001`.
+- **(C) Sin el criterio 2:** el texto pequeño (fechas, fuentes de los cuidados, último riego) se quedaría en 4.5:1; el humano decidió el 2026-09-22 que ese texto es el que más importa bajo el sol.
+- **(D) Con los criterios 4 y 5:** el 4 (itálica verdadera y glifos es-MX) solo lo puede cumplir `typography` y queda como criterio propio de esa pieza; el 5 ("evoca Chiapas") no lo puede responder nadie con un sí o un no, y una segunda firma por pieza acerca la firma automática que la convención del ciclo advierte.
