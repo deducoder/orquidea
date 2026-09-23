@@ -41,6 +41,9 @@ wrote it. Retirement moves an entry to `## Retired` with its reason.
 - **Quitar `'unsafe-inline'` de `style-src` en la CSP.** Hoy la CSP lo permite porque cuatro plantillas llevan atributos `style`; s5.7 (e5) los mueve a `identidad.css`, y desde entonces ya nada lo necesita. Quitarlo toca `CONTENT_SECURITY_POLICY` en `web/app.py` y la prueba `test_la_csp_no_permite_scripts_en_linea`, que hoy afirma su presencia; htmx inyecta estilos en línea para sus indicadores salvo que se configure `htmx.config.includeIndicatorStyles = false`, y eso hay que comprobarlo antes.
   *Origin:* e5, `epic-design`, 2026-09-22 — recorrido de las plantillas y de la CSP.
   *Promotion:* al cerrar s5.7, si ninguna plantilla conserva un atributo `style`: una historia o arreglo con su prueba de CSP y la comprobación de htmx.
+- **Ninguna prueba afirma el `<title>` de las páginas salvo el de inicio.** Una prueba parametrizada que recorra las páginas (catálogo, especie, colección, ejemplar, alta, edición, baja, acceso) y afirme que el contenido de `<title>` es texto sin `<` ni `>` cerraría la clase de b1, no solo su instancia; hoy solo `tests/test_web_inicio.py:13` y la regresión de b1 lo miran.
+  *Origin:* b1, `bug-review`, 2026-09-22 — prevención de la clase (afirmación de presencia que no ve el lugar).
+  *Promotion:* s5.7 (e5), que toca todas las plantillas: agregarla ahí como red de las plantillas vestidas.
 
 ## Retired
 
