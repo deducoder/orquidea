@@ -1,4 +1,4 @@
-- [Última sesión](session-pointer.md) — 2026-09-23: e5 cerrada y publicada; siguiente, quitar unsafe-inline de la CSP
+- [Última sesión](session-pointer.md) — 2026-09-23: s1 (vocabulario 0.23.0) cerrada y publicada; siguiente, quitar unsafe-inline de la CSP
 - [Starlette TestClient usa httpx2](starlette-testclient-httpx2.md) — httpx2 en dev; ids locales s{N}.{M}
 - [Mutaciones sin bytecode; ruff formatea .md](mutation-checks-stale-bytecode.md) — falsos supervivientes
 - [Cuidados por género en la AOS](aos-genus-care-cards.md) — fuente del catálogo semilla y sus límites
