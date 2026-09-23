@@ -2,7 +2,7 @@
 type: adr
 id: ADR-013
 title: "Roles de color de la interfaz de Orquídea"
-status: proposed
+status: accepted
 date: 2026-09-22
 epic: e5
 published: no — el proyecto no tiene espacio de documentación externo; el ADR vive solo en el repositorio
@@ -12,7 +12,7 @@ published: no — el proyecto no tiene espacio de documentación externo; el ADR
 
 ## Status
 
-Proposed.
+Accepted.
 
 ## Context
 
@@ -78,7 +78,7 @@ Corridas el 2026-09-22 con `uv run python scripts/derivar-primitivas.py governan
 | `component-contrast` | `mechanical` | sí — 12 pares de componente, 0 bajo 3:1; el más bajo, `campo-borde` y `línea` sobre `fondo` 3.34:1 (`ran:`) | **no** — 2 bajo: `línea` y `campo-borde` sobre `fondo` 2.76:1 (`ran:`) | sí — 0 bajo; el más bajo, `campo-borde` y `línea` sobre `fondo` 3.30:1 (`ran:`) |
 | R2 · reproducible y desde un escalón | `mechanical` | sí — la salida es la misma al correr otra vez (prueba del script); `provenance`: 13 tokens, 0 fuera de escala (`ran:`) | sí — ídem, 13 tokens, 0 fuera (`ran:`) | sí — ídem, 13 tokens, 0 fuera (`ran:`) |
 | Desvío máximo de un rol de identidad | medido, informativo | 0.000 en los siete (por construcción) | 0.039 — `papel` sale `#EFE6D5` en lugar de `#F7F3EA` | 0.100 — `tinta` sale `#38342E` en lugar de `#1E1C19`; `papel` sale `#EEEDEB` |
-| R3 · se lee como Cuaderno de campo | `judgement` | pendiente de la lámina | no se lleva a la lámina: falla R1 | pendiente de la lámina |
+| R3 · se lee como Cuaderno de campo | `judgement` | **sí** — elegida | no se lleva a la lámina: falla R1 | no — no elegida |
 
 ### Contraejemplos
 
@@ -119,12 +119,28 @@ exit=1
 
 ## Decision
 
-Sin resolver.
+**Option (A) Anclas en OKLCH**, elegida y firmada por Daniel Efraín Domínguez Urbina el 2026-09-22 en elección forzada entre (A) y (C), sobre la lámina del formulario de alta en `papel` y en `hoja` (`$S/lamina-roles.html`, solo en el scratchpad).
+
+1. Las primitivas las produce `scripts/derivar-primitivas.py governance/identity/palette.md --regla anclas`: tres rampas (`neutro`, `azul`, `rojo`) de doce escalones; cada rol de la paleta resuelve a su valor exacto (desvío 0.000).
+2. Trece roles por función, cada uno una referencia a un escalón, iguales en `papel` y en `hoja`; `acción-presionada` es `azul-900`, el escalón siguiente más oscuro de `acción-fondo` (`azul-800`).
+3. R1: 10 pares de texto, 0 bajo 7:1 (el más bajo 8.38:1). `component-contrast`: 12 pares, 0 bajo 3:1 (el más bajo 3.34:1). R2: 13 tokens, 0 fuera de escala, y una prueba del gate regenera `primitives.md`. Invariancia: no comparada, la identidad no declara variante.
+4. Los entregables son `governance/identity/ui/primitives.md` y `governance/identity/ui/semantics.md` — un nivel abajo de la raíz, como pide la convención `deliverables` del addon para las piezas de interfaz.
 
 ## Consequences
 
-Se escriben al decidir.
+**Positive:**
+- La paleta firmada en ADR-012 queda intacta en pantalla: la regla la contiene en lugar de aproximarla.
+- Un cambio de color de la paleta se re-deriva corriendo el script, y la prueba de regeneración pone el gate en rojo si `primitives.md` no se regenera.
+- s5.6 compone componentes sobre roles con su contraste ya medido.
+
+**Negative / costs:**
+- `campo-borde` y `línea` sobre `fondo` quedan en 3.34:1, el margen más fino del sistema; un renglón más claro exige otro rol, no mover este.
+- Los escalones intermedios de la rampa neutra entre `papel` (L ≈ 0.96) y `renglón` saltan mucho (`neutro-50` `#F7F3EA` → `neutro-100` `#D4CFC4`): la rejilla uniforme no tiene un gris muy claro para separadores tenues; si s5.6 lo pide, será un rol nuevo con su propia medición.
+- La mayor parte de la rampa roja y los claros del azul no están medidos contra ningún fondo: no son pares de nada hasta que un componente los use.
+- Sin variante, la regla no dice nada de un tema oscuro; ese rabbit hole del brief pediría otra rejilla y otro registro.
 
 ## Alternatives considered
 
-Las candidatas (A), (B) y (C) de arriba; las que pierdan se registran aquí con su razón.
+- **(B) Uniforme en OKLCH:** falla R1 (`texto-secundario` sobre `fondo` 6.86:1) y `component-contrast` (`línea` y `campo-borde` sobre `fondo` 2.76:1): al fijar croma y tono de una sola fuente, el papel se oscurece y la tinta suave se aclara.
+- **(C) Uniforme en HSL:** pasa los umbrales (7.40:1 y 3.30:1), pero cambia la tinta a `#38342E` y el papel a `#EEEDEB` (desvío 0.100) y no fue la elegida en R3.
+- **Respaldo al escalón más cercano que cumpla** (propuesto en el diseño para `campo-borde`): descartado al abrir este registro, porque esconde el rojo que la regla causa — el que (B) mostró.
