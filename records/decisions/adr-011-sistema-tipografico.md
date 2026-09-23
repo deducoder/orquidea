@@ -2,17 +2,17 @@
 type: adr
 id: ADR-011
 title: "Sistema tipográfico de Orquídea"
-status: proposed
+status: accepted
 date: 2026-09-22
 epic: e5
-published: pendiente — se resuelve al completar el registro
+published: no — el proyecto no tiene espacio de documentación externo; el ADR vive solo en el repositorio
 ---
 
 # ADR-011: Sistema tipográfico de Orquídea
 
 ## Status
 
-Proposed.
+Accepted.
 
 ## Context
 
@@ -74,6 +74,33 @@ Prueba: renderizado con Pillow a 3 px físicos por px CSS, a 16 px y a 14 px, co
 - **T3 — rojo, visto en el archivo:** los anchos de 0–9 de (B) por defecto son 9 distintos; sin `tnum` las fechas no se alinean. Se cumple solo activando el rasgo.
 - **T4 — no aplica: `read:`**, no hay comprobación que ver fallar; la licencia se lee.
 
+### Prueba de (A), hecha tras la elección
+
+A petición del humano, (A) se probó con fuentes reales: Roboto (la de Android) desde su versión web `@fontsource/roboto` 5.3.0, solo en el scratchpad — x/em 0.528, tamaño mínimo 14.6 px, cifras de un solo ancho (1151) por defecto, itálica y negrita propias (`ran:`); y la pila `system-ui` servida localmente y abierta en Chrome sobre Windows (Segoe UI): itálica diseñada, glifos es-MX presentes y fechas alineadas con `tabular-nums` (`ran:`, captura en el scratchpad). San Francisco no se renderizó.
+
 ## Decision
 
-Sin resolver.
+**Option (A) Pila de fuentes del sistema**, elegida por Daniel Efraín Domínguez Urbina el 2026-09-22.
+
+1. Una sola familia, la del sistema: `system-ui, -apple-system, "Segoe UI", Roboto, "Noto Sans", sans-serif`. Ningún archivo de fuente se sirve.
+2. Roles: `text` 400, `emphasis` 700, `binomial` 400 itálica, `date` 400 con `font-variant-numeric: tabular-nums`.
+3. Piso de legibilidad: **16 px CSS para todo texto**, incluido el de `<small>`, desde 0.2° de altura de x (Legge y Bigelow, 2011) con el teléfono a 35 cm y 160 px CSS por pulgada.
+4. El entregable es `specimen.md` en `governance/identity/`; la escala la fija s5.6 a partir de estos roles y este piso.
+
+## Consequences
+
+**Positive:**
+- 0 KB de fuentes: los 50 KB del encargo quedan enteros para el CSS, y la primera carga en Slow 3G no espera ninguna fuente.
+- Negrita e itálica diseñadas en todos los estilos y en los tres sistemas principales, sin síntesis del navegador.
+- La tipografía es la de las apps del teléfono del usuario, lo que S3 de ADR-010 pide.
+
+**Negative / costs:**
+- Lo que se ve cambia con el teléfono: la identidad no controla la forma de las letras, y un sistema viejo o raro puede caer en una sans peor. El carácter tiene que ponerlo la estructura (ADR-010), no la familia.
+- El piso de 16 px para todo texto es alto: `<small>` deja de ser más pequeño que el cuerpo, y s5.6 tendrá que marcar la jerarquía con peso, color y espacio más que con tamaño.
+- Los 16 px dependen de dos parámetros declarados (35 cm, 160 px/pulgada) y de alturas de x no medidas para San Francisco y Segoe UI; con el teléfono a 30 cm bastarían 13–14 px.
+
+## Alternatives considered
+
+- **(B) Atkinson Hyperlegible:** cumple T1 solo con regular e itálica (34.7 KB), con negrita sintetizada y cifras proporcionales por defecto; más ancha en pantalla estrecha.
+- **(C) IBM Plex Sans:** falla T1 aun con dos estilos (45.8 KB > 40 KB).
+- **(D) Source Sans 3:** cumple T1 con dos estilos (30.8 KB) y tiene la mejor itálica, con negrita sintetizada y 31 KB por primera carga; queda como la alternativa si un día se quiere el mismo aspecto en todos los teléfonos.
