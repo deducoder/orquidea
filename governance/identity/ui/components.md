@@ -130,6 +130,8 @@ Cada dimensión del catálogo de gemba-design 0.23.0 con destino `ui`, respondid
 | M4 — los componentes se leen como una familia del Cuaderno de campo | sí, para la escala (A) con el espaciado (A) | Daniel Efraín Domínguez Urbina, 2026-09-22, en elección forzada entre A·A, A·B, B·A y B·B (escala · espaciado) sobre la lámina de la ficha y el formulario de alta a 360 px |
 | V3 — el renglón de la ficha no cruza la pantalla de escritorio | no se cumple con "sin tope"; se elige de todos modos | Daniel Efraín Domínguez Urbina, 2026-09-23, en elección forzada entre sin tope, 34em y 40em sobre la ficha a 1280 y a 360 px |
 | V4 — esquinas, trazos y planos se leen como papel y tinta | sí, para "solo tono" | Daniel Efraín Domínguez Urbina, 2026-09-23, en elección forzada entre tono y borde, solo tono y solo borde sobre la colección a 360 px |
+| Criterio 3 de ADR-009 — la foto del ejemplar es la protagonista y la paleta no compite con la flor, sobre la interfaz vestida (foto a todo el ancho en la ficha, miniatura de 96 px en la colección) | sí | Daniel Efraín Domínguez Urbina, 2026-09-23, sobre capturas a 360 px de la app con tres fotos reales de *Laelia anceps*; quedó `unsigned` en e5 |
+| Decisión 5 de ADR-015 — el subtítulo de 20 px en negrita se distingue del cuerpo de 16 px | sí; no hace falta el ajuste por espacio | Daniel Efraín Domínguez Urbina, 2026-09-23, sobre la ficha a 360 px (Foto, Riegos, Floraciones); quedó `unsigned` en e5 |
 
 ## What was not measured
 
