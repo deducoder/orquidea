@@ -2,17 +2,17 @@
 type: adr
 id: ADR-010
 title: "Dirección común de la identidad visual de Orquídea"
-status: proposed
+status: accepted
 date: 2026-09-22
 epic: e5
-published: pendiente — se resuelve al completar el registro
+published: no — el proyecto no tiene espacio de documentación externo; el ADR vive solo en el repositorio
 ---
 
 # ADR-010: Dirección común de la identidad visual de Orquídea
 
 ## Status
 
-Proposed.
+Accepted.
 
 ## Context
 
@@ -73,4 +73,27 @@ S1, S2 y S3 son `judgement`: **no aplica: no hay oráculo** para ninguno. No exi
 
 ## Decision
 
-Sin resolver. Se completa, en este mismo archivo, con la dirección elegida por el humano y `concept.md` escrito.
+**Option (A) Cuaderno de campo**, elegida por Daniel Efraín Domínguez Urbina el 2026-09-22 en elección forzada entre las tres, contra S1, S2 y S3.
+
+1. La identidad apuesta por la libreta del naturalista: neutros cálidos de papel, una tinta casi negra y un solo acento de tinta oscuro para acciones y enlaces; la foto del ejemplar es el único color vivo.
+2. El tipo es una sans del sistema o una sola familia ligera, con cifras tabulares para las fechas e itálica verdadera para los nombres científicos; renglones, márgenes y etiquetas pequeñas hacen el trabajo que haría el color.
+3. En el teléfono, cada ejemplar es una hoja con su foto a todo el ancho; la navegación principal va al alcance del pulgar y las acciones frecuentes, grandes y al pie de su contenido. Ningún flujo nuevo.
+4. El entregable es `concept.md` en `governance/identity/`. s5.3 (paleta) y s5.4 (tipografía) derivan de aquí sus criterios, cada uno citando el S{n} o el criterio del encargo del que venga.
+
+No se decide aquí ningún valor: ni colores, ni familias, ni tamaños.
+
+## Consequences
+
+**Positive:**
+- La paleta y la tipografía comparten una apuesta que ya se sabe compatible con los tres criterios del encargo: tinta sobre papel da contraste alto por naturaleza (criterio 2), la estructura no pesa (criterio 1) y el color queda para la foto (criterio 3).
+- S3 le da a s5.6 y s5.7 un encargo concreto para el teléfono (foto a todo el ancho, navegación inferior, acciones grandes) sin abrir flujos nuevos.
+
+**Negative / costs:**
+- Con un solo acento oscuro, los estados (error, éxito, aviso) no pueden apoyarse en colores vivos; tendrán que distinguirse con texto, forma o posición, y s5.5 lo tiene que resolver con `component-contrast`.
+- Una dirección de papel y tinta corre el riesgo de verse austera o de prototipo si la estructura (renglones, márgenes, jerarquía) no está bien hecha; ese riesgo pasa a s5.6.
+- Las celdas de la rejilla son el juicio de una sola persona (el agente las propuso, el humano eligió); no hay un segundo evaluador, y la convención del ciclo prohíbe promediar aunque lo hubiera.
+
+## Alternatives considered
+
+- **(B) Lámina de herbario:** falla S2 — su carácter depende de una serif clásica con itálica y versalitas reales (una fuente web que compite por los 50 KB de ADR-009) y del tono sepia de papel viejo, que empuja el texto hacia medios tonos; y cumple S3 solo en parte: la etiqueta recuadrada es una forma de escritorio que en el teléfono se vuelve una columna densa.
+- **(C) Vivero:** falla S1 — su verde de marca saturado compite en la misma tarjeta con los verdes de la planta y con los amarillos y magentas de las flores; además cumple S3 solo en parte, porque su tono se lee más como tienda o comunidad que como registro con fuentes citadas.
