@@ -4,17 +4,17 @@ description: "Last session handoff for Orquídea — date, next action, and hand
 metadata:
   node_type: memory
   type: project
-  modified: 2026-09-22
+  modified: 2026-09-23
 ---
 
-Last session: **2026-09-22** — e5 (identidad visual): b1 publicado; s5.1 encargo, s5.2 concepto, s5.4 tipografía y s5.3 paleta cerradas; hito "identidad decidida".
+Last session: **2026-09-23**. Se cerraron s5.5, s5.6 y s5.7, y la épica e5 (identidad visual) quedó revisada, cerrada y publicada en `origin/develop` (`9d366d5`).
 
-Full handoff: `work/sessions/2026-09-22-e5-identity-decided.md` (read it in full via
+Full handoff: `work/sessions/2026-09-23-e5-closed.md` (read it in full via
 `session-start`).
 
-Next action: **Arrancar s5.5** — roles de color de la interfaz derivados de `governance/identity/palette.md`, técnica `ui`.
+Next action: **Quitar `'unsafe-inline'` de la CSP**. Primero comprobar que htmx no inyecte estilos en línea, luego escribir la prueba de la CSP. La promoción del parking lot se cumplió al cerrar s5.7.
 
-`develop` tiene 41 commits locales sin push; se publican en `epic-close` de e5, no antes.
+e5 cerró con el tiempo en "Slow 3G" sin medir y dos juicios `unsigned`, por decisión del humano. Los dos están ligados al primer despliegue en el parking lot.
 
 Overwritten on every `session-close`; this is a pointer, the handoff is the
 source of truth.
