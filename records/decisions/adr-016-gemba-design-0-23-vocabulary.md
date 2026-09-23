@@ -206,7 +206,23 @@ exit=1
 7. **Sangría (A):** fuera de la cabecera, un enlace `accion` no tiene relleno horizontal y no se centra dentro de su objetivo; el objetivo sigue en 48 × 48 por `min-width`. En la cabecera los enlaces se centran y conservan su relleno.
 8. **Acceso:** el campo va en su propio `<p>`, como en los demás formularios.
 9. **Las catorce dimensiones** tienen respuesta en `components.md` (tabla `Dimension | Answer | Where`). Las que el formato no lleva (foco, trazo, elevación, retícula, medida) van como `--gap` del generador. La iconografía ya la trae el generador como hueco propio.
-10. **`DESIGN.md`** se genera con `design-md.py --spec-version alpha --name Orquídea`, con tres `--decision` (ADR-013, ADR-014, ADR-016) y siete `--gap`, sobre `semantics.md`, `type-scale.md`, `spacing.md` y `components.md`. Salida del generador: `22 token(s), 10 component(s), 8 pair(s), 0 target(s), 0 literal(s) in the prose, 1 Component table(s) ignored, 9 unrecognised component properties accepted`. Las 9 son `borderColor` × 1 y los mínimos × 4 × 2. El comando completo está en el `plan.md` de s1.
+10. **`DESIGN.md`** se genera con `design-md.py --spec-version alpha --name Orquídea`, con tres `--decision` (ADR-013, ADR-014, ADR-016) y siete `--gap`, sobre `semantics.md`, `type-scale.md`, `spacing.md` y `components.md`. Salida del generador: `22 token(s), 10 component(s), 8 pair(s), 0 target(s), 0 literal(s) in the prose, 1 Component table(s) ignored, 9 unrecognised component properties accepted`. Las 9 son `borderColor` × 1 y los mínimos × 4 × 2. El comando, desde la raíz del repositorio, con `$D` = `skills/techniques/ui/scripts/` del addon:
+
+```
+python3 $D/design-md.py --spec-version alpha --name Orquídea \
+  --decision "ADR-013: roles de color de la interfaz" \
+  --decision "ADR-014: escala tipográfica, espaciado y componentes" \
+  --decision "ADR-016: la identidad en el vocabulario de gemba-design 0.23.0" \
+  --gap "El anillo de foco (rol foco) no tiene componente: el formato no compone estados de foco." \
+  --gap "El peso (700 en titulo y subtitulo) y las cifras tabulares de date viven en specimen.md: el formato no los compone en typography." \
+  --gap "Los enlaces dentro de un párrafo se apoyan en la excepción inline de WCAG 2.2 SC 2.5.8 y 2.5.5; no son objetivos declarados." \
+  --gap "Trazo: 1 px en el borde del campo y en los separadores, 2 px en el anillo de foco (components.md); el formato no tiene grosores." \
+  --gap "Elevación: dos planos separados solo por tono, superficie sobre fondo (components.md); el formato no tiene elevación." \
+  --gap "Retícula: una columna con margen lateral de spacing.step-2 (components.md); el formato no tiene retícula." \
+  --gap "Medida: sin tope, el renglón ocupa el ancho de la página menos su margen (components.md, ADR-016); el formato no tiene medida." \
+  governance/identity/ui/semantics.md governance/identity/ui/type-scale.md \
+  governance/identity/ui/spacing.md governance/identity/ui/components.md > governance/identity/ui/DESIGN.md
+```
 11. **Recalculado sobre lo producido**, con las cifras copiadas de la salida:
     - texto: 8 pares, 0 bajo 7:1, el más bajo 8.38:1 (`contraste-de-lectura.py`, `tokens.py pairs`); roles: 22 pares, 0 bajo su umbral;
     - `provenance`: 12 tokens, 0 fuera de escala;
