@@ -40,7 +40,43 @@ Tres, descritas antes de fijar valores:
 - **(B) Papel blanco, acento sepia** — papel blanco, hoja apenas cálida, acento sepia oscuro.
 - **(C) Papel gris frío, acento verde bosque** — papel gris muy claro, hoja blanca, acento verde oscuro.
 
-Valores, mediciones y contraejemplos: por escribir, antes de elegir.
+### Valores y mediciones
+
+Fijados el 2026-09-22 en el scratchpad (`$S`), cada candidata en su mejor versión, y medidos con `scripts/contraste-de-lectura.py` (salida vista; cifras copiadas de ella). Los pares declarados son los ocho de texto (tinta, tinta suave, acento y alerta, sobre papel y sobre hoja) y `renglón` sobre `papel` y sobre `hoja` como `component` (s5.5 los mide contra 3:1; aquí no se juzgan).
+
+| Role | (A) Papel cálido, azul tinta | (B) Papel blanco, sepia | (C) Gris frío, verde bosque |
+|---|---|---|---|
+| papel | `#F7F3EA` | `#FFFFFF` | `#F1F3F1` |
+| hoja | `#FFFFFF` | `#F8F6F1` | `#FFFFFF` |
+| tinta | `#1E1C19` | `#141414` | `#1B1F1C` |
+| tinta suave | `#4A453E` | `#474747` | `#444B46` |
+| renglón | `#8C8475` | `#8A8A8A` | `#848C86` |
+| acento | `#1F3A5F` | `#6B4420` | `#24503A` |
+| alerta | `#8A1C1C` | `#8E1B1B` | `#8A1C1C` |
+
+### La rejilla
+
+| Criterio | Estrato | (A) | (B) | (C) |
+|---|---|---|---|---|
+| P1 · texto ≥ 7:1 | `mechanical` | sí — 8 pares, 0 bajo el umbral; el más bajo, alerta sobre papel 8.38:1 (`ran:`) | sí — 8 pares, 0 bajo; el más bajo, acento sobre hoja 7.86:1 (`ran:`) | sí — 8 pares, 0 bajo; el más bajo, tinta suave sobre papel 8.04:1 (`ran:`) |
+| P2 · no compite con la flor | `judgement` | por juzgar | por juzgar | por juzgar |
+| P3 · papel y tinta | `judgement` | por juzgar | por juzgar | por juzgar |
+
+### Contraejemplos
+
+- **P1 — rojo, visto.** Sujeto: la candidata (A) con el gris habitual de texto secundario, `#767676`, como tinta suave.
+
+```
+$ uv run python scripts/contraste-de-lectura.py $S/candidata-roja.md
+…
+tinta suave sobre papel (texto): 4.10:1  necesita 7:1  NO
+tinta suave sobre hoja (texto): 4.54:1  necesita 7:1  NO
+…
+8 par(es) de texto juzgado(s), 2 bajo el umbral
+exit=1
+```
+
+- **P2 y P3 — no aplica: no hay oráculo.** Se juzgan en elección forzada sobre una lámina de tres pantallas de teléfono (una por candidata) con fotos reales de orquídeas del catálogo, compuesta con Roboto a 16 px y 3× en el scratchpad (`$S/lamina-paletas.jpg`). Fotos, solo en el scratchpad: *Barkeria spectabilis* (Wikimedia Commons, «Barkeria spectabilis.jpg», Brett Francis (Oort), CC BY-SA 2.5), *Cuitlauzina pulchella* (Commons, «Cuitlauzina pulchella (7533856656).jpg», Mitch, CC BY 2.0) y *Brassia verrucosa* (Commons, «BrassiaVerrucosa.jpg», Chhe, dominio público).
 
 ## Decision
 
