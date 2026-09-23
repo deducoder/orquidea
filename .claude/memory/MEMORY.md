@@ -20,3 +20,4 @@
 - [Afirmar presencia no ve el lugar](afirmar-presencia-no-ve-el-lugar.md) — `x in html` deja pasar duplicados mal ubicados
 - [Mutación de frontera en el predicado](mutacion-de-frontera-se-prueba-en-el-predicado.md) — `>=`→`>` sobrevive sin entrada exacta; no predecir mutaciones
 - [Población sin falsos sujetos](poblacion-no-cuenta-lo-que-no-es-sujeto.md) — `.gitkeep` daba verde con población 1
+- [Hechos de plataforma antes de aceptar](afirmaciones-de-plataforma-se-verifican-antes-de-aceptar.md) — en una rejilla, verificar lo que trae el sistema antes de `accepted`
