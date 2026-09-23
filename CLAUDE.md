@@ -110,8 +110,10 @@ something emits its own file rather than editing another's.
 
 A project may provide `./scripts/check` — fast, run before every commit.
 **What it checks is the project's own call**, and an addon may require more.
-Running it is discipline, like everything else in this method: **Gemba ships
-nothing that enforces it**, though a project is free to add its own control.
+Gemba ships the mechanism that enforces the method, and **wiring it is the
+project's own act**: nothing Gemba installs or updates wires it. Until the
+project does, running the gate is discipline, like everything else in this
+method.
 
 ## Non-negotiables
 
@@ -186,7 +188,7 @@ never leave it unresolved.
 ## Visual identity
 
 What this addon adds to the method, for work whose product is a visual
-identity — a palette, a typeface system, a logotype. The core above governs
+identity — a palette, a typeface system, a logotype, the interface derived from them — its colour, type, spacing and components, generated as a DESIGN.md. The core above governs
 everything; this section governs how that method is practised when the thing
 being built is looked at rather than run.
 
@@ -226,6 +228,16 @@ territory board, type specimen, brand book). The precedent is the software
 addon's own three-movement skeleton: universally recognised in its trade,
 executed by the cycles from inside their own phases, and owning neither a
 skill nor a work-item kind.
+
+**The cycle is declared, and it has two entries.** How a commission advances —
+small uniform increments, one check per increment, and the stratum of its
+oracle said out loud — lives in the addon's `cycle` convention, which every
+technique reads and none of them copies. A criterion reaches that cycle either
+**proposed**, for a commission that has nothing yet, or **extracted** from an
+identity that already exists and committed before it is touched; most work in
+this craft is the second kind. This is not the four movements above: those are
+shared vocabulary and nothing more, while this is the cadence the techniques
+obey.
 
 **The pieces are invocable on their own.** Colour and typography are not phases
 of anything — they are asked for singly and delivered singly, and asking for
