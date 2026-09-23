@@ -70,7 +70,7 @@ Prueba: renderizado con Pillow a 3 px físicos por px CSS, a 16 px y a 14 px, co
 ### Contraejemplos
 
 - **T1 — rojo, visto:** las tres opciones web con sus cuatro estilos pasan de 40 KB (69.9, 92.3 y 61.5 KB), y también en su versión variable (70.0, 93.4 y 56.0 KB). (C) pasa incluso con solo regular e itálica (45.8 KB). Salida del instrumento: `Total 61.5 KB tope 50 KB PASA DEL TOPE` (D, 4 estilos), `Total 45.8 KB tope 50 KB OK` (C, 2 estilos: bajo el tope del encargo, sobre el de T1).
-- **T2 — ningún sujeto lo viola** entre las opciones: todas traen itálica propia y los glifos. Sujeto construido para verlo en rojo: el subconjunto regular de (D) sin su archivo itálico — el navegador sintetizaría una oblicua; el criterio pide el archivo, y `fontTools` sobre ese sujeto no encuentra ningún archivo con el bit de itálica.
+- **T2 — ningún sujeto lo viola** entre las opciones: todas traen itálica propia y los glifos. Sujeto construido para verlo en rojo: el subconjunto regular de (D) sin su archivo itálico — el navegador sintetizaría una oblicua; el criterio pide el archivo. Corrido con `fontTools` sobre ese sujeto: `1 archivo(s), con bit de itálica: ninguno -> T2 NO cumple`.
 - **T3 — rojo, visto en el archivo:** los anchos de 0–9 de (B) por defecto son 9 distintos; sin `tnum` las fechas no se alinean. Se cumple solo activando el rasgo.
 - **T4 — no aplica: `read:`**, no hay comprobación que ver fallar; la licencia se lee.
 
