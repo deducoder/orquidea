@@ -183,6 +183,24 @@ El tamaño es L porque la historia junta el vocabulario nuevo con cuatro entrada
 - **Orden por fecha de autor:** `add ADR-016` → T1 → T2 → `update ADR-016` → T5 → `publish ADR-016`.
 - **Verify:** `cmp` sin diferencias; los instrumentos en 0 con su población; los dos juicios firmados o rechazados; la aplicación sirve cada página con la hoja y sin errores en consola.
 
+### T9 · El gate ata la cadena de colores (re-plan del 2026-09-23)
+
+Añadida tras T8, aprobada por el humano: la promoción de la entrada del parking lot "El gate no ata la cadena de la identidad…" es "la siguiente historia que toque `governance/identity/ui/`", y s1 es esa historia. La entrada "lectores de tablas repetidos" también se promovió (con `comprobar-dimensiones.py`, el cuarto script), pero va a su propia historia de refactor: cambia cuatro scripts que no son de s1.
+
+- **Files:** modify `tests/test_identidad_ui.py`; modify `records/parking-lot.md` (retirar la entrada de la cadena).
+- **TDD:** RED: una prueba que falla si el valor de un rol de `semantics.md` no es el de su escalón en `primitives.md`, o si los colores de `DESIGN.md` no son los de `semantics.md`; se ve en rojo con la mutación de la entrada (`acción-fondo` a `#1F3A60`). GREEN: el árbol ya cumple, así que el rojo se ve con la mutación plantada.
+- **Satisfies:** la promoción de la entrada del parking lot.
+- **Mold:** `tests/test_identidad_ui.py` (el lector `_filas` de `comprobar-medidas.py`, ya cargado ahí: no se escribe un quinto lector).
+- **Verify:** la propiedad es que ningún color cambia en un eslabón sin que los otros dos lo sigan. Mutaciones que deben poner rojo:
+  - `acción-fondo` a `#1F3A60` en la tabla `Role | Value` de `semantics.md`;
+  - el mismo cambio en la tabla `Token | Value | From`;
+  - un color cambiado solo en la tabla de `DESIGN.md`;
+  - un rol borrado de `DESIGN.md`;
+  - las tablas vacías: población cero, rojo.
+
+  Después, `./scripts/check`.
+- **Commit:** test(identity): tie the colour chain from primitives to DESIGN.md
+
 ## Order & risks
 
 - **Execution order:** A0 → T1 → T2 → A1 → T3 → T4 (elección) → T5 → T6 → T8 (recorrido y firmas) → A2 → T7 → T8 (resto).
