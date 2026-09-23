@@ -1,7 +1,7 @@
 """Mide cuánto transfiere la primera carga de "Mi colección" con miniaturas (must-perf-001).
 
-Cuenta el HTML y el JavaScript en gzip (así los sirve un proxy) y las miniaturas tal como son
-(un JPEG no se comprime más). No cuenta las fotos a tamaño completo. Sale con 1 si pasa del
+Cuenta el HTML, el JavaScript y el CSS en gzip (así los sirve un proxy) y las miniaturas tal como
+son (un JPEG no se comprime más). No cuenta las fotos a tamaño completo. Sale con 1 si pasa del
 presupuesto.
 
     uv run python scripts/medir-primera-carga.py               # 25 fotos de ejemplo con detalle
@@ -51,12 +51,12 @@ OCTAVAS = (8, 20, 50, 120, 300)
 class Medicion:
     cantidad: int
     html: int
-    javascript: int
+    estaticos: int
     miniaturas: int
 
     @property
     def total(self) -> int:
-        return self.html + self.javascript + self.miniaturas
+        return self.html + self.estaticos + self.miniaturas
 
 
 @dataclass(frozen=True)
@@ -66,11 +66,11 @@ class MedicionDeFicha:
     filas: int  # filas del historial que la página trae (una por registro)
     html_sin_comprimir: int
     html: int
-    javascript: int
+    estaticos: int
 
     @property
     def total(self) -> int:
-        return self.html + self.javascript
+        return self.html + self.estaticos
 
 
 @dataclass(frozen=True)
@@ -130,12 +130,12 @@ def medir(fotos: list[bytes] | None = None, n: int = 25) -> Medicion:
             poner_foto(conexion, app.state.directorio_fotos, ejemplar.id, procesada)
         pagina = cliente.get("/coleccion")
         texto = pagina.text
-        estaticos = sorted(set(re.findall(r'(?:src|href)="(/static/[^"]+)"', texto)))
+        rutas_estaticas = sorted(set(re.findall(r'(?:src|href)="(/static/[^"]+)"', texto)))
         miniaturas = re.findall(r'src="(/coleccion/\d+/foto/miniatura)"', texto)
         return Medicion(
             cantidad=len(miniaturas),
             html=len(gzip.compress(pagina.content)),
-            javascript=sum(len(gzip.compress(cliente.get(u).content)) for u in estaticos),
+            estaticos=sum(len(gzip.compress(cliente.get(u).content)) for u in rutas_estaticas),
             miniaturas=sum(len(cliente.get(u).content) for u in miniaturas),
         )
 
@@ -155,14 +155,14 @@ def medir_ficha(riegos: int, floraciones: int) -> MedicionDeFicha:
             [(ejemplar, d) for d in dias],
         )
         pagina = cliente.get(f"/coleccion/{ejemplar}")
-        estaticos = sorted(set(re.findall(r'(?:src|href)="(/static/[^"]+)"', pagina.text)))
+        rutas_estaticas = sorted(set(re.findall(r'(?:src|href)="(/static/[^"]+)"', pagina.text)))
         return MedicionDeFicha(
             riegos=riegos,
             floraciones=floraciones,
             filas=pagina.text.count("<li>"),
             html_sin_comprimir=len(pagina.content),
             html=len(gzip.compress(pagina.content)),
-            javascript=sum(len(gzip.compress(cliente.get(u).content)) for u in estaticos),
+            estaticos=sum(len(gzip.compress(cliente.get(u).content)) for u in rutas_estaticas),
         )
 
 
@@ -221,7 +221,7 @@ def main(argumentos: list[str] | None = None) -> int:
     dentro = m.total <= presupuesto
     print(f'Primera carga de "Mi colección" con {m.cantidad} ejemplares con foto:')
     print(f"  HTML (gzip)        {_kb(m.html)}")
-    print(f"  JavaScript (gzip)  {_kb(m.javascript)}")
+    print(f"  JS y CSS (gzip)    {_kb(m.estaticos)}")
     print(f"  Miniaturas ({m.cantidad})   {_kb(m.miniaturas)}   ({_kb(promedio).strip()} c/u)")
     print(
         f"  Total              {_kb(m.total)}   presupuesto {parametros.presupuesto} KB", end="  "
@@ -236,7 +236,7 @@ def main(argumentos: list[str] | None = None) -> int:
         print(f"Primera carga de la ficha con {riegos} riegos y {floraciones} floraciones{nota}:")
         crudo = _kb(f.html_sin_comprimir).strip()
         print(f"  HTML (gzip)        {_kb(f.html)}   ({crudo} sin comprimir)")
-        print(f"  JavaScript (gzip)  {_kb(f.javascript)}")
+        print(f"  JS y CSS (gzip)    {_kb(f.estaticos)}")
         print(
             f"  Total              {_kb(f.total)}   presupuesto {parametros.presupuesto} KB",
             end="  ",

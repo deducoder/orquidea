@@ -27,7 +27,7 @@ def test_la_coleccion_de_ejemplo_cabe_en_el_presupuesto_de_200_kb() -> None:
     m = medicion.medir(n=25)
 
     assert m.cantidad == 25
-    assert m.html > 0 and m.javascript > 0
+    assert m.html > 0 and m.estaticos > 0
     assert 25 * 1024 < m.miniaturas < 150 * 1024  # se cuentan, y son de fotos con detalle
     assert m.total <= medicion.PRESUPUESTO == 200 * 1024
 
@@ -73,7 +73,7 @@ def test_la_ficha_con_50_riegos_y_50_floraciones_cabe_en_el_presupuesto() -> Non
     m = medicion.medir_ficha(riegos=50, floraciones=50)
 
     assert (m.riegos, m.floraciones) == (50, 50)
-    assert m.html > 0 and m.javascript > 0
+    assert m.html > 0 and m.estaticos > 0
     assert m.total <= medicion.PRESUPUESTO == 200 * 1024
 
 
@@ -138,14 +138,14 @@ def test_sin_argumentos_el_script_sale_con_0_y_mide_la_lista_y_las_dos_fichas(
 def test_una_ficha_que_pasa_del_presupuesto_basta_para_salir_con_1(
     monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
 ) -> None:
-    lista_chica = medicion.Medicion(cantidad=1, html=1, javascript=1, miniaturas=1)
+    lista_chica = medicion.Medicion(cantidad=1, html=1, estaticos=1, miniaturas=1)
     ficha_grande = medicion.MedicionDeFicha(
         riegos=500,
         floraciones=500,
         filas=1000,
         html_sin_comprimir=2_000_000,
         html=300 * 1024,
-        javascript=1,
+        estaticos=1,
     )
     monkeypatch.setattr(medicion, "medir", lambda *_, **__: lista_chica)
     monkeypatch.setattr(medicion, "medir_ficha", lambda *_, **__: ficha_grande)
@@ -230,3 +230,13 @@ def test_sin_recursos_de_identidad_no_hay_verde(
 
     assert codigo == 2
     assert "nada que medir" in capsys.readouterr().out
+
+
+def test_los_estaticos_de_la_primera_carga_cuentan_la_hoja_de_la_identidad() -> None:
+    estaticos = Path(__file__).parent.parent / "src" / "orquidea" / "web" / "static"
+    htmx = len(gzip.compress((estaticos / "htmx.min.js").read_bytes()))
+    hoja = len(gzip.compress((estaticos / "identidad" / "identidad.css").read_bytes()))
+
+    m = medicion.medir(n=1)
+
+    assert m.estaticos == htmx + hoja

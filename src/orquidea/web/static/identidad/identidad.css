@@ -1,0 +1,239 @@
+/* La identidad de Orquídea (ADR-015). Cada valor sale de un token de
+   governance/identity/ui/DESIGN.md o de specimen.md, declarado una vez en :root;
+   tests/test_identidad_hoja.py lo comprueba. No se escribe un valor fuera de :root
+   salvo los de la lista cerrada de ADR-015. */
+
+:root {
+  --colors-fondo: #F7F3EA;
+  --colors-superficie: #FFFFFF;
+  --colors-texto: #1E1C19;
+  --colors-texto-secundario: #4A453E;
+  --colors-enlace: #1F3A5F;
+  --colors-error: #8A1C1C;
+  --colors-linea: #8C8475;
+  --colors-campo-fondo: #FFFFFF;
+  --colors-campo-borde: #8C8475;
+  --colors-accion-fondo: #1F3A5F;
+  --colors-accion-texto: #FFFFFF;
+  --colors-accion-presionada: #0C274A;
+  --colors-foco: #1F3A5F;
+  --typography-step-0-font-size: 16px;
+  --typography-step-0-line-height: 24px;
+  --typography-step-1-font-size: 20px;
+  --typography-step-1-line-height: 32px;
+  --typography-step-2-font-size: 25px;
+  --typography-step-2-line-height: 36px;
+  --spacing-step-1: 8px;
+  --spacing-step-2: 16px;
+  --spacing-step-3: 24px;
+  --spacing-step-4: 32px;
+  --spacing-step-6: 48px;
+  --familia: system-ui, -apple-system, "Segoe UI", Roboto, "Noto Sans", sans-serif;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+/* pagina */
+body {
+  margin: 0;
+  background: var(--colors-fondo);
+  color: var(--colors-texto);
+  font-family: var(--familia);
+  font-size: var(--typography-step-0-font-size);
+  line-height: var(--typography-step-0-line-height);
+}
+
+main {
+  padding: 0 var(--spacing-step-2) var(--spacing-step-4);
+}
+
+/* enlace-navegacion: la cabecera y todo enlace que no va dentro de una frase, al alcance del
+   pulgar (M2 de ADR-014) */
+header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--spacing-step-1);
+  padding: 0 var(--spacing-step-1);
+  border-bottom: 1px solid var(--colors-linea);
+}
+
+header a,
+.accion {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: var(--spacing-step-6);
+  min-width: var(--spacing-step-6);
+  padding: 0 var(--spacing-step-1);
+  color: var(--colors-enlace);
+}
+
+header form {
+  margin: 0 0 0 auto;
+}
+
+/* titulo y subtitulo: el peso y el espacio marcan la jerarquía (ADR-011, ADR-015) */
+h1 {
+  font-size: var(--typography-step-2-font-size);
+  line-height: var(--typography-step-2-line-height);
+  font-weight: 700;
+  margin: var(--spacing-step-3) 0 var(--spacing-step-2);
+}
+
+h2 {
+  font-size: var(--typography-step-1-font-size);
+  line-height: var(--typography-step-1-line-height);
+  font-weight: 700;
+  margin: var(--spacing-step-4) 0 var(--spacing-step-1);
+}
+
+p,
+ul,
+dl,
+form {
+  margin: var(--spacing-step-2) 0;
+}
+
+/* los enlaces se subrayan: el acento no se distingue de la tinta por color (ADR-012) */
+a {
+  color: var(--colors-enlace);
+  text-decoration: underline;
+}
+
+i {
+  font-style: italic;
+}
+
+strong,
+dt {
+  font-weight: 700;
+}
+
+dd {
+  margin: 0 0 var(--spacing-step-2);
+}
+
+/* fecha: el texto secundario no se hace más pequeño (ADR-011) */
+small {
+  font-size: var(--typography-step-0-font-size);
+  color: var(--colors-texto-secundario);
+  font-variant-numeric: tabular-nums;
+}
+
+/* campo */
+label {
+  display: block;
+}
+
+input,
+textarea,
+select {
+  font: inherit;
+  color: var(--colors-texto);
+  background: var(--colors-campo-fondo);
+  border: 1px solid var(--colors-campo-borde);
+  border-radius: 0;
+  padding: var(--spacing-step-1);
+  min-height: var(--spacing-step-6);
+  min-width: var(--spacing-step-6);
+  width: 100%;
+}
+
+/* boton y boton-presionado */
+button {
+  font: inherit;
+  background: var(--colors-accion-fondo);
+  color: var(--colors-accion-texto);
+  border: 0;
+  border-radius: 0;
+  padding: 0 var(--spacing-step-2);
+  min-height: var(--spacing-step-6);
+  min-width: var(--spacing-step-6);
+}
+
+button:active {
+  background: var(--colors-accion-presionada);
+}
+
+/* el anillo de foco: 2 px, separado del control por el fondo (ADR-015) */
+:focus-visible {
+  outline: 2px solid var(--colors-foco);
+  outline-offset: 2px;
+}
+
+/* aviso */
+[role="alert"] {
+  color: var(--colors-error);
+  font-weight: 700;
+}
+
+/* tarjeta: cada ejemplar de la colección es una hoja sobre el papel */
+.tarjetas {
+  list-style: none;
+  padding: 0;
+}
+
+.tarjetas > li {
+  background: var(--colors-superficie);
+  border: 1px solid var(--colors-linea);
+  padding: var(--spacing-step-2);
+  margin: 0 0 var(--spacing-step-2);
+}
+
+.tarjetas small {
+  display: block;
+}
+
+.miniatura {
+  display: block;
+  object-fit: cover;
+  margin: 0 0 var(--spacing-step-1);
+}
+
+/* la foto de la ficha, a todo el ancho */
+.foto {
+  display: block;
+  max-width: 100%;
+  width: 100%;
+  height: auto;
+}
+
+.notas {
+  white-space: pre-line;
+}
+
+/* historial de riegos y floraciones: los formularios en línea envuelven, no encogen */
+.historial {
+  list-style: none;
+  padding: 0;
+}
+
+.historial > li {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--spacing-step-1);
+  border-top: 1px solid var(--colors-linea);
+  padding: var(--spacing-step-1) 0;
+}
+
+.en-linea {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--spacing-step-1);
+  margin: 0;
+}
+
+.en-linea label {
+  display: inline;
+}
+
+.en-linea input {
+  width: auto;
+}

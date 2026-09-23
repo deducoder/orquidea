@@ -13,7 +13,7 @@
 {% if especies %}
 <ul>
   {% for especie in especies %}
-  <li><a href="/especies/{{ especie.id }}">{{ especie.nombre_cientifico }}</a></li>
+  <li><a class="accion" href="/especies/{{ especie.id }}">{{ especie.nombre_cientifico }}</a></li>
   {% endfor %}
 </ul>
 {% elif q.strip() %}

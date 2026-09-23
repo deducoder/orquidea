@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% block title %}{{ titulo }} — Orquídea{% endblock %}
 {% block content %}
-<p><a href="/coleccion">Mi colección</a></p>
+<p><a class="accion" href="/coleccion">Mi colección</a></p>
 <h1>{{ titulo }}</h1>
 {% if especie %}<p>Especie: <i>{{ especie }}</i></p>{% endif %}
 {% if error %}<p role="alert">{{ error }}</p>{% endif %}

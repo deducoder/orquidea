@@ -3,14 +3,14 @@
 {% block content %}
 <h1>Mi colección</h1>
 {% if ejemplares %}
-<ul>
+<ul class="tarjetas">
   {% for item in ejemplares %}
   <li>
     {% if item.ejemplar.foto %}
-    <a href="/coleccion/{{ item.ejemplar.id }}"><img src="/coleccion/{{ item.ejemplar.id }}/foto/miniatura" alt="Foto de {{ item.ejemplar.nombre or (item.especie.nombre_cientifico if item.especie else 'este ejemplar') }}" loading="lazy" width="96" height="96" style="object-fit: cover"></a>
+    <a href="/coleccion/{{ item.ejemplar.id }}"><img src="/coleccion/{{ item.ejemplar.id }}/foto/miniatura" alt="Foto de {{ item.ejemplar.nombre or (item.especie.nombre_cientifico if item.especie else 'este ejemplar') }}" loading="lazy" width="96" height="96" class="miniatura"></a>
     {% endif %}
     {% if item.especie %}
-    <a href="/especies/{{ item.especie.id }}"><i>{{ item.especie.nombre_cientifico }}</i></a>
+    <a class="accion" href="/especies/{{ item.especie.id }}"><i>{{ item.especie.nombre_cientifico }}</i></a>
     {% elif item.ejemplar.especie_id %}
     {{ item.ejemplar.especie_id }} <small>(esa especie ya no está en el catálogo)</small>
     {% endif %}
@@ -21,11 +21,11 @@
     {% else %}
     <small>Sin riegos</small>
     {% endif %}
-    <a href="/coleccion/{{ item.ejemplar.id }}">Ficha</a>
-    <a href="/coleccion/{{ item.ejemplar.id }}/editar">Editar</a>
-    <a href="/coleccion/{{ item.ejemplar.id }}/quitar">Quitar</a>
+    <a class="accion" href="/coleccion/{{ item.ejemplar.id }}">Ficha</a>
+    <a class="accion" href="/coleccion/{{ item.ejemplar.id }}/editar">Editar</a>
+    <a class="accion" href="/coleccion/{{ item.ejemplar.id }}/quitar">Quitar</a>
     {% if item.ejemplar.notas %}
-    <p style="white-space: pre-line">{{ item.ejemplar.notas }}</p>
+    <p class="notas">{{ item.ejemplar.notas }}</p>
     {% endif %}
   </li>
   {% endfor %}
@@ -33,5 +33,5 @@
 {% else %}
 <p>Aún no tienes ejemplares. Explora el <a href="/especies">catálogo</a> y agrega el primero desde la ficha de su especie.</p>
 {% endif %}
-<p><a href="/coleccion/nuevo">Agregar una planta que no está en el catálogo</a></p>
+<p><a class="accion" href="/coleccion/nuevo">Agregar una planta que no está en el catálogo</a></p>
 {% endblock %}
