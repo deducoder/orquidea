@@ -120,11 +120,6 @@ or of the core exactly as written, and a class:
 | bug-triage | analysis — do not wait for an answer. | not a gate |
 | epic-close | present them and let the human choose | decision |
 | epic-close | **Do not proceed until resolved** | decision |
-| epic-close | Then ask the human what a developer new to the code would still find | decision |
-| epic-close | missing — added failure modes are the most valuable. Human-reviewed before | decision |
-| epic-close | nothing has drifted, say so and change nothing. Human-reviewed before | decision |
-| epic-close | sections only — human-reviewed, never any other section | decision |
-| epic-close | Human reviewed `docs.md` before shipping. | decision |
 | epic-design | If it does not, **stop** and run | not a gate |
 | epic-plan | If it does not, **stop** and run `epic-design` | not a gate |
 | epic-plan | Present it to the human before starting the first story. | decision |

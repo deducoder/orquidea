@@ -27,6 +27,7 @@ build-backend = "uv_build"
 
 [tool.ruff]
 line-length = 100
+extend-exclude = ["scripts/gemba"]
 
 [tool.ruff.lint]
 select = ["E", "F", "W", "I", "B", "UP", "S"]

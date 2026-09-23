@@ -12,9 +12,23 @@
 ## When this applies
 
 Only when a docs system is connected (`tracker-bind`'s "Docs space"
-binding exists in the project's `conventions/tracker/instance.md`). No
-docs system → publish steps are skipped, same as every other
-best-effort/non-blocking tracker touchpoint in the method.
+binding exists in the project's `conventions/tracker/instance.md`). That
+file is where it is read, and nowhere else: a binding looked for under
+another name is not a binding found absent. No docs system → publish steps
+are skipped, same as every other best-effort/non-blocking tracker
+touchpoint in the method.
+
+Skipped is never silent. Every skill that publishes says, in its output,
+which of three outcomes its publish step had, by these names:
+
+- **published** — the page exists, read back; its URL.
+- **not applicable** — the binding file declares no docs system; say that
+  it was read, and where.
+- **not published** — the binding declares a docs system and the page was
+  not created: the connector was unreachable, a write failed, or the step
+  did not run; say which. This is not a skip, clean or otherwise — it is
+  work left undone, reported so the reader of the output (a supervisor, a
+  handoff) does not take the close for a published one.
 
 ## The five templates
 
@@ -107,6 +121,19 @@ on every publish.
      mark.
    - **Code content passes verbatim**, backslashes and quotes included —
      `tr -d ' \n'` is published with one backslash, never zero, never two.
+
+   The converter this convention ships makes exactly these changes. Run it
+   by its path relative to this convention's own directory — a skill of
+   another plugin locates the core first — and send what it prints:
+
+   ```sh
+   python3 scripts/md-to-html.py {artifact}.md
+   ```
+
+   It writes the body to stdout, one block per line, in standard HTML.
+   Exit 2 → it met something it does not cover, named on stderr (an
+   image, a heading deeper than level 3, an unclosed fence): extend the
+   converter before publishing, never hand-write a body around it.
 
    Write that body in the connector's **structured format** — the one it
    stores as received (HTML, where the connector offers it) — never

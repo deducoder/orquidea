@@ -91,4 +91,7 @@ reference is provenance, never load-bearing.
 If `tracker-bind`'s Docs space binding doesn't exist, every publish step
 this convention governs is skipped — best-effort, non-blocking, the same
 posture as every other tracker/docs touchpoint in the method. Nothing in
-`adr`/`spike`/`epic-close` blocks on a docs system being absent.
+`adr`/`spike`/`epic-close` blocks on a docs system being absent. Skipped
+is still said: the step reports **not applicable**, and a binding that
+declares a docs system while the page was not created is **not
+published**, never a skip (the convention's `When this applies`).

@@ -41,8 +41,7 @@ by analogy with these five:
   silently across a whole epic's worth of change — no other phase ever
   revisits it once `project-create`/`project-onboard` write it (see
   `convention.md`'s ownership table). Bounded to those two sections; the
-  opening paragraph and any other content stay read-only, human-reviewed
-  before commit the same way `docs.md` already is.
+  opening paragraph and any other content stay read-only.
 - **`epic-close` → its own epic's row in `work/roadmap.md`.** Sets that
   row's `Status` to `closed` when the epic closes. Bounded to that one cell of
   that one row (`convention.md`, `### The roadmap`).
