@@ -47,10 +47,6 @@ wrote it. Retirement moves an entry to `## Retired` with its reason.
 - **El tiempo de la primera carga con "Slow 3G" (`must-perf-001`, ≤ 5 s) no se ha medido nunca: e1, e2, e3 y e5 lo difirieron.** El peso sí se mide por script en cada épica. En e5: "Mi colección" con 25 fotos, 148.1 KB de 200, e identidad 1.6 KB de 50. El 2026-09-23 el servidor quedó listo para medir, con 25 ejemplares con foto, y el humano pidió cerrar sin medir.
   *Origin:* e5, `epic-review`, 2026-09-23 — stop previsto desde el diseño de e5, diferido por el humano como en e1–e3.
   *Promotion:* el primer despliegue real en Dokploy (el mismo momento que la entrada de `docker build`): medir en el teléfono o con DevTools en "Slow 3G" contra el servidor desplegado. Si pasa de 5 s, es un bug contra `must-perf-001`.
-- **El gate no ata la cadena de la identidad entre `semantics.md`, `primitives.md` y `DESIGN.md`.** En `epic-review` de e5 se cambió `accion-fondo` en `semantics.md` a `#1F3A60` y `./scripts/check` siguió en verde. La prueba de regeneración cubre `primitives.md`, y la de la hoja compara `identidad.css` con `DESIGN.md`. Pero `provenance` (roles contra escalones) solo corrió a mano, y nada compara los colores de `DESIGN.md` con `semantics.md`. Un cambio de paleta regenera las primitivas y deja los roles y la hoja con el valor viejo, sin rojo. El arreglo es una prueba en el proyecto que lea las tres tablas, sin depender del addon.
-  *Origin:* e5, `epic-review` (quality-review a escala de épica), 2026-09-23 — mutación plantada en `semantics.md`.
-  *Promotion:* antes del primer cambio de paleta o de roles, o en la siguiente historia que toque `governance/identity/ui/`.
-
 - **Tres scripts de `scripts/` tienen cada uno su lector de tablas markdown:** `contraste-de-lectura.py` (`tablas`/`filas`), `derivar-primitivas.py` (`_roles_de`) y `comprobar-medidas.py` (`_filas`), además de los de las pruebas. Cada uno encuentra la tabla por la primera celda de la cabecera, con diferencias pequeñas (quitar comillas invertidas, filas separadoras). Son scripts sueltos cargados por ruta, y compartir el lector exige un módulo común y manejo de `sys.path`, un costo que hoy no se paga con tres usos.
   *Origin:* e5, `epic-close` (architecture-review a escala de épica), 2026-09-23.
   *Promotion:* un cuarto script que lea tablas, o un defecto que aparezca en un lector y no en los otros.
@@ -62,6 +58,10 @@ wrote it. Retirement moves an entry to `## Retired` with its reason.
   *Promotion:* al reportarlo al método, o si una lectura de ADR-013 a ADR-015 aplica una decisión reemplazada.
 
 ## Retired
+
+### 2026-09-23 · s1 · El gate no ataba la cadena de la identidad entre `semantics.md`, `primitives.md` y `DESIGN.md`
+**Why:** se cumplió la promoción ("la siguiente historia que toque `governance/identity/ui/`"). `test_la_cadena_de_colores_esta_atada` (`tests/test_identidad_ui.py`) comprueba que cada rol de `semantics.md` valga lo que su escalón en `primitives.md`, en la tabla `Role` y en la `Token`, y que los colores de `DESIGN.md` sean esos mismos 13 roles. Se vio en rojo con la mutación de la entrada (`acción-fondo` a `#1F3A60` en `semantics.md`). Reusa el lector `_filas` de `comprobar-medidas.py`: no suma un lector de tablas.
+**Swept:** la citan el `plan.md` de s1 (T9), que la resuelve, y la retrospectiva de e5, registro histórico que no se reescribe. Nada más la cita.
 
 ### 2026-09-23 · s1 · La interfaz vestida de e5 tenía dos juicios sin firmar y dos ajustes sin decidir
 **Why:** s1 la tomó en su alcance. Los dos juicios los firmó Daniel Efraín Domínguez Urbina el 2026-09-23, sobre capturas a 360 px con fotos reales: el criterio 3 de ADR-009, sí, y la decisión 5 de ADR-015, sí. Los dos ajustes se decidieron en ADR-016: los enlaces `accion` sin sangría y el campo de Acceso en su propio párrafo. La entrada pedía que un ajuste fuera un arreglo propio contra ADR-015; el humano lo juntó en s1.
