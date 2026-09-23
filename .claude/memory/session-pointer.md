@@ -4,17 +4,17 @@ description: "Last session handoff for Orquídea — date, next action, and hand
 metadata:
   node_type: memory
   type: project
-  modified: 2026-09-19
+  modified: 2026-09-22
 ---
 
-Last session: **2026-09-19** — Gemba adoptado; v0.1.0 y v0.2.0 construidas con orchestrate y publicadas (tags en `main`).
+Last session: **2026-09-22** — método puesto al día a Gemba 0.21.0: core, checks vendorizados y hooks de git cableados.
 
-Full handoff: `work/sessions/2026-09-19-v0-1-and-v0-2.md` (read it in full via
+Full handoff: `work/sessions/2026-09-22-gemba-0-21-refresh.md` (read it in full via
 `session-start`).
 
-Next action: **Empezar la UI con gemba-design** — elegir la primera pieza (color, tipografía o logo) y comprometer su criterio antes de producir.
+Next action: **Empezar la UI con gemba-design por color** — comprometer el criterio antes de producir.
 
-`develop` tiene commits locales sin push; el dueño iba a trabajar en el repo de Gemba antes de volver.
+`develop` tiene commits locales sin push; los hooks exigen `/gemba:hooks` de nuevo en cualquier clon nuevo.
 
 Overwritten on every `session-close`; this is a pointer, the handoff is the
 source of truth.
