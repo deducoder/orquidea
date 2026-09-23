@@ -61,12 +61,14 @@ Then la sangría de 8 px de los enlaces `accion` y el botón "Entrar" pegado al 
   - el botón "Entrar" pegado al campo en Acceso;
   - la firma o el rechazo del criterio 3 de ADR-009 (la foto como protagonista);
   - la firma o el rechazo del subtítulo frente al cuerpo (ADR-015, decisión 5).
+- **Recalcular la cadena con 0.23.0 y corregir lo que cambie.** Se vuelven a correr las derivaciones (`derivar-primitivas.py`, `derivar-medidas.py`) y las mediciones (`tokens.py pairs`, `targets`, `provenance`, `contraste-de-lectura.py`, `comprobar-medidas.py`) sobre lo declarado de nuevo. Si una cifra cambia o aparece información nueva (niveles de `rounded`, pares de componente que salen de `borderColor`, objetivos que salen del mínimo declarado), se corrige en su eslabón y se propaga hasta la hoja.
+- Trazo, elevación, medida de texto e iconografía: se declaran donde 0.23.0 lo permita; donde no, quedan como `--gap` con la decisión escrita en el ADR (ninguna sombra, ningún ícono, trazos de ADR-015) y la razón de por qué el formato no los lleva.
 - `survival-review` sobre las piezas tocadas.
 - Retirar del parking lot la entrada de las referencias ASCII (0.23.0 la corrige) y la de la interfaz vestida, con lo que citaba cada una.
 
 ## Out of scope
 
-- Trazo, elevación, medida de texto, iconografía y la **medición** del mínimo de control: 0.23.0 no los expresa (`{stroke.*}` sale `refused`; radio, elevación y movimiento "not derived"; iconografía en Known Gaps; `targets` no lee `minWidth`). Van a una iteración nueva, medidos recalculando con un script — decisión del humano, 2026-09-23.
+- Copiar o parchar un instrumento del addon para que exprese lo que 0.23.0 no expresa (`{stroke.*}` sale `refused`; elevación "not derived"; iconografía en Known Gaps; `targets` no lee `minWidth`): el addon prohíbe una segunda copia. Lo que falte va al parking lot como hallazgo del addon.
 - La columna `Variant` con `—` que `invariance.py` no lee: sigue sin corregir en 0.23.0; la entrada del parking lot se queda.
 - Que `precedence.py` no pueda leer el `DESIGN.md` generado (sin `decision:` en el frontmatter): hallazgo del addon, al parking lot, no se rodea aquí.
 - La medición con "Slow 3G": ligada al primer despliegue (parking lot).
@@ -76,6 +78,7 @@ Then la sangría de 8 px de los enlaces `accion` y el botón "Entrar" pegado al 
 
 - [stated] El ADR de esta historia estaba commiteado en `proposed`, con los criterios de fitness aprobados, antes del primer commit que produce un valor, y `precedence.py` lo confirma en las piezas que lo citan.
 - [stated] `DESIGN.md` declara el radio, `borderColor` y `minWidth`, y los roles en español; regenerado con 0.23.0, sale idéntico dos veces.
+- [stated] La cadena se recalculó con 0.23.0 y cada cifra que cambió está corregida en su eslabón y en la hoja; si no cambió ninguna, se dice con la salida de cada comando.
 - [deduced] `./scripts/check` verde con los nombres nuevos, y ningún nombre ASCII anterior en `identidad.css` ni en las tablas.
 - [stated] Los dos juicios tienen firma o rechazo con nombre y fecha; los dos ajustes, una decisión escrita.
 - [deduced] `survival-review` corrido sobre las piezas tocadas, con su población contada.
