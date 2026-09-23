@@ -74,9 +74,49 @@ El alcance del criterio 2 (todo el texto de tamaño normal y no solo los párraf
 
 ### Contraejemplos (se escriben antes de producir)
 
-- Criterio 1: pendiente — la comprobación se escribe en s5.1 y se corre sobre un sujeto que viola el tope.
-- Criterio 2: pendiente — ídem, sobre un par de texto bajo 7:1.
-- Criterio 3: no aplica — no hay oráculo; es juicio, y se instrumenta como elección forzada firmada, nunca como comprobación inventada.
+Corridos el 2026-09-22 en s5.1, sobre sujetos construidos fuera del repositorio (`$S` es el scratchpad de la sesión), con las comprobaciones de los commits `adf0e45` y `e51c828`. Salida literal.
+
+**Criterio 1 — rojo.** Sujeto: un archivo de 60 KB de bytes aleatorios (no comprime), `fuente.woff2`.
+
+```
+$ uv run python scripts/medir-primera-carga.py --identidad $S/muestra
+Recursos de la identidad en $S/muestra: 1 archivo(s)
+  fuente.woff2 (gzip)    60.0 KB
+  Total                60.0 KB   tope 50 KB  PASA DEL TOPE
+exit=1
+```
+
+Control de población vacía (no es el rojo del criterio, y no es verde):
+
+```
+$ uv run python scripts/medir-primera-carga.py --identidad $S/vacio
+Recursos de la identidad en $S/vacio: 0 archivo(s) — nada que medir
+exit=2
+```
+
+**Criterio 2 — rojo.** Sujeto: `#767676` sobre `#ffffff` como `text`, que pasa el piso de `contrast` (4.5:1) y no el de este criterio.
+
+```
+$ uv run python scripts/contraste-de-lectura.py $S/par-gris.md
+#767676 sobre #ffffff (texto): 4.54:1  necesita 7:1  NO
+1 par(es) de texto juzgado(s), 1 bajo el umbral
+exit=1
+```
+
+Controles: un par que cumple (`#595959` como rol `tinta` sobre `#ffffff` como `papel`) y un documento sin pares.
+
+```
+$ uv run python scripts/contraste-de-lectura.py $S/par-oscuro.md
+tinta sobre papel (texto): 7.00:1  necesita 7:1  SÍ
+1 par(es) de texto juzgado(s), 0 bajo el umbral
+exit=0
+
+$ uv run python scripts/contraste-de-lectura.py $S/sin-tabla.md
+0 par(es) de texto juzgado(s) — nada que juzgar
+exit=2
+```
+
+**Criterio 3 — no aplica: no hay oráculo.** Que la foto sea la protagonista es juicio: no existe una medida publicada de "competir con una flor", e inventar una (saturación máxima, distancia de tono) sería la teatralidad que el paso `counterexample` prohíbe. Se instrumenta en cada pieza como elección forzada, contra este criterio, firmada por el humano.
 
 ## Decision
 
