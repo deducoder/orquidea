@@ -8,12 +8,12 @@ colors:
   texto-secundario: "#4A453E"
   enlace: "#1F3A5F"
   error: "#8A1C1C"
-  linea: "#8C8475"
+  línea: "#8C8475"
   campo-fondo: "#FFFFFF"
   campo-borde: "#8C8475"
-  accion-fondo: "#1F3A5F"
-  accion-texto: "#FFFFFF"
-  accion-presionada: "#0C274A"
+  acción-fondo: "#1F3A5F"
+  acción-texto: "#FFFFFF"
+  acción-presionada: "#0C274A"
   foco: "#1F3A5F"
 typography:
   step-0:
@@ -50,15 +50,15 @@ components:
     textColor: "{colors.texto}"
     typography: "{typography.step-1}"
   boton:
-    backgroundColor: "{colors.accion-fondo}"
-    textColor: "{colors.accion-texto}"
+    backgroundColor: "{colors.acción-fondo}"
+    textColor: "{colors.acción-texto}"
     typography: "{typography.step-0}"
     padding: "{spacing.step-2}"
     height: "{spacing.step-6}"
     width: "{spacing.step-6}"
   boton-presionado:
-    backgroundColor: "{colors.accion-presionada}"
-    textColor: "{colors.accion-texto}"
+    backgroundColor: "{colors.acción-presionada}"
+    textColor: "{colors.acción-texto}"
     typography: "{typography.step-0}"
     padding: "{spacing.step-2}"
     height: "{spacing.step-6}"
@@ -102,12 +102,12 @@ The values are the tokens above and are normative; this text cites them by refer
 - {colors.texto-secundario}
 - {colors.enlace}
 - {colors.error}
-- {colors.linea}
+- {colors.línea}
 - {colors.campo-fondo}
 - {colors.campo-borde}
-- {colors.accion-fondo}
-- {colors.accion-texto}
-- {colors.accion-presionada}
+- {colors.acción-fondo}
+- {colors.acción-texto}
+- {colors.acción-presionada}
 - {colors.foco}
 
 ## Typography
@@ -138,8 +138,8 @@ Not derived: see Known Gaps.
 - tarjeta: backgroundColor is {colors.superficie}, textColor is {colors.texto}, typography is {typography.step-0}, padding is {spacing.step-2}
 - titulo: backgroundColor is {colors.fondo}, textColor is {colors.texto}, typography is {typography.step-2}
 - subtitulo: backgroundColor is {colors.fondo}, textColor is {colors.texto}, typography is {typography.step-1}
-- boton: backgroundColor is {colors.accion-fondo}, textColor is {colors.accion-texto}, typography is {typography.step-0}, padding is {spacing.step-2}, height is {spacing.step-6}, width is {spacing.step-6}
-- boton-presionado: backgroundColor is {colors.accion-presionada}, textColor is {colors.accion-texto}, typography is {typography.step-0}, padding is {spacing.step-2}, height is {spacing.step-6}, width is {spacing.step-6}
+- boton: backgroundColor is {colors.acción-fondo}, textColor is {colors.acción-texto}, typography is {typography.step-0}, padding is {spacing.step-2}, height is {spacing.step-6}, width is {spacing.step-6}
+- boton-presionado: backgroundColor is {colors.acción-presionada}, textColor is {colors.acción-texto}, typography is {typography.step-0}, padding is {spacing.step-2}, height is {spacing.step-6}, width is {spacing.step-6}
 - campo: backgroundColor is {colors.campo-fondo}, textColor is {colors.texto}, typography is {typography.step-0}, padding is {spacing.step-1}, height is {spacing.step-6}, width is {spacing.step-6}
 - enlace-navegacion: backgroundColor is {colors.fondo}, textColor is {colors.enlace}, typography is {typography.step-0}, height is {spacing.step-6}, width is {spacing.step-6}
 - aviso: backgroundColor is {colors.fondo}, textColor is {colors.error}, typography is {typography.step-0}
@@ -162,20 +162,20 @@ Generated from the same tokens as the frontmatter, for the instruments of the me
 | texto-secundario | #4A453E |
 | enlace | #1F3A5F |
 | error | #8A1C1C |
-| linea | #8C8475 |
+| línea | #8C8475 |
 | campo-fondo | #FFFFFF |
 | campo-borde | #8C8475 |
-| accion-fondo | #1F3A5F |
-| accion-texto | #FFFFFF |
-| accion-presionada | #0C274A |
+| acción-fondo | #1F3A5F |
+| acción-texto | #FFFFFF |
+| acción-presionada | #0C274A |
 | foco | #1F3A5F |
 
 | Foreground | Ground | Kind |
 |------------|--------|------|
 | texto | fondo | text |
 | texto | superficie | text |
-| accion-texto | accion-fondo | text |
-| accion-texto | accion-presionada | text |
+| acción-texto | acción-fondo | text |
+| acción-texto | acción-presionada | text |
 | texto | campo-fondo | text |
 | enlace | fondo | text |
 | error | fondo | text |
@@ -215,11 +215,14 @@ Generated from the same tokens as the frontmatter, for the instruments of the me
 
 - ADR-013: roles de color de la interfaz
 - ADR-014: escala tipográfica, espaciado y componentes
+- ADR-016: la identidad en el vocabulario de gemba-design 0.23.0
 
 ## Known Gaps
 
 - Radius, elevation and motion are not derived: no rule from an attribute to a value is published.
 - Whatever needs a rendered interface is not measured: zoom, reflow, text spacing and focus.
-- Los bordes (campo-borde, linea, error como borde) y el anillo de foco son tokens de colors sin componente: el vocabulario del formato no tiene color de borde.
+- A component property outside the closed vocabulary — a declared `minWidth`/`minHeight` among them — is accepted and resolved like any other, but the mechanical stratum measures a target only from a literal `height`/`width`: a component with no literal box has no target row, and a declared minimum is never checked against it.
+- Iconography has nowhere to declare a family or a style: neither `Dimension` nor `number`, the only types the spec gives a token, hold a name like "Material Symbols" or "outlined".
+- Los bordes (campo-borde, línea, error como borde) y el anillo de foco son tokens de colors sin componente: el vocabulario del formato no tiene color de borde.
 - El peso (700 en titulo y subtitulo) y las cifras tabulares de date viven en specimen.md: el formato no los compone en typography.
 - Los enlaces dentro de un párrafo se apoyan en la excepción inline de WCAG 2.2 SC 2.5.8 y 2.5.5; no son objetivos declarados.

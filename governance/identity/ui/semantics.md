@@ -2,7 +2,7 @@
 type: semantics
 commission: "La identidad visual de la interfaz web de Orquídea: paleta, tipografía y la interfaz derivada de ellas"
 derived-from: "governance/identity/ui/primitives.md"
-decision: ADR-013
+decision: ADR-013, ADR-016
 date: 2026-09-22
 ---
 
@@ -14,7 +14,7 @@ No se repite aquí: vive en `ADR-013`, abierto antes de que existiera cualquiera
 
 ## The rule
 
-Cada rol por función es, en cada contexto, una referencia al escalón que tomó un rol de la paleta en `primitives.md`. El único rol que la paleta no trae, `accion-presionada`, se resuelve relativo a uno que sí: el escalón siguiente más oscuro de la rampa de `accion-fondo`. Los contextos son los dos fondos de la aplicación, `papel` y `hoja`, y en los dos cada rol resuelve al mismo escalón. Ningún rol está fijado a su valor exacto: con la regla de anclas, cada rol de la paleta ya resuelve a él (desvío 0.000), así que fijarlo no cambiaría nada.
+Cada rol por función es, en cada contexto, una referencia al escalón que tomó un rol de la paleta en `primitives.md`. El único rol que la paleta no trae, `acción-presionada`, se resuelve relativo a uno que sí: el escalón siguiente más oscuro de la rampa de `acción-fondo`. Los contextos son los dos fondos de la aplicación, `papel` y `hoja`, y en los dos cada rol resuelve al mismo escalón. Ningún rol está fijado a su valor exacto: con la regla de anclas, cada rol de la paleta ya resuelve a él (desvío 0.000), así que fijarlo no cambiaría nada.
 
 ## The parameters
 
@@ -22,12 +22,12 @@ Cada rol por función es, en cada contexto, una referencia al escalón que tomó
 |-----------|-------|---------|------------------------------------------|
 | conjunto de roles | los trece de la tabla de abajo | `judgement` | con éxito, aviso y deshabilitado: la interfaz no los usa (la aplicación confirma redirigiendo, no tiene controles deshabilitados); con un rol de acción destructiva en `alerta`: "Sí, quitar" ya se distingue por su texto y su página de confirmación, y ADR-010 deja un solo acento |
 | contextos | `papel` y `hoja`, mismo escalón en los dos | `judgement` | un escalón distinto por fondo: ningún par lo necesita — el más bajo sobre `papel` pasa (3.34:1 en componente, 8.38:1 en texto) |
-| resolución de `accion-presionada` | el escalón siguiente más oscuro de `accion-fondo` | `judgement` | el siguiente más claro: bajaría el contraste de `accion-texto` encima; un color distinto (la tinta): el botón presionado dejaría de ser azul |
+| resolución de `acción-presionada` | el escalón siguiente más oscuro de `acción-fondo` | `judgement` | el siguiente más claro: bajaría el contraste de `acción-texto` encima; un color distinto (la tinta): el botón presionado dejaría de ser azul |
 | roles fijados | ninguno | `judgement` | fijar los siete de la paleta: con la regla de anclas el desvío ya es 0.000, y fijar escondería que la regla los reproduce |
 
 ## The roles
 
-Los identificadores de token van en ASCII (`linea`, `accion-fondo`, `accion-texto`, `accion-presionada`) desde ADR-014, porque `design-md.py` solo acepta referencias ASCII. Los roles y sus valores son los de ADR-013; cambia la grafía del identificador, no la decisión.
+Los identificadores de token se escriben en español (`línea`, `acción-fondo`, `acción-texto`, `acción-presionada`) desde ADR-016, que reemplaza la decisión 6 de ADR-014 (ASCII): el generador de gemba-design 0.23.0 acepta letras de cualquier escritura. Los roles y sus valores son los de ADR-013; cambia la grafía del identificador, no la decisión.
 
 La tabla va en la forma de paleta que lee el instrumento de invariancia (`Role`, `Value`), con las columnas de este eslabón a la derecha. La variante: **ninguna declarada** (ADR-012), y por eso la tabla **no lleva columna `Variant`**: con la columna llena de `—`, `invariance.py` sale con 2 por un valor ilegible, no por falta de sujeto; sin ella, reporta lo que es cierto — no hay segundo lado que comparar.
 
@@ -39,12 +39,12 @@ La tabla va en la forma de paleta que lee el instrumento de invariancia (`Role`,
 | texto-secundario | #4A453E | `neutro-700` en `papel` y en `hoja` | `#4A453E` (tinta suave) | 0.000 — el valor exacto |
 | enlace | #1F3A5F | `azul-800` en `papel` y en `hoja` | `#1F3A5F` (acento) | 0.000 — el valor exacto |
 | error | #8A1C1C | `rojo-700` en `papel` y en `hoja` | `#8A1C1C` (alerta) | 0.000 — el valor exacto |
-| linea | #8C8475 | `neutro-400` en `papel` y en `hoja` | `#8C8475` (renglón) | 0.000 — el valor exacto |
+| línea | #8C8475 | `neutro-400` en `papel` y en `hoja` | `#8C8475` (renglón) | 0.000 — el valor exacto |
 | campo-fondo | #FFFFFF | `neutro-0` en `papel` y en `hoja` | `#FFFFFF` (hoja) | 0.000 — el valor exacto |
 | campo-borde | #8C8475 | `neutro-400` en `papel` y en `hoja` | `#8C8475` (renglón) | 0.000 — el valor exacto |
-| accion-fondo | #1F3A5F | `azul-800` en `papel` y en `hoja` | `#1F3A5F` (acento) | 0.000 — el valor exacto |
-| accion-texto | #FFFFFF | `neutro-0` en `papel` y en `hoja` | `#FFFFFF` (hoja) | 0.000 — el valor exacto |
-| accion-presionada | #0C274A | `azul-900` en `papel` y en `hoja` | un rol que la identidad no trae | — (el escalón siguiente más oscuro de `accion-fondo`) |
+| acción-fondo | #1F3A5F | `azul-800` en `papel` y en `hoja` | `#1F3A5F` (acento) | 0.000 — el valor exacto |
+| acción-texto | #FFFFFF | `neutro-0` en `papel` y en `hoja` | `#FFFFFF` (hoja) | 0.000 — el valor exacto |
+| acción-presionada | #0C274A | `azul-900` en `papel` y en `hoja` | un rol que la identidad no trae | — (el escalón siguiente más oscuro de `acción-fondo`) |
 | foco | #1F3A5F | `azul-800` en `papel` y en `hoja` | `#1F3A5F` (acento) | 0.000 — el valor exacto |
 
 Cada valor es una referencia que resuelve a una primitiva: `tokens.py provenance` lo comprueba sobre esta tabla y la escala de `primitives.md`:
@@ -57,12 +57,12 @@ Cada valor es una referencia que resuelve a una primitiva: `tokens.py provenance
 | texto-secundario | #4A453E | neutro-700 |
 | enlace | #1F3A5F | azul-800 |
 | error | #8A1C1C | rojo-700 |
-| linea | #8C8475 | neutro-400 |
+| línea | #8C8475 | neutro-400 |
 | campo-fondo | #FFFFFF | neutro-0 |
 | campo-borde | #8C8475 | neutro-400 |
-| accion-fondo | #1F3A5F | azul-800 |
-| accion-texto | #FFFFFF | neutro-0 |
-| accion-presionada | #0C274A | azul-900 |
+| acción-fondo | #1F3A5F | azul-800 |
+| acción-texto | #FFFFFF | neutro-0 |
+| acción-presionada | #0C274A | azul-900 |
 | foco | #1F3A5F | azul-800 |
 
 Los pares que declaran estos roles, en el formato que leen `scripts/contraste-de-lectura.py` y `tokens.py pairs`:
@@ -77,18 +77,18 @@ Los pares que declaran estos roles, en el formato que leen `scripts/contraste-de
 | enlace | superficie | text |
 | error | fondo | text |
 | error | superficie | text |
-| accion-texto | accion-fondo | text |
-| accion-texto | accion-presionada | text |
+| acción-texto | acción-fondo | text |
+| acción-texto | acción-presionada | text |
 | error | fondo | component |
 | error | superficie | component |
-| linea | fondo | component |
-| linea | superficie | component |
+| línea | fondo | component |
+| línea | superficie | component |
 | campo-borde | fondo | component |
 | campo-borde | superficie | component |
-| accion-fondo | fondo | component |
-| accion-fondo | superficie | component |
-| accion-presionada | fondo | component |
-| accion-presionada | superficie | component |
+| acción-fondo | fondo | component |
+| acción-fondo | superficie | component |
+| acción-presionada | fondo | component |
+| acción-presionada | superficie | component |
 | foco | fondo | component |
 | foco | superficie | component |
 
@@ -106,18 +106,18 @@ La cuenta de pares y de relaciones comparadas se dice, y cero es rojo. Cifras co
 | enlace | superficie | 11.48:1 (texto, contra 7:1) | — | no comparada: sin variante |
 | error | fondo | 8.38:1 (texto, contra 7:1) | — | no comparada: sin variante |
 | error | superficie | 9.28:1 (texto, contra 7:1) | — | no comparada: sin variante |
-| accion-texto | accion-fondo | 11.48:1 (texto, contra 7:1) | — | no comparada: sin variante |
-| accion-texto | accion-presionada | 14.95:1 (texto, contra 7:1) | — | no comparada: sin variante |
+| acción-texto | acción-fondo | 11.48:1 (texto, contra 7:1) | — | no comparada: sin variante |
+| acción-texto | acción-presionada | 14.95:1 (texto, contra 7:1) | — | no comparada: sin variante |
 | error | fondo | 8.38:1 (componente, contra 3:1) | — | no comparada: sin variante |
 | error | superficie | 9.28:1 (componente, contra 3:1) | — | no comparada: sin variante |
-| linea | fondo | 3.34:1 (componente, contra 3:1) | — | no comparada: sin variante |
-| linea | superficie | 3.70:1 (componente, contra 3:1) | — | no comparada: sin variante |
+| línea | fondo | 3.34:1 (componente, contra 3:1) | — | no comparada: sin variante |
+| línea | superficie | 3.70:1 (componente, contra 3:1) | — | no comparada: sin variante |
 | campo-borde | fondo | 3.34:1 (componente, contra 3:1) | — | no comparada: sin variante |
 | campo-borde | superficie | 3.70:1 (componente, contra 3:1) | — | no comparada: sin variante |
-| accion-fondo | fondo | 10.37:1 (componente, contra 3:1) | — | no comparada: sin variante |
-| accion-fondo | superficie | 11.48:1 (componente, contra 3:1) | — | no comparada: sin variante |
-| accion-presionada | fondo | 13.50:1 (componente, contra 3:1) | — | no comparada: sin variante |
-| accion-presionada | superficie | 14.95:1 (componente, contra 3:1) | — | no comparada: sin variante |
+| acción-fondo | fondo | 10.37:1 (componente, contra 3:1) | — | no comparada: sin variante |
+| acción-fondo | superficie | 11.48:1 (componente, contra 3:1) | — | no comparada: sin variante |
+| acción-presionada | fondo | 13.50:1 (componente, contra 3:1) | — | no comparada: sin variante |
+| acción-presionada | superficie | 14.95:1 (componente, contra 3:1) | — | no comparada: sin variante |
 | foco | fondo | 10.37:1 (componente, contra 3:1) | — | no comparada: sin variante |
 | foco | superficie | 11.48:1 (componente, contra 3:1) | — | no comparada: sin variante |
 
@@ -132,7 +132,7 @@ La cuenta de pares y de relaciones comparadas se dice, y cero es rojo. Cifras co
 | `single-ink` | no aplica, porque es propiedad de una marca y este encargo no tiene marca (ADR-009) |
 | `contrast` | los diez pares de texto, medidos arriba; el más bajo, 8.38:1, sobre 4.5:1 |
 | `prior-art` | no aplica, porque no se entrega marca ni se registra nada (ADR-009) |
-| `component-contrast` | los doce pares de componente (`error` como borde, `linea`, `campo-borde`, `accion-fondo`, `accion-presionada`, `foco`, sobre `papel` y sobre `hoja`), medidos arriba contra 3:1, la cifra del catálogo (WCAG 2.2 SC 1.4.11) leída hoy; el más bajo, 3.34:1 |
+| `component-contrast` | los doce pares de componente (`error` como borde, `línea`, `campo-borde`, `acción-fondo`, `acción-presionada`, `foco`, sobre `papel` y sobre `hoja`), medidos arriba contra 3:1, la cifra del catálogo (WCAG 2.2 SC 1.4.11) leída hoy; el más bajo, 3.34:1 |
 | `target-size` | no aplica, porque un rol de color no declara objetivos interactivos; lo resuelve s5.6 |
 | `provenance` | los trece roles vienen de un escalón de `primitives.md`: `tokens.py provenance`, arriba |
 
@@ -156,6 +156,6 @@ Lo que solo una interfaz renderizada muestra: el anillo de foco sobre un botón 
 
 ## What was tried and rejected
 
-- **(B) Uniforme en OKLCH:** `texto-secundario` sobre `fondo` 6.86:1; `linea` y `campo-borde` sobre `fondo` 2.76:1 — sus primitivas se alejan de la paleta.
+- **(B) Uniforme en OKLCH:** `texto-secundario` sobre `fondo` 6.86:1; `línea` y `campo-borde` sobre `fondo` 2.76:1 — sus primitivas se alejan de la paleta.
 - **(C) Uniforme en HSL:** pasa (mínimos 7.40:1 y 3.30:1), pero la tinta y el papel de los roles dejan de ser los de la paleta; perdió R3.
-- **`accion-presionada` como literal** (`#1A3050`): `provenance` en rojo — no es escalón de ninguna rampa (ADR-013).
+- **`acción-presionada` como literal** (`#1A3050`): `provenance` en rojo — no es escalón de ninguna rampa (ADR-013).

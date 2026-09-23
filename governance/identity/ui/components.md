@@ -2,7 +2,7 @@
 type: components
 commission: "La identidad visual de la interfaz web de Orquídea: paleta, tipografía y la interfaz derivada de ellas"
 derived-from: "governance/identity/ui/semantics.md, governance/identity/ui/type-scale.md, governance/identity/ui/spacing.md"
-decision: ADR-014
+decision: ADR-014, ADR-016
 date: 2026-09-22
 ---
 
@@ -34,8 +34,8 @@ Los componentes son los que usan hoy las plantillas. Cada uno es una composició
 | tarjeta | {colors.superficie} | {colors.texto} | {typography.step-0} | {spacing.step-2} | | |
 | titulo | {colors.fondo} | {colors.texto} | {typography.step-2} | | | |
 | subtitulo | {colors.fondo} | {colors.texto} | {typography.step-1} | | | |
-| boton | {colors.accion-fondo} | {colors.accion-texto} | {typography.step-0} | {spacing.step-2} | {spacing.step-6} | {spacing.step-6} |
-| boton-presionado | {colors.accion-presionada} | {colors.accion-texto} | {typography.step-0} | {spacing.step-2} | {spacing.step-6} | {spacing.step-6} |
+| boton | {colors.acción-fondo} | {colors.acción-texto} | {typography.step-0} | {spacing.step-2} | {spacing.step-6} | {spacing.step-6} |
+| boton-presionado | {colors.acción-presionada} | {colors.acción-texto} | {typography.step-0} | {spacing.step-2} | {spacing.step-6} | {spacing.step-6} |
 | campo | {colors.campo-fondo} | {colors.texto} | {typography.step-0} | {spacing.step-1} | {spacing.step-6} | {spacing.step-6} |
 | enlace-navegacion | {colors.fondo} | {colors.enlace} | {typography.step-0} | | {spacing.step-6} | {spacing.step-6} |
 | aviso | {colors.fondo} | {colors.error} | {typography.step-0} | | | |
@@ -53,8 +53,8 @@ Los componentes son los que usan hoy las plantillas. Cada uno es una composició
 | tarjeta | texto sobre superficie | 17.00:1, necesita 7:1 | not declared | sí |
 | titulo | texto sobre fondo | 15.35:1, necesita 7:1 | not declared | sí |
 | subtitulo | texto sobre fondo | 15.35:1, necesita 7:1 | not declared | sí |
-| boton | accion-texto sobre accion-fondo | 11.48:1, necesita 7:1 | 48 × 48, necesita 44 × 44 (M2) y 24 × 24 (SC 2.5.8) | sí |
-| boton-presionado | accion-texto sobre accion-presionada | 14.95:1, necesita 7:1 | 48 × 48, ídem | sí |
+| boton | acción-texto sobre acción-fondo | 11.48:1, necesita 7:1 | 48 × 48, necesita 44 × 44 (M2) y 24 × 24 (SC 2.5.8) | sí |
+| boton-presionado | acción-texto sobre acción-presionada | 14.95:1, necesita 7:1 | 48 × 48, ídem | sí |
 | campo | texto sobre campo-fondo | 17.00:1, necesita 7:1 | 48 × 48, ídem | sí |
 | enlace-navegacion | enlace sobre fondo | 10.37:1, necesita 7:1 | 48 × 48, ídem | sí |
 | aviso | error sobre fondo | 8.38:1, necesita 7:1 | not declared | sí |
