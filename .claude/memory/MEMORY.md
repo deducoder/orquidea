@@ -17,7 +17,7 @@
 - [Cifras de retrospectiva de la salida del comando](cifras-de-retrospectiva-de-la-salida-del-comando.md) — contar con un comando, no de memoria
 - [Rango de epic-review desde el diseño](rango-de-epic-review-desde-el-disenio.md) — base = padre del commit de diseño, no del brief
 - [Supervisar orchestrate](orchestrate-supervision-mechanics.md) — nombre tras renombre, espera en bucle, push no sale con terminal activa
-- [Afirmar presencia no ve el lugar](afirmar-presencia-no-ve-el-lugar.md) — `x in html` deja pasar duplicados mal ubicados
+- [Afirmar presencia no ve el lugar](afirmar-presencia-no-ve-el-lugar.md) — `x in html` deja pasar duplicados mal ubicados; `"<li"` cuenta `<link>`
 - [Mutación de frontera en el predicado](mutacion-de-frontera-se-prueba-en-el-predicado.md) — `>=`→`>` sobrevive sin entrada exacta; no predecir mutaciones
 - [Población sin falsos sujetos](poblacion-no-cuenta-lo-que-no-es-sujeto.md) — `.gitkeep` daba verde con población 1
 - [Hechos de plataforma antes de aceptar](afirmaciones-de-plataforma-se-verifican-antes-de-aceptar.md) — en una rejilla, verificar lo que trae el sistema antes de `accepted`
@@ -26,3 +26,5 @@
 - [Medio hacia arriba no es round](redondeo-medio-hacia-arriba-no-es-round.md) — probar con .5 de parte entera par
 - [Excepción sin capturar sale con 1](excepcion-sin-capturar-sale-con-1.md) — en scripts 0/1/2 lo ilegible sale con 2
 - [Qué lee design-md.py](design-md-py-que-lee.md) — comando en ADR-014; no pasarle primitives.md
+- [No enviar el correo a servicios externos](no-enviar-el-correo-a-servicios-externos.md) — User-Agent genérico; preguntar si piden contacto
+- [Capturas a 360 px en Chrome de Windows](captura-360-en-chrome-de-windows.md) — iframe de 360; sesión con curl; --data-urlencode

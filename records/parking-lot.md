@@ -41,9 +41,6 @@ wrote it. Retirement moves an entry to `## Retired` with its reason.
 - **Quitar `'unsafe-inline'` de `style-src` en la CSP.** Hoy la CSP lo permite porque cuatro plantillas llevan atributos `style`; s5.7 (e5) los mueve a `identidad.css`, y desde entonces ya nada lo necesita. Quitarlo toca `CONTENT_SECURITY_POLICY` en `web/app.py` y la prueba `test_la_csp_no_permite_scripts_en_linea`, que hoy afirma su presencia; htmx inyecta estilos en línea para sus indicadores salvo que se configure `htmx.config.includeIndicatorStyles = false`, y eso hay que comprobarlo antes.
   *Origin:* e5, `epic-design`, 2026-09-22 — recorrido de las plantillas y de la CSP.
   *Promotion:* al cerrar s5.7, si ninguna plantilla conserva un atributo `style`: una historia o arreglo con su prueba de CSP y la comprobación de htmx.
-- **Ninguna prueba afirma el `<title>` de las páginas salvo el de inicio.** Una prueba parametrizada que recorra las páginas (catálogo, especie, colección, ejemplar, alta, edición, baja, acceso) y afirme que el contenido de `<title>` es texto sin `<` ni `>` cerraría la clase de b1, no solo su instancia; hoy solo `tests/test_web_inicio.py:13` y la regresión de b1 lo miran.
-  *Origin:* b1, `bug-review`, 2026-09-22 — prevención de la clase (afirmación de presencia que no ve el lugar).
-  *Promotion:* s5.7 (e5), que toca todas las plantillas: agregarla ahí como red de las plantillas vestidas.
 - **En gemba-design 0.21.0, la plantilla `semantics.md` de la técnica `ui` pide una columna `Variant`, pero `invariance.py` no acepta `—` en ella.** Con una identidad sin variante (Orquídea, ADR-012), la columna llena de `—` hace que `invariance.py` salga con 2 por `unreadable variant value '—'`, no por `no subject`. Solo sale "sin sujeto" cuando la tabla no trae columna `Variant`, y eso contradice la plantilla. En `governance/identity/ui/semantics.md` se quitó la columna y se explicó por qué. `palette.md` conserva su columna con `—`, que ningún eslabón pasa por `invariance.py`. El arreglo es del addon: tratar una columna de variante vacía o con `—` como "sin sujeto", o que la plantilla diga que se omite. No es de Orquídea.
   *Origin:* s5.5 (e5), `story-implement` T3 y `survival-review`, 2026-09-22 — salida de `invariance.py governance/identity/ui/semantics.md texto fondo`.
   *Promotion:* al reportarlo en el repositorio de gemba-design, o cuando una versión del addon lo corrija: entonces se vuelve a poner la columna en `semantics.md` si la plantilla lo sigue pidiendo.
@@ -51,7 +48,19 @@ wrote it. Retirement moves an entry to `## Retired` with its reason.
   *Origin:* s5.6 (e5), `story-design`, 2026-09-22 — lectura de `design-md.py` contra los roles de `semantics.md`.
   *Promotion:* al reportarlo en el repositorio de gemba-design, o cuando una versión del addon lo corrija; en Orquídea no hace falta deshacer nada.
 
+- **La interfaz vestida de e5 tiene tres juicios sin firmar y dos ajustes visuales sin decidir.**
+  - Sin firma (`unsigned`): el criterio 3 de ADR-009 (la foto es la protagonista: a todo el ancho en la ficha, miniatura de 96 px en la colección) y si el subtítulo de 20 px en negrita se distingue del cuerpo (ADR-015, decisión 5).
+  - Sin decidir: los enlaces con `accion` quedan 8 px hacia adentro del texto por el relleno de `enlace-navegacion`, y en Acceso el botón "Entrar" queda pegado al campo porque ese formulario no envuelve sus controles en `<p>`.
+
+  Se preguntó al cerrar T5 de s5.7 y el humano pidió cerrar sin responder. Las capturas a 360 px quedaron en el scratchpad de esa sesión, no en el repositorio.
+  *Origin:* s5.7 (e5), `story-implement` T5, 2026-09-23 — recorrido renderizado.
+  *Promotion:* cuando el humano recorra la aplicación en el teléfono (el mismo momento que la medición en "Slow 3G" que queda pendiente de e5): firma o rechazo de los dos juicios. Un ajuste que se decida hacer va como arreglo propio contra ADR-015.
+
 ## Retired
+
+### 2026-09-23 · s5.7 (e5) · Ninguna prueba afirmaba el `<title>` de las páginas salvo el de inicio
+**Why:** se cumplió la promoción ("s5.7, que toca todas las plantillas"). `tests/test_web_titulos.py` recorre las nueve páginas GET que devuelven HTML y afirma que su `<title>` es texto. Cuenta su cobertura contra `rutas_registradas`, así que una página nueva sin título probado la pone en rojo. Se vio en rojo con el bloque `title` de `especies.html` en la forma de b1.
+**Swept:** citan la entrada el `scope.md` y el `design.md` de s5.7, que la resuelven. También la citan la retrospectiva de b1 (`work/bugs/b1-collection-title-shows-markup/retrospective.md:16`, "aparcada, con promoción en s5.7") y el handoff `work/sessions/2026-09-22-e5-identity-decided.md`: los dos son registros históricos y no se reescriben. Nada más la cita.
 
 ### 2026-09-19 · s3.6 (e3) · Las cifras de la guía de despliegue estaban escritas a mano
 **Why:** la promoción se cumplió ("cuando la guía crezca"): s3.6 amplió la guía con las fotos y añadió en `tests/test_despliegue.py` una prueba que importa las constantes (foto máxima, ancho, lado de la miniatura, cuerpo máximo, duración y inactividad de la sesión, intentos y bloqueo) y falla si la guía ya no dice la misma cifra; con una constante cambiada a propósito, la prueba se pone en rojo.
