@@ -61,7 +61,7 @@ wrote it. Retirement moves an entry to `## Retired` with its reason.
 
 ### 2026-09-23 · s1 · El gate no ataba la cadena de la identidad entre `semantics.md`, `primitives.md` y `DESIGN.md`
 **Why:** se cumplió la promoción ("la siguiente historia que toque `governance/identity/ui/`"). `test_la_cadena_de_colores_esta_atada` (`tests/test_identidad_ui.py`) comprueba que cada rol de `semantics.md` valga lo que su escalón en `primitives.md`, en la tabla `Role` y en la `Token`, y que los colores de `DESIGN.md` sean esos mismos 13 roles. Se vio en rojo con la mutación de la entrada (`acción-fondo` a `#1F3A60` en `semantics.md`). Reusa el lector `_filas` de `comprobar-medidas.py`: no suma un lector de tablas.
-**Swept:** la citan el `plan.md` de s1 (T9), que la resuelve, y la retrospectiva de e5, registro histórico que no se reescribe. Nada más la cita.
+**Swept:** la cita el `plan.md` de s1 (T9), que la resuelve. Nada más la cita.
 
 ### 2026-09-23 · s1 · La interfaz vestida de e5 tenía dos juicios sin firmar y dos ajustes sin decidir
 **Why:** s1 la tomó en su alcance. Los dos juicios los firmó Daniel Efraín Domínguez Urbina el 2026-09-23, sobre capturas a 360 px con fotos reales: el criterio 3 de ADR-009, sí, y la decisión 5 de ADR-015, sí. Los dos ajustes se decidieron en ADR-016: los enlaces `accion` sin sangría y el campo de Acceso en su propio párrafo. La entrada pedía que un ajuste fuera un arreglo propio contra ADR-015; el humano lo juntó en s1.
