@@ -45,7 +45,7 @@ None. s5.3 (`palette.md`, su ADR) y s5.4 (`specimen.md`, su ADR, fuentes en `/st
 
 | Story | Status | Est. | Actual |
 |-------|:------:|:----:|:------:|
-| s5.1 | todo | S | |
+| s5.1 | done | S | S |
 | s5.2 | todo | S | |
 | s5.4 | todo | M | |
 | s5.3 | todo | S | |

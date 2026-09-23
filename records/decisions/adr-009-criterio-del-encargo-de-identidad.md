@@ -1,0 +1,152 @@
+---
+type: adr
+id: ADR-009
+title: "Criterio del encargo de identidad visual de Orquídea"
+status: accepted
+date: 2026-09-22
+epic: e5
+published: no — el proyecto no tiene espacio de documentación externo; el ADR vive solo en el repositorio
+---
+
+# ADR-009: Criterio del encargo de identidad visual de Orquídea
+
+## Status
+
+Accepted.
+
+## Context
+
+**La pregunta:** ¿contra qué se juzgará toda la identidad visual de Orquídea (concepto, paleta, tipografía y la interfaz derivada), antes de que exista cualquiera de sus piezas?
+
+Hoy no hay identidad que extraer: la aplicación no enlaza una sola hoja de estilos y `base.html` no tiene estilos (recorrido de e5). El criterio entra, por tanto, **propuesto**, por la técnica `commission` de gemba-design 0.21.0, y este registro se abre y se commitea antes de producir nada: cualquier cambio posterior al criterio queda como un diff visible.
+
+Fuerzas:
+
+- **Uso en campo.** El resultado *Usable en campo* de la visión: teléfono, sol directo y redes de baja calidad en Chiapas. `must-perf-001` fija la primera carga en ≤ 200 KB gzip y ≤ 5 s en "Slow 3G", y hoy ya gasta parte de ese presupuesto en HTML, htmx y miniaturas.
+- **La planta es lo que importa.** *Colección al día*: el coleccionista reconoce cada ejemplar por su foto, y las orquídeas traen sus propios magentas, púrpuras y amarillos.
+- **Una sola persona usa y juzga.** App personal de un solo usuario (RF-08); nadie más firma los juicios, y firmar demasiados lleva a firmar en automático.
+- **El coste de captura** es lo que mata esta notación: dos a cuatro criterios de adecuación, no diez.
+
+Perímetro aprobado por el humano el 2026-09-22: `concept`, `color`, `typography` y `ui`. `logo` queda fuera (no-go del brief de e5).
+
+### El catálogo de supervivencia, resuelto una vez
+
+| Entrada | Este encargo | Por qué |
+|---|---|---|
+| `platform-specs` | no aplica | no se entrega ninguna marca ni ícono de plataforma |
+| `minimum-size` | aplica a `typography` | el texto más pequeño (fechas, fuentes de los cuidados) se prueba en el teléfono |
+| `single-ink` | no aplica | es propiedad de una marca y este encargo no tiene marca |
+| `contrast` | aplica a `color` (pares de texto) y a `ui` (plantillas) | son las aplicaciones de la identidad; la exención del logotipo no se usa porque no hay logotipo |
+| `prior-art` | no aplica | no se entrega marca ni se registra nada; el uso es personal y no comercial |
+| `component-contrast` | aplica a `ui` | botones, campos y estados de foco de los formularios (acceso, alta de ejemplar, riegos) |
+| `target-size` | aplica a `ui` | los botones y enlaces se tocan con el dedo en campo |
+| `provenance` | aplica a `color`, `typography` y `ui` | todo valor sale de la escala que declara su entregable |
+
+### Los criterios de adecuación candidatos
+
+| # | Criterio | Estrato | Se espera que toque |
+|---|---|---|---|
+| 1 | Los recursos de la identidad (CSS y fuentes, en `src/orquidea/web/static/identidad/`, gzip) pesan ≤ 50 KB | `mechanical` | `typography`, `ui` |
+| 2 | Todo texto de tamaño normal (`Kind = text`: cuerpo, fechas, fuentes, etiquetas) tiene contraste ≥ 7:1 con su fondo; el texto grande queda en el piso de `contrast` | `mechanical` | `color`, `ui` |
+| 3 | La foto del ejemplar es la protagonista: la paleta no compite con los colores de las flores | `judgement` | `color`, `ui` |
+| 4 | La tipografía distingue el nombre científico con itálica verdadera y cubre los glifos es-MX | `mechanical` | `typography` |
+| 5 | La identidad evoca la naturaleza de Chiapas | `judgement` | todas |
+
+El alcance del criterio 2 (todo el texto de tamaño normal y no solo los párrafos) lo decidió el humano el 2026-09-22, al diseñar s5.1: el texto pequeño es justo el que se lee bajo el sol.
+
+### Opciones
+
+- **(A) Catálogo + criterios 1, 2 y 3** — lo que el humano aprobó el 2026-09-22.
+- **(B) Solo el catálogo** — sin criterios de adecuación; las piezas se juzgan solo por lo que sobrevive.
+- **(C) Catálogo + criterios 1 y 3** — sin el 2, el texto pequeño se queda en el 4.5:1 de `contrast`.
+- **(D) Catálogo + criterios 1 a 5** — todo lo que se consideró.
+
+| Criterio | Estrato | (A) | (B) | (C) | (D) |
+|---|---|---|---|---|---|
+| Catálogo (8 entradas, arriba) | según la entrada | sí | sí | sí | sí |
+| 1 · Peso ≤ 50 KB | `mechanical` | sí | no — el peso de las fuentes queda sin tope propio dentro de los 200 KB | sí | sí |
+| 2 · Texto normal ≥ 7:1 | `mechanical` | sí | no | no — el texto pequeño queda en 4.5:1 bajo el sol | sí |
+| 3 · La foto es la protagonista | `judgement` | sí | no — nada dice qué debe lograr la paleta | sí | sí |
+| 4 · Itálica verdadera y glifos es-MX | `mechanical` | no — es de la pieza `typography` | no | no | sí — pero solo una pieza podría cumplirlo |
+| 5 · Evoca Chiapas | `judgement` | no | no | no | sí — pero nadie puede responderlo con sí o no |
+| Firmas del humano que pide | — | 1 | 0 | 1 | 2 |
+| Cabe en una pantalla | — | sí | sí | sí | al límite |
+
+### Contraejemplos (se escriben antes de producir)
+
+Corridos el 2026-09-22 en s5.1, sobre sujetos construidos fuera del repositorio (`$S` es el scratchpad de la sesión), con las comprobaciones de los commits `adf0e45` y `e51c828`. Salida literal.
+
+**Criterio 1 — rojo.** Sujeto: un archivo de 60 KB de bytes aleatorios (no comprime), `fuente.woff2`.
+
+```
+$ uv run python scripts/medir-primera-carga.py --identidad $S/muestra
+Recursos de la identidad en $S/muestra: 1 archivo(s)
+  fuente.woff2 (gzip)    60.0 KB
+  Total                60.0 KB   tope 50 KB  PASA DEL TOPE
+exit=1
+```
+
+Control de población vacía (no es el rojo del criterio, y no es verde):
+
+```
+$ uv run python scripts/medir-primera-carga.py --identidad $S/vacio
+Recursos de la identidad en $S/vacio: 0 archivo(s) — nada que medir
+exit=2
+```
+
+**Criterio 2 — rojo.** Sujeto: `#767676` sobre `#ffffff` como `text`, que pasa el piso de `contrast` (4.5:1) y no el de este criterio.
+
+```
+$ uv run python scripts/contraste-de-lectura.py $S/par-gris.md
+#767676 sobre #ffffff (texto): 4.54:1  necesita 7:1  NO
+1 par(es) de texto juzgado(s), 1 bajo el umbral
+exit=1
+```
+
+Controles: un par que cumple (`#595959` como rol `tinta` sobre `#ffffff` como `papel`) y un documento sin pares.
+
+```
+$ uv run python scripts/contraste-de-lectura.py $S/par-oscuro.md
+tinta sobre papel (texto): 7.00:1  necesita 7:1  SÍ
+1 par(es) de texto juzgado(s), 0 bajo el umbral
+exit=0
+
+$ uv run python scripts/contraste-de-lectura.py $S/sin-tabla.md
+0 par(es) de texto juzgado(s) — nada que juzgar
+exit=2
+```
+
+**Criterio 3 — no aplica: no hay oráculo.** Que la foto sea la protagonista es juicio: no existe una medida publicada de "competir con una flor", e inventar una (saturación máxima, distancia de tono) sería la teatralidad que el paso `counterexample` prohíbe. Se instrumenta en cada pieza como elección forzada, contra este criterio, firmada por el humano.
+
+## Decision
+
+**Option (A):** toda la identidad visual de Orquídea se juzga contra el catálogo de supervivencia, resuelto una vez arriba, y contra tres criterios de adecuación:
+
+1. **Peso** (`mechanical`): los archivos bajo `src/orquidea/web/static/identidad/`, en gzip, suman ≤ 50 KB. Instrumento: `scripts/medir-primera-carga.py --identidad DIR`.
+2. **Contraste de lectura** (`mechanical`): todo par de texto de tamaño normal (`Kind = text`) llega a ≥ 7:1; el texto grande queda en el piso de `contrast` y los componentes en `component-contrast`. Instrumento: `scripts/contraste-de-lectura.py SUJETO.md`, sobre las tablas del formato de `tokens.py pairs`.
+3. **La foto es la protagonista** (`judgement`): se responde en cada pieza que lo toque como elección forzada contra este criterio, firmada por el humano.
+
+Cada pieza (s5.2 a s5.7) propone sus propios criterios y declara si derivan de uno de estos, por su número, o si son propios de la pieza. Nada obliga a que una pieza recoja todos.
+
+El entregable es `commission.md` en `governance/identity/`. La mitad juzgada (el perímetro, esta opción y el alcance del criterio 2) la firmó Daniel Efraín Domínguez Urbina el 2026-09-22.
+
+Diferido, y hasta cuándo: conectar la comprobación del criterio 1 al gate sobre los recursos reales se hace en s5.7, cuando existan; hasta entonces el directorio no existe y la comprobación daría 2 (nada que medir), que no es un verde.
+
+## Consequences
+
+**Positive:**
+- Cada pieza de e5 puede demostrar con `git log` que su criterio es anterior a ella: este registro se commiteó en `proposed` (`docs(s5.1): add ADR-009`) antes de cualquier comprobación o entregable.
+- Los dos criterios medibles tienen instrumento y se vieron en rojo sobre sujetos que los violan; s5.3 a s5.7 se miden sin escribir nada nuevo.
+- `must-perf-001` gana un subpresupuesto explícito para la identidad, que deja tres cuartas partes de los 200 KB al HTML, htmx y las miniaturas.
+
+**Negative / costs:**
+- 7:1 en todo el texto normal restringe mucho la paleta: el gris medio que suele usarse para texto secundario (`#767676`, 4.54:1) queda fuera, y los tonos de acento solo sirven en componentes o en texto grande. Se acepta porque el texto pequeño es justo el que se lee bajo el sol.
+- 50 KB puede dejar fuera una fuente web con itálica verdadera; la pila de fuentes del sistema es una opción real en `typography`, no un último recurso.
+- La fórmula WCAG está copiada en el proyecto (`scripts/contraste-de-lectura.py`) además de en el addon; si el addon la cambia, la divergencia se ve en el caso de control `#767676` = 4.54:1, que es el mismo en las dos pruebas.
+- El criterio 3 depende de una firma del humano en cada pieza; una firma que no llega se escribe `unsigned` y la entrega la cuenta como sin responder.
+
+## Alternatives considered
+
+- **(B) Solo el catálogo:** nada diría qué debe lograr esta identidad para su uso en campo, y el peso de las fuentes quedaría sin tope propio dentro de `must-perf-001`.
+- **(C) Sin el criterio 2:** el texto pequeño (fechas, fuentes de los cuidados, último riego) se quedaría en 4.5:1; el humano decidió el 2026-09-22 que ese texto es el que más importa bajo el sol.
+- **(D) Con los criterios 4 y 5:** el 4 (itálica verdadera y glifos es-MX) solo lo puede cumplir `typography` y queda como criterio propio de esa pieza; el 5 ("evoca Chiapas") no lo puede responder nadie con un sí o un no, y una segunda firma por pieza acerca la firma automática que la convención del ciclo advierte.

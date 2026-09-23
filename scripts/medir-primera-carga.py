@@ -8,6 +8,11 @@ presupuesto.
     uv run python scripts/medir-primera-carga.py --n 40        # otra cantidad
     uv run python scripts/medir-primera-carga.py ~/fotos/*.jpg # con tus fotos reales
 
+Con `--identidad DIR` mide solo los recursos de la identidad (CSS y fuentes, en gzip) contra su
+tope de 50 KB (criterio 1 de ADR-009): sale con 1 si pasa del tope y con 2 si no hay nada que medir.
+
+    uv run python scripts/medir-primera-carga.py --identidad src/orquidea/web/static/identidad
+
 Las fotos de ejemplo son ruido fractal: tienen detalle a la escala de la miniatura, pero no son
 fotos de orquídeas. Con las tuyas la cifra es la verdadera.
 """
@@ -38,6 +43,7 @@ from orquidea.web.app import app
 from orquidea.web.sesion import nombre_de_cookie
 
 PRESUPUESTO = 200 * 1024
+TOPE_DE_IDENTIDAD = 50 * 1024  # criterio 1 de ADR-009
 OCTAVAS = (8, 20, 50, 120, 300)
 
 
@@ -65,6 +71,15 @@ class MedicionDeFicha:
     @property
     def total(self) -> int:
         return self.html + self.javascript
+
+
+@dataclass(frozen=True)
+class MedicionDeIdentidad:
+    archivos: tuple[tuple[str, int], ...]  # (ruta relativa, octetos en gzip)
+
+    @property
+    def total(self) -> int:
+        return sum(octetos for _, octetos in self.archivos)
 
 
 def foto_con_detalle(ancho: int = 1600, alto: int = 1200) -> bytes:
@@ -151,6 +166,38 @@ def medir_ficha(riegos: int, floraciones: int) -> MedicionDeFicha:
         )
 
 
+def medir_identidad(directorio: Path) -> MedicionDeIdentidad:
+    """Cada archivo bajo `directorio`, en gzip; un directorio que no existe no tiene ninguno.
+
+    Los ocultos (`.gitkeep`, o lo que cuelga de un directorio oculto) no son recursos de la
+    identidad: contarlos daría un verde con población sin haber medido nada de ella."""
+    archivos = sorted(
+        r
+        for r in directorio.rglob("*")
+        if r.is_file() and not any(p.startswith(".") for p in r.relative_to(directorio).parts)
+    )
+    return MedicionDeIdentidad(
+        tuple(
+            (r.relative_to(directorio).as_posix(), len(gzip.compress(r.read_bytes())))
+            for r in archivos
+        )
+    )
+
+
+def _identidad(directorio: Path) -> int:
+    m = medir_identidad(directorio)
+    if not m.archivos:
+        print(f"Recursos de la identidad en {directorio}: 0 archivo(s) — nada que medir")
+        return 2
+    print(f"Recursos de la identidad en {directorio}: {len(m.archivos)} archivo(s)")
+    for nombre, octetos in m.archivos:
+        print(f"  {nombre} (gzip)  {_kb(octetos)}")
+    dentro = m.total <= TOPE_DE_IDENTIDAD
+    print(f"  Total              {_kb(m.total)}   tope {TOPE_DE_IDENTIDAD // 1024} KB", end="  ")
+    print("OK" if dentro else "PASA DEL TOPE")
+    return 0 if dentro else 1
+
+
 def _kb(octetos: int) -> str:
     return f"{octetos / 1024:6.1f} KB"
 
@@ -160,7 +207,12 @@ def main(argumentos: list[str] | None = None) -> int:
     analizador.add_argument("fotos", nargs="*", type=Path, help="fotos reales (una por ejemplar)")
     analizador.add_argument("--n", type=int, default=25, help="ejemplares con las fotos de ejemplo")
     analizador.add_argument("--presupuesto", type=int, default=PRESUPUESTO // 1024, help="en KB")
+    analizador.add_argument(
+        "--identidad", type=Path, help="mide solo los recursos de la identidad de ese directorio"
+    )
     parametros = analizador.parse_args(argumentos)
+    if parametros.identidad is not None:
+        return _identidad(parametros.identidad)
 
     reales = [ruta.read_bytes() for ruta in parametros.fotos]
     m = medir(reales or None, len(reales) or parametros.n)
