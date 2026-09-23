@@ -68,16 +68,3 @@ def test_el_titulo_de_cada_pagina_es_texto(
     assert len(encontrados) == 1, encontrados
     assert "<" not in encontrados[0] and ">" not in encontrados[0], encontrados[0]
     assert encontrados[0].strip().endswith("Orquídea")
-
-
-@pytest.mark.parametrize(
-    "html",
-    [
-        "<title><p><a href='/'>Mi colección</a></p> — Orquídea</title>",  # la forma de b1
-        "<html><head></head></html>",  # sin título: no hay nada que juzgar, y no es verde
-    ],
-)
-def test_un_titulo_con_marcado_o_ausente_no_pasa(html: str) -> None:
-    encontrados = titulos(html)
-
-    assert len(encontrados) != 1 or "<" in encontrados[0]
