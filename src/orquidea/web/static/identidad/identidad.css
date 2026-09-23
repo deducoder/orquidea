@@ -51,7 +51,8 @@ main {
   padding: 0 var(--spacing-step-2) var(--spacing-step-4);
 }
 
-/* enlace-navegacion: la cabecera, al alcance del pulgar */
+/* enlace-navegacion: la cabecera y todo enlace que no va dentro de una frase, al alcance del
+   pulgar (M2 de ADR-014) */
 header {
   display: flex;
   flex-wrap: wrap;
@@ -61,7 +62,8 @@ header {
   border-bottom: 1px solid var(--colors-linea);
 }
 
-header a {
+header a,
+.accion {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -181,6 +183,10 @@ button:active {
   border: 1px solid var(--colors-linea);
   padding: var(--spacing-step-2);
   margin: 0 0 var(--spacing-step-2);
+}
+
+.tarjetas small {
+  display: block;
 }
 
 .miniatura {

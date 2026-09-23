@@ -190,3 +190,30 @@ def test_la_hoja_se_sirve_como_css(client: TestClient) -> None:
     assert respuesta.status_code == 200
     assert respuesta.headers["content-type"].startswith("text/css")
     assert "--colors-fondo" in respuesta.text
+
+
+# Enlaces que van dentro de una frase: la excepción *inline* de WCAG 2.2 SC 2.5.8 y 2.5.5.
+EN_UNA_FRASE = {("coleccion.html", "/especies")}
+
+
+def test_todo_enlace_suelto_es_un_objetivo_de_48() -> None:
+    # M2 de ADR-014: fuera de una frase, un enlace es `enlace-navegacion` (clase `accion`), salvo
+    # los de la cabecera (ya lo son) y el que envuelve la miniatura (96 × 96)
+    enlaces = []
+    for plantilla in sorted(PLANTILLAS.glob("*.html")):
+        texto = plantilla.read_text(encoding="utf-8")
+        if plantilla.name == "base.html":
+            texto = re.sub(r"<header>.*?</header>", "", texto, flags=re.S)
+        for etiqueta, contenido in re.findall(r"(<a\s[^>]*>)(.*?)</a>", texto, re.S):
+            href = re.search(r'href="([^"]*)"', etiqueta)
+            enlaces.append((plantilla.name, href.group(1) if href else "", etiqueta, contenido))
+    sueltos = [
+        f"{nombre}: {href}"
+        for nombre, href, etiqueta, contenido in enlaces
+        if 'class="accion"' not in etiqueta
+        and "<img" not in contenido
+        and (nombre, href) not in EN_UNA_FRASE
+    ]
+
+    assert len(enlaces) >= 15  # sin enlaces no hay verde
+    assert sueltos == []

@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% block title %}Quitar ejemplar — Orquídea{% endblock %}
 {% block content %}
-<p><a href="/coleccion">Mi colección</a></p>
+<p><a class="accion" href="/coleccion">Mi colección</a></p>
 <h1>Quitar ejemplar</h1>
 <p>
   ¿Quitar
@@ -12,6 +12,6 @@
 <form method="post" action="/coleccion/{{ item.ejemplar.id }}/quitar">
   {% include "_csrf.html" %}
   <button type="submit">Sí, quitar</button>
-  <a href="/coleccion">Cancelar</a>
+  <a class="accion" href="/coleccion">Cancelar</a>
 </form>
 {% endblock %}

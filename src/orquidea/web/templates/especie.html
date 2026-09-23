@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% block title %}{{ especie.nombre_cientifico }} — Orquídea{% endblock %}
 {% block content %}
-<p><a href="/especies">Todas las especies</a></p>
+<p><a class="accion" href="/especies">Todas las especies</a></p>
 <h1><i>{{ especie.nombre_cientifico }}</i></h1>
 {% if especie.nombres_comunes %}
 <p>También conocida como: {{ especie.nombres_comunes | join(", ") }}</p>
