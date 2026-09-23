@@ -2,17 +2,17 @@
 type: adr
 id: ADR-012
 title: "Paleta de Orquídea"
-status: proposed
+status: accepted
 date: 2026-09-22
 epic: e5
-published: pendiente — se resuelve al completar el registro
+published: no — el proyecto no tiene espacio de documentación externo; el ADR vive solo en el repositorio
 ---
 
 # ADR-012: Paleta de Orquídea
 
 ## Status
 
-Proposed.
+Accepted.
 
 ## Context
 
@@ -59,8 +59,8 @@ Fijados el 2026-09-22 en el scratchpad (`$S`), cada candidata en su mejor versi�
 | Criterio | Estrato | (A) | (B) | (C) |
 |---|---|---|---|---|
 | P1 · texto ≥ 7:1 | `mechanical` | sí — 8 pares, 0 bajo el umbral; el más bajo, alerta sobre papel 8.38:1 (`ran:`) | sí — 8 pares, 0 bajo; el más bajo, acento sobre hoja 7.86:1 (`ran:`) | sí — 8 pares, 0 bajo; el más bajo, tinta suave sobre papel 8.04:1 (`ran:`) |
-| P2 · no compite con la flor | `judgement` | por juzgar | por juzgar | por juzgar |
-| P3 · papel y tinta | `judgement` | por juzgar | por juzgar | por juzgar |
+| P2 · no compite con la flor | `judgement` | sí — el azul tinta no está en ninguna flor ni follaje | sí | **no** — el acento verde queda junto al follaje de las plantas |
+| P3 · papel y tinta | `judgement` | sí | **no** — hoja crema sobre blanco y acento sepia se leen como lámina de herbario (descartada en ADR-010) | sí |
 
 ### Contraejemplos
 
@@ -78,6 +78,30 @@ exit=1
 
 - **P2 y P3 — no aplica: no hay oráculo.** Se juzgan en elección forzada sobre una lámina de tres pantallas de teléfono (una por candidata) con fotos reales de orquídeas del catálogo, compuesta con Roboto a 16 px y 3× en el scratchpad (`$S/lamina-paletas.jpg`). Fotos, solo en el scratchpad: *Barkeria spectabilis* (Wikimedia Commons, «Barkeria spectabilis.jpg», Brett Francis (Oort), CC BY-SA 2.5), *Cuitlauzina pulchella* (Commons, «Cuitlauzina pulchella (7533856656).jpg», Mitch, CC BY 2.0) y *Brassia verrucosa* (Commons, «BrassiaVerrucosa.jpg», Chhe, dominio público).
 
+Las celdas de P2 y P3 las propuso el agente sobre la lámina y las confirmó el humano con su elección.
+
 ## Decision
 
-Sin resolver.
+**Option (A) Papel cálido, azul tinta**, elegida y firmada por Daniel Efraín Domínguez Urbina el 2026-09-22 en elección forzada entre las tres, sobre la lámina con fotos.
+
+1. Roles y valores: `papel` `#F7F3EA`, `hoja` `#FFFFFF`, `tinta` `#1E1C19`, `tinta suave` `#4A453E`, `renglón` `#8C8475`, `acento` `#1F3A5F`, `alerta` `#8A1C1C`.
+2. Ocho pares de texto declarados (cuatro tintas sobre papel y sobre hoja), todos ≥ 7:1 — el más bajo 8.38:1; `renglón` declarado como `component` para s5.5.
+3. Variante: ninguna; la relación de invariancia no se compara, y s5.5 lo dice así.
+4. El entregable es `palette.md` en `governance/identity/`, legible por `contraste-de-lectura.py` y por `tokens.py pairs`.
+
+## Consequences
+
+**Positive:**
+- Todo texto, incluido el secundario, pasa 7:1 con margen (≥ 8.38:1), así que s5.5 puede derivar escalones sin caer bajo el umbral a la primera.
+- El único color vivo de la pantalla es la foto, y el acento no se confunde con ninguna flor del catálogo probada.
+
+**Negative / costs:**
+- El acento contra la tinta da 1.48:1: los enlaces no se distinguen por color y tienen que ir subrayados (s5.6, s5.7).
+- No hay rol de éxito ni de aviso; si un día la aplicación muestra confirmaciones, la paleta crece con un ADR nuevo.
+- `renglón` a 3.34:1 sobre papel es una línea visible; si s5.6 quiere renglones más tenues para decoración, necesitará un rol aparte que no se use en bordes de campos.
+- El juicio de P2 se hizo con tres fotos de tres especies; una flor azul (no hay en el catálogo probado) podría acercarse al acento.
+
+## Alternatives considered
+
+- **(B) Papel blanco, acento sepia:** pasa P1 (7.86:1), falla P3 — se lee como la lámina de herbario que ADR-010 descartó.
+- **(C) Gris frío, verde bosque:** pasa P1 (8.04:1), falla P2 — el acento verde compite con el follaje.
