@@ -1,4 +1,6 @@
+import gzip
 import importlib.util
+import os
 from pathlib import Path
 from types import ModuleType
 
@@ -154,3 +156,64 @@ def test_una_ficha_que_pasa_del_presupuesto_basta_para_salir_con_1(
     assert codigo == 1
     assert salida.count("PASA DEL PRESUPUESTO") == 2  # las dos fichas; la lista está dentro
     assert "OK" in salida
+
+
+def test_medir_identidad_suma_el_gzip_de_cada_archivo_del_directorio(tmp_path: Path) -> None:
+    hoja = b"body { color: #222; }\n" * 200
+    (tmp_path / "identidad.css").write_bytes(hoja)
+    (tmp_path / "fuentes").mkdir()
+    (tmp_path / "fuentes" / "texto.woff2").write_bytes(os.urandom(4096))
+
+    m = medicion.medir_identidad(tmp_path)
+
+    assert [nombre for nombre, _ in m.archivos] == ["fuentes/texto.woff2", "identidad.css"]
+    assert dict(m.archivos)["identidad.css"] == len(gzip.compress(hoja))
+    assert m.total == sum(octetos for _, octetos in m.archivos)
+
+
+def test_la_identidad_cuenta_en_gzip_no_sin_comprimir(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    (tmp_path / "identidad.css").write_bytes(b" " * (60 * 1024))  # 60 KB que comprimen a casi nada
+
+    assert medicion.main(["--identidad", str(tmp_path)]) == 0
+    assert "OK" in capsys.readouterr().out
+
+
+def test_la_identidad_sobre_el_tope_sale_con_1(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    (tmp_path / "fuente.woff2").write_bytes(os.urandom(60 * 1024))
+
+    codigo = medicion.main(["--identidad", str(tmp_path)])
+
+    salida = capsys.readouterr().out
+    assert codigo == 1
+    assert "1 archivo(s)" in salida and "PASA DEL TOPE" in salida
+
+
+def test_el_tope_de_la_identidad_incluye_la_frontera(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    (tmp_path / "fuente.woff2").write_bytes(os.urandom(8 * 1024))
+    total = medicion.medir_identidad(tmp_path).total
+
+    assert medicion.TOPE_DE_IDENTIDAD == 50 * 1024
+    monkeypatch.setattr(medicion, "TOPE_DE_IDENTIDAD", total)
+    assert medicion.main(["--identidad", str(tmp_path)]) == 0
+    monkeypatch.setattr(medicion, "TOPE_DE_IDENTIDAD", total - 1)
+    assert medicion.main(["--identidad", str(tmp_path)]) == 1
+
+
+@pytest.mark.parametrize("vacio", [True, False])
+def test_sin_recursos_de_identidad_no_hay_verde(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str], vacio: bool
+) -> None:
+    directorio = tmp_path / "identidad"
+    if vacio:
+        directorio.mkdir()
+
+    codigo = medicion.main(["--identidad", str(directorio)])
+
+    assert codigo == 2
+    assert "nada que medir" in capsys.readouterr().out
