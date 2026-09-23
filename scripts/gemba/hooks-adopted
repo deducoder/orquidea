@@ -1,0 +1,1 @@
+Written by /gemba:hooks: this project adopted the hooks shipped beside the git convention. To stop using them, delete this file and run git config --unset core.hooksPath.
