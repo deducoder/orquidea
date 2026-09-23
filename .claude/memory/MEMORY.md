@@ -29,3 +29,6 @@
 - [No enviar el correo a servicios externos](no-enviar-el-correo-a-servicios-externos.md) — User-Agent genérico; preguntar si piden contacto
 - [Capturas a 360 px en Chrome de Windows](captura-360-en-chrome-de-windows.md) — iframe de 360; sesión con curl; --data-urlencode
 - [survival-review es tarea del plan](survival-review-es-tarea-del-plan.md) — se omitió en s5.2–s5.4; nombrarlo en cada plan de pieza
+- [Promociones del parking lot al diseñar](revisar-promociones-del-parking-lot-al-disenar.md) — grep de Promotion en story-design; s1 descubrió dos en T7
+- [Verificar el efecto en el render](verificar-el-efecto-en-el-render.md) — la prueba de padding no vio el centrado de flex
+- [precedence.py juzga por creación](precedence-py-juzga-por-creacion.md) — eslabón ui recalculado sale FAIL; leer el orden a mano

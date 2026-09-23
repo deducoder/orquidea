@@ -57,6 +57,10 @@ wrote it. Retirement moves an entry to `## Retired` with its reason.
   *Origin:* s1, `story-design`, 2026-09-23 — decidido por el humano con la recomendación del diseño.
   *Promotion:* al reportarlo al método, o si una lectura de ADR-013 a ADR-015 aplica una decisión reemplazada.
 
+- **`work/epics/e5-visual-identity/docs.md` quedó desactualizado en dos puntos después de s1.** La línea 95 dice que `design-md.py` rechaza `{colors.acción-fondo}` (ASCII), y 0.23.0 lo acepta: los tokens ya van en español (ADR-016). La línea 93 dice que el gate no ata `semantics.md` a `primitives.md` ni `DESIGN.md` a sus tablas, y `test_la_cadena_de_colores_esta_atada` ya lo hace. El archivo es de `epic-close` de un epic cerrado, y la regla de un solo escritor impide corregirlo desde una historia.
+  *Origin:* s1, `story-implement` T7 y T9 (barridos del parking lot), 2026-09-23.
+  *Promotion:* la próxima vez que se genere documentación de desarrollador que cubra la identidad (el cierre de un epic que la toque, o una versión), o si alguien sigue esas dos líneas y pierde tiempo.
+
 ## Retired
 
 ### 2026-09-23 · s1 · El gate no ataba la cadena de la identidad entre `semantics.md`, `primitives.md` y `DESIGN.md`
