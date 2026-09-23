@@ -1,0 +1,55 @@
+#!/usr/bin/env bash
+# commit-msg — refuses a commit message that breaks the git rules' R1 (a single
+# line, no Co-Authored-By trailer) or R3 (the closed type vocabulary), and a
+# subject longer than the convention's ~72-character target.
+#
+# It reads the message git hands it as its first argument, already resolved:
+# quoting, command substitution and option parsing are git's problem and are
+# finished before this runs. That is why it is short — reconstructing this
+# string from a shell command is where every defect of such a hook lives.
+#
+# Shipped beside the git convention and wired by /gemba:hooks, never by
+# install or update: wiring is the project's own act. check-hooks-wiring is
+# what says whether the wiring a project declared is there.
+set -u
+
+f="$1"
+
+# A merge commit is exempt: the method fixes its message as git's default,
+# unadorned, and git's default (`Merge branch 'x' into y`) satisfies neither
+# R1's shape nor R3's vocabulary. Without this, every `--no-ff` merge the
+# method mandates would be refused. MERGE_HEAD is present only while a merge
+# is being concluded, so this cannot exempt an ordinary commit.
+if [ -e "$(git rev-parse --git-dir)/MERGE_HEAD" ]; then
+  exit 0
+fi
+
+# Blank and comment lines are not the message. git leaves its own commentary
+# in the file for editor-driven commits.
+n="$(grep -cve '^[[:space:]]*$' -e '^#' "$f")"
+
+if [ "$n" -ne 1 ]; then
+  echo "R1: the commit message must be a single line (found $n). See the git convention's rules, R1."
+  exit 1
+fi
+
+if grep -qi 'Co-Authored-By' "$f"; then
+  echo "R1: Co-Authored-By trailers are forbidden by the commit convention. See the git convention's rules, R1 and R9."
+  exit 1
+fi
+
+if ! grep -qE '^(feat|fix|refactor|test|docs|chore|style|build|ci)\(' "$f"; then
+  echo "R3: the commit type must be one of feat|fix|refactor|test|docs|chore|style|build|ci. See the git convention's rules, R3."
+  exit 1
+fi
+
+# The convention targets ~72 characters (the git convention's Description
+# rule): long enough that `git log --oneline` stops truncating. The bound
+# refuses the outliers rather than arguing about a word.
+subject="$(grep -ve '^[[:space:]]*$' -e '^#' "$f" | head -1)"
+if [ "${#subject}" -gt 72 ]; then
+  echo "R-length: the subject is ${#subject} characters; the convention targets ~72. See the git convention, Description rule."
+  exit 1
+fi
+
+exit 0

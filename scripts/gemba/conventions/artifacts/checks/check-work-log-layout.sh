@@ -183,7 +183,7 @@ done < <(printf '%s\n' "$dirs" | sed -nE "s#.*/$key-[^/]*\$#\\1#p" | sort | uniq
 while IFS= read -r f; do
   [ -n "$f" ] || continue
   art_count=$((art_count+1))
-  printf '%s\n' "$canonical" | grep -x "$(basename "$f")" >/dev/null || {
+  printf '%s\n' "$canonical" | grep -Fx -- "$(basename "$f")" >/dev/null || {
     echo "P3 FAIL: $f is not a canonical artifact name (artifacts rules R2)."
     echo "         The canonical names, from the convention's own table: $(printf '%s' "$canonical" | tr '\n' ' ')"
     rc=1

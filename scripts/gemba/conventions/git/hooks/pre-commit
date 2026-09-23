@@ -1,0 +1,93 @@
+#!/usr/bin/env bash
+# pre-commit — makes the gate a condition instead of a claim: a commit cannot
+# exist while ./scripts/check is red. Without it, "the gate ran" is an
+# assertion by whoever committed, and a session that reads $? after a pipe
+# takes a refused run for a green one.
+#
+# Shipped beside the git convention and wired by /gemba:hooks, never by
+# install or update: wiring is the project's own act. check-hooks-wiring is
+# what says whether the wiring a project declared is there.
+#
+# DECLARED LIMIT: this runs the gate against the WORKING TREE, not against the
+# staged index. A commit made while unstaged changes are present is therefore
+# gated on a tree that is not exactly what it records. That is deliberate — it
+# is precisely the discipline this replaces (`./scripts/check` run by hand
+# before committing has always tested the working tree), and stashing mid-hook
+# to isolate the index trades a known, stated approximation for a real risk of
+# losing work.
+set -u
+
+# A merge being concluded is exempt — but note exactly what that covers.
+# Since git 2.24 a CLEAN merge fires pre-merge-commit, not pre-commit, so it
+# never reaches this hook and this guard has nothing to do with it. What the
+# guard does cover is the CONFLICTED merge, whose resolution ends in a real
+# `git commit` with MERGE_HEAD still present; without it, a conflict could
+# not be concluded while the gate is red. The full suite runs at integration
+# time either way. MERGE_HEAD exists only mid-merge, so this cannot exempt an
+# ordinary commit.
+if [ -e "$(git rev-parse --git-dir)/MERGE_HEAD" ]; then
+  exit 0
+fi
+
+# Announced, never silent: a skip nobody can see is indistinguishable from a
+# pass, which is the whole failure this control replaces.
+root="$(git rev-parse --show-toplevel)" || {
+  echo "pre-commit: cannot resolve the repository root — gate skipped"
+  exit 0
+}
+gate="$root/scripts/check"
+
+# A project with no gate is not blocked — but the skip is announced. A silent
+# skip cannot be told apart from a pass.
+if [ ! -x "$gate" ]; then
+  echo "pre-commit: no executable scripts/check — gate skipped"
+  exit 0
+fi
+
+# AN AMEND IS TOLD TO THE GATE, NOT EXEMPTED FROM IT. The history-shape check
+# judges commits already made — this hook runs before the message exists — so
+# a behaviour commit straight onto the dev branch turns the gate red for every
+# commit after it, including the `--amend` that would repair it, and the only
+# way out without --no-verify would be `reset --soft`. The amend replaces
+# HEAD, so HEAD's sha goes to the gate in GEMBA_AMENDED_HEAD and that check —
+# its only reader — leaves that one commit unjudged, out loud. Every other
+# check, and every other commit, is judged as before: an amend over any other
+# red is still refused.
+#
+# git hands a pre-commit hook nothing that says "amend" (measured on git
+# 2.47.3: no argument, no GIT_REFLOG_ACTION; GIT_AUTHOR_DATE is exported for
+# plain commits too). The one witness is the argv of the `git commit` that
+# runs this hook — its parent. DECLARED LIMIT: an alias (`git ca`) or an
+# abbreviated `--amen` is not recognised, and the amend is refused as it was
+# before this: the detection fails towards red, never towards green.
+if [ -r "/proc/$PPID/cmdline" ]; then
+  parent_args="$(tr '\0' '\n' < "/proc/$PPID/cmdline")"
+else
+  parent_args="$(ps -o args= -p "$PPID" 2>/dev/null | tr ' ' '\n')"
+fi
+if printf '%s\n' "$parent_args" | grep -qx -- '--amend'; then
+  GEMBA_AMENDED_HEAD="$(git rev-parse -q --verify HEAD)" && export GEMBA_AMENDED_HEAD
+fi
+
+# THE GIT ENVIRONMENT MUST BE STRIPPED. Git exports GIT_INDEX_FILE (and
+# friends) to every hook, and they leak into whatever the gate runs: a check
+# that builds its own worktrees resolves them against git's temporary index
+# instead of the repository. Measured: a check that builds worktrees failed
+# inside the hook and passed on the same tree from a shell, with
+# GIT_INDEX_FILE as the single reproduced cause. Without this the hook would
+# refuse correct commits.
+#
+# Status into a variable on the line after the call, never read through a
+# pipe: that is the exact mistake this control exists to make impossible.
+out="$(cd "$root" && env -u GIT_INDEX_FILE -u GIT_DIR -u GIT_WORK_TREE \
+        -u GIT_PREFIX -u GIT_OBJECT_DIRECTORY -u GIT_QUARANTINE_PATH \
+        -u GIT_ALTERNATE_OBJECT_DIRECTORIES "$gate" 2>&1)"
+rc=$?
+
+if [ "$rc" -ne 0 ]; then
+  printf '%s\n' "$out"
+  echo "pre-commit: refused — the gate is not green (exit $rc)"
+  exit 1
+fi
+
+exit 0

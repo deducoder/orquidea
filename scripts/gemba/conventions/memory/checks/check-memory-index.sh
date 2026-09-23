@@ -3,10 +3,13 @@
 # memory convention's flat store
 # Property: the always-loaded memory index exists and fits its load budget.
 #
-# P1 — .claude/memory/MEMORY.md exists. The memory convention is set up in
-#      every project at creation or onboarding, and the index is the one
-#      memory artifact loaded into every session: without it nothing is
-#      recalled, and nothing says so.
+# P1 — .claude/memory/MEMORY.md exists wherever the store does, or ever did.
+#      The index is the one memory artifact loaded into every session: without
+#      it nothing is recalled, and nothing says so. project-create and
+#      project-onboard set the store up; a project wired by install alone never
+#      had one, and reads as a declared opt-out — the store absent from the
+#      tree and from its history. A store present without its index, or one
+#      the history shows was there and is gone, is red.
 # P2 — MEMORY.md is at most 20480 bytes. Past the harness's load limit the
 #      index is truncated silently, and a truncated entry is indistinguishable,
 #      from inside a session, from a memory nobody wrote. The bound and the
@@ -44,6 +47,13 @@ index=$store/MEMORY.md
 bound=20480
 
 if [ ! -f "$index" ]; then
+  # A store this project never had is declined, not lost: nothing in its
+  # history ever touched it. One it had and lost is red.
+  last=$(git log -1 --format=%h -- "$store" 2>/dev/null)
+  if [ -z "$last" ] && [ ! -d "$store" ]; then
+    echo "check-memory-index: opt-out — this project has never had a $store"
+    exit 0
+  fi
   echo "P1 FAIL: $index is missing — the memory convention is adopted here and the index is its always-loaded tier."
   exit 1
 fi
@@ -65,7 +75,7 @@ leaf_count=0
 while IFS= read -r leaf; do
   [ -n "$leaf" ] || continue
   leaf_count=$((leaf_count+1))
-  printf '%s\n' "$linked" | grep -x "$leaf" >/dev/null || {
+  printf '%s\n' "$linked" | grep -Fx -- "$leaf" >/dev/null || {
     echo "P3 FAIL: $store/$leaf is not reachable from the index (memory rules R3)."
     rc=1
   }

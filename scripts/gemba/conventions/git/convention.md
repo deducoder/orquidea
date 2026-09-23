@@ -93,6 +93,27 @@ Derivation is agnostic to the work item type:
 | Close with retrospective | `chore` | |
 | Integration merge | merge message, not a conventional commit | See below |
 
+### What marks each phase on the work item's branch
+
+The order of a work item's phases is the core's to declare, in its work-items
+table, and nowhere else. What this convention adds is how each of those
+phases shows on the branch, so that the order can be read back from the
+history:
+
+| Phase | Its mark |
+|---|---|
+| `start` | `chore({scope}): initialize` |
+| `implement`, `fix` | a task commit — `test`, `feat`, `fix` or `refactor`, scoped to the area of code |
+| `close` | nothing on the branch: the merge into `{dev-branch}` is its mark |
+| any other | `chore({scope}): {phase}` |
+
+A task commit is only one of those four types. A `chore` or `docs` commit
+scoped to anything but the work item — parking an entry, landing a research,
+closing a session — is meta-work done alongside the cycle, not a step of it,
+and a decision record's `docs({scope}): …` is the work item's own container
+commit. `check-phase-order`, beside this convention, reads this table and the
+core's to judge the order.
+
 **Merge:** the message is **git's default, with no embellishment**:
 `Merge branch 'story/{scope}/{slug}' into {dev-branch}`. No `Tracker:` line
 and no hand-written summary — both are redundant with the branch name.

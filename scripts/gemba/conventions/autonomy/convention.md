@@ -1,7 +1,7 @@
 # Autonomy — Convention
 
 > What turns a project's unattended mode on, the stops that mode can never run
-> past, and the one question a project answers about it. The mode itself — the
+> past, and what a project answers about it. The mode itself — the
 > orchestrator that walks a version, and the human gates that read whether it
 > is on — belongs to the skills that implement it; this file stops at what they
 > read.
@@ -29,7 +29,7 @@ Turning the mode on is the one decision this mode exists to keep with a
 person, so what a person gives is the decision, and the file is its
 transcription. The supervisor of the unattended orchestrator writes it, and
 only when the human, in that conversation, asks for an unattended run and
-answers its one question: whether to turn the mode on, which stops to add, and
+answers what it asks: whether to turn the mode on, which stops to add, and
 through which channel a stop reaches them. It quotes the answer in the
 binding's `Last verified`, writes nothing on an answer that does not turn the
 mode on, and runs this convention's check on what it wrote. No other skill
@@ -72,8 +72,16 @@ one, whether it halts or answers. The census below says so, gate by gate. **The
 skills are never edited for this mode**: an adopter cannot change them, so the
 classification lives here, where the orchestrator reads it.
 
-Each row names a skill, a fragment of one line of its `SKILL.md` exactly as
-written, and a class:
+**The always-loaded core has gates too**, and they are censused the same way:
+the unattended session carries the core wired into the project's `CLAUDE.md`
+whatever skill it runs, so a pause the core asks for is a gate that session
+meets. Its rows name `core` where a skill's rows name the skill, and their text
+is a line of the shipped core. A pause read there with no row would be obeyed
+the only way left — a question at the end of a turn, outside every stop and
+every entry of the decisions log.
+
+Each row names a skill, or `core`, a fragment of one line of its `SKILL.md`
+or of the core exactly as written, and a class:
 
 - **a stop id** (`P1`…) — the work halts there, as the stop says;
 - **`decision`** — the orchestrator answers it, and writes the entry in the
@@ -89,7 +97,7 @@ written, and a class:
 
 ### The gates
 
-| Skill | Gate (exact text, one line of the SKILL.md) | Class |
+| Skill | Gate (exact text, one line of the SKILL.md or the core) | Class |
 |---|---|---|
 | bug-analyse | If it does not, **stop** and run | not a gate |
 | bug-analyse | equally likely, **stop and escalate to a human** with the two strongest | P5 |
@@ -97,6 +105,7 @@ written, and a class:
 | bug-close | If any is missing, **stop** and run the phase that produces it. | not a gate |
 | bug-close | → **stop** and report | P5 |
 | bug-close | the message to the human. Neither merge nor push | P5 |
+| bug-close | stop and report it, because `-D` would destroy them. | P5 |
 | bug-fix | If it does not, **stop** and run | not a gate |
 | bug-fix | the fix is a specified delta: ask the human | decision |
 | bug-fix | escalate to a human with the partial state documented. | P3 |
@@ -134,6 +143,7 @@ written, and a class:
 | story-implement | say what it contains and let the human decide. | decision |
 | story-implement | and the acceptance confirmation. | not a gate |
 | story-implement | fix it or escalate. | P3 |
+| story-implement | Stop on the first defect; never accumulate errors | P3 |
 | story-plan | If it does not, **stop** and run | not a gate |
 | story-review | If either is not true, **stop** and finish `story-implement` | not a gate |
 | story-review | acceptance confirmation, and the human's approval | not a gate |
@@ -143,7 +153,7 @@ written, and a class:
 | bug-start | unreadable, **stop and report** which | P5 |
 | bug-start | **stop and report** the mismatch rather than start it | P5 |
 | story-close | → **not merging**; return it as a finding to the human | P5 |
-| integrate | Otherwise, ask whether the target carries content | not a gate |
+| integrate | Fetch the target, then ask whether it carries content | not a gate |
 | integrate | pause and ask for explicit human | P1 |
 | integrate | confirmation before doing anything below** | P1 |
 | integrate | target paused for explicit confirmation before | P1 |
@@ -156,6 +166,7 @@ written, and a class:
 | release | confirmation → nothing ships, and nothing is renamed or marked. | P1 |
 | release | full gate, confirmation pause, | P1 |
 | release | **stop and report** that it is not a hotfix | P5 |
+| release | Stop and report it: the promotion, the tag and the | P5 |
 | release | A **presented output**: rendered to the human, never written to a file. | not a gate |
 | debug | respect the box (escalate if exceeded) | P3 |
 | debug | time-box respected — escalate if exceeded. | P3 |
@@ -180,6 +191,17 @@ written, and a class:
 | delegate | this skill stops and reports to | P5 |
 | delegate | Stop, name the files, and do not merge either until the human has looked | P5 |
 | delegate | stop, report it as a finding for the epic's review, never resolve it by hand | P5 |
+| color | ## 2 · Propose the fitness criteria, then stop | decision |
+| typography | ## 2 · Propose the fitness criteria, then stop | decision |
+| logo | ## 2 · Propose the fitness criteria, then stop | decision |
+| ui | ## 2 · Propose the fitness criteria, then stop | decision |
+| core | show the work, explain the reasoning, let the human | not a gate |
+| core | stop on incoherence, ambiguity or drift | P5 |
+| core | ask before expensive | decision |
+| core | conflict to surface to the human before the first commit it would | P5 |
+| core | undeclared → ask before the first push. | P5 |
+| core | **Stop on defects.** Do not accumulate; a red gate is fixed, not bypassed. | P3 |
+| core | **Pause for human review by default** after significant work | decision |
 
 ### Skills outside the mode
 
@@ -198,19 +220,39 @@ gates stay the person's:
 | session-close | a session belongs to the person who closes it |
 | orchestrate | the mode itself: its stops are the closed list, not gates the mode walks |
 
-## The binding's one question
+## The binding's two questions
 
-One question, because the switch is the file itself and the stops are shipped:
+Two, and only the first is required. The switch is the file itself and the
+stops are shipped, so a binding is asked what it **adds** to a closed list and
+nothing about narrowing it. The second is optional because its absence has to
+mean the safe answer, which is the paragraph after the table:
 
 ### What the binding answers
 
 | Label | Required | Answers |
 |---|---|---|
 | Added stops | yes | The stops this project adds to the shipped list, or that it adds none |
+| Delegated approvals | no | Whether the orchestrator may approve fitness criteria on the person's behalf. Absent, it may not |
 
 A label outside this table is red, whatever it says: `Removed stops`,
 `Disabled stops` or a bare `Stops` have no meaning here, and reading one as a
 harmless extra would let a binding appear to narrow the list.
+
+**Without `Delegated approvals`, the fitness approval halts the run, and no
+new rule had to be written to say so.** The census classifies that pause
+`decision`, and a decision the orchestrator answers on the person's behalf
+needs this binding to say that it may. Left unanswered, the declaration that
+decision needs is not there — which is already `a declaration that is
+missing`, P5 by its own wording in `### The stops` above. That is the
+asymmetry, and it is why this label **supplies a declaration** instead of
+removing a stop: a binding still has no way to narrow the closed list, and a
+project that says nothing keeps the behaviour it has today.
+
+**Approving is not signing.** The label authorises answering the approval
+pause. It does not make a judgement of the `judgement` stratum signed: a
+judgement with no person behind it is still written `unsigned` and still named
+among the criteria left unanswered. Two distinct acts, and a binding that
+delegates the first delegates nothing of the second.
 
 **Write text on the label's own line.** The shape every binding has reads a
 value up to its first structural line, and a nested bullet is one: a
