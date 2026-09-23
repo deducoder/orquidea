@@ -149,6 +149,75 @@ def test_objetivos_sin_sujeto_o_ilegible_sale_con_2(tmp_path: Path, texto: str) 
     assert comprobar.main(["objetivos", _sujeto(tmp_path, texto), "--minimo", "44"]) == 2
 
 
+MINIMOS = (
+    "| Token | Value | From |\n|-------|-------|------|\n"
+    "| components.tarjeta.padding | 16px | spacing.step-2 |\n"
+    "| components.boton.minHeight | 48px | spacing.step-6 |\n"
+    "| components.boton.minWidth | 48px | spacing.step-6 |\n"
+)
+
+
+def test_los_minimos_declarados_se_miden_sin_tabla_target(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    codigo = comprobar.main(["objetivos", _sujeto(tmp_path, MINIMOS), "--minimo", "44"])
+
+    salida = capsys.readouterr().out
+    assert codigo == 0
+    assert "boton mínimo 48×48  necesita 44×44  SÍ" in salida
+    assert "1 objetivo(s) medidos, 0 bajo 44 px" in salida
+
+
+@pytest.mark.parametrize(("token", "dimension"), [("minHeight", "alto"), ("minWidth", "ancho")])
+def test_un_minimo_bajo_el_umbral_sale_con_1_y_se_nombra(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str], token: str, dimension: str
+) -> None:
+    texto = MINIMOS.replace(f"boton.{token} | 48px", f"boton.{token} | 32px")
+
+    codigo = comprobar.main(["objetivos", _sujeto(tmp_path, texto), "--minimo", "44"])
+
+    salida = capsys.readouterr().out
+    assert codigo == 1
+    assert f"boton: {dimension} bajo 44" in salida
+    assert "1 objetivo(s) medidos, 1 bajo 44 px" in salida
+
+
+def test_un_minimo_exactamente_en_el_umbral_pasa(tmp_path: Path) -> None:
+    texto = MINIMOS.replace("| 48px |", "| 44px |")
+
+    assert comprobar.main(["objetivos", _sujeto(tmp_path, texto), "--minimo", "44"]) == 0
+
+
+def test_una_dimension_sin_minimo_se_dice_no_medida(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    texto = MINIMOS.replace("| components.boton.minHeight | 48px | spacing.step-6 |\n", "")
+
+    codigo = comprobar.main(["objetivos", _sujeto(tmp_path, texto), "--minimo", "44"])
+
+    salida = capsys.readouterr().out
+    assert codigo == 0
+    assert "boton mínimo ancho 48  necesita 44  SÍ — alto no declarado, no se midió" in salida
+    assert "1 objetivo(s) medidos, 0 bajo 44 px" in salida
+
+
+def test_la_tabla_target_y_los_minimos_se_cuentan_juntos(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    codigo = comprobar.main(
+        ["objetivos", _sujeto(tmp_path, OBJETIVOS + "\n" + MINIMOS), "--minimo", "44"]
+    )
+
+    assert codigo == 0
+    assert "3 objetivo(s) medidos, 0 bajo 44 px" in capsys.readouterr().out
+
+
+def test_sin_target_y_sin_minimos_sale_con_2(tmp_path: Path) -> None:
+    texto = "| Token | Value | From |\n|---|---|---|\n| components.tarjeta.padding | 16px | x |\n"
+
+    assert comprobar.main(["objetivos", _sujeto(tmp_path, texto), "--minimo", "44"]) == 2
+
+
 @pytest.mark.parametrize(
     "argumentos",
     [

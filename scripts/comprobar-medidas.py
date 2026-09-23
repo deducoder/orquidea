@@ -7,9 +7,12 @@
 `piso` lee la tabla `Step | Size | … | Roles` y juzga que cada rol de lectura esté en un escalón de
 al menos el piso, y que no haya dos escalones del mismo tamaño (colapsados al redondear).
 `objetivos` lee la tabla `Target | Width | Height` (la que escribe `design-md.py`) y juzga que cada
-objetivo llegue al mínimo en sus dos dimensiones; existe porque `tokens.py targets` fija 24 px y M2
-pide 44 (WCAG 2.2 SC 2.5.5, AAA). No modela las excepciones de la fuente (inline, espaciado,
-equivalente): un objetivo que se apoye en una se declara y se firma, no se mide aquí.
+objetivo llegue al mínimo en sus dos dimensiones; lee también los mínimos declarados
+(`components.{c}.minWidth`/`minHeight` en la tabla `Token | Value | From`), que `tokens.py targets`
+no mide, y una dimensión sin mínimo declarado se dice no medida (ADR-016, V2). Existe porque
+`tokens.py targets` fija 24 px y M2 pide 44 (WCAG 2.2 SC 2.5.5, AAA). No modela las excepciones
+de la fuente (inline, espaciado, equivalente): un objetivo que se apoye en una se declara y se
+firma, no se mide aquí.
 
 Sale con 0 si todo lo juzgado pasa, con 1 si algo no (y lo nombra), y con 2 si no juzgó nada: sin
 tabla, sin filas, un rol de lectura que ningún escalón lleva, un valor ilegible o un archivo que no
@@ -81,9 +84,34 @@ def piso(texto: str, minimo: int, lectura: list[str]) -> int:
     return 1 if bajo or colapsados else 0
 
 
+MINIMO_DECLARADO = re.compile(r"components\.(.+)\.(minWidth|minHeight)")
+
+
+def _minimos(texto: str) -> dict[str, dict[str, int]]:
+    """Los mínimos declarados de la tabla `Token | Value | From`: componente → {dimensión: px}."""
+    minimos: dict[str, dict[str, int]] = {}
+    for fila in _filas(texto, "Token") or []:
+        m = MINIMO_DECLARADO.fullmatch(fila[0])
+        if m:
+            if len(fila) < 2:
+                raise ValueError(f"fila incompleta de mínimos: {fila}")
+            dimension = "ancho" if m.group(2) == "minWidth" else "alto"
+            minimos.setdefault(m.group(1), {})[dimension] = _px(fila[1])
+    return minimos
+
+
+def _veredicto(nombre: str, medidas: dict[str, int], minimo: int) -> tuple[bool, str]:
+    faltan = [d for d, v in medidas.items() if v < minimo]
+    if not faltan:
+        return False, "SÍ"
+    return True, "NO — " + ", ".join(f"{nombre}: {d} bajo {minimo}" for d in faltan)
+
+
 def objetivos(texto: str, minimo: int) -> int:
-    filas = _filas(texto, "Target")
-    if not filas:
+    """Juzga la tabla `Target` (caja literal) y los mínimos declarados (`minWidth`/`minHeight`)."""
+    filas = _filas(texto, "Target") or []
+    minimos = _minimos(texto)
+    if not filas and not minimos:
         print("0 objetivo(s) medidos — nada que juzgar")
         return 2
     bajo = 0
@@ -91,15 +119,25 @@ def objetivos(texto: str, minimo: int) -> int:
         if len(fila) < 3:
             raise ValueError(f"fila incompleta de objetivos: {fila}")
         nombre, ancho, alto = fila[0], _px(fila[1]), _px(fila[2])
-        faltan = [d for d, v in (("ancho", ancho), ("alto", alto)) if v < minimo]
-        bajo += bool(faltan)
-        veredicto = (
-            "SÍ"
-            if not faltan
-            else "NO — " + ", ".join(f"{nombre}: {d} bajo {minimo}" for d in faltan)
-        )
+        falla, veredicto = _veredicto(nombre, {"ancho": ancho, "alto": alto}, minimo)
+        bajo += falla
         print(f"{nombre} {ancho}×{alto}  necesita {minimo}×{minimo}  {veredicto}")
-    print(f"{len(filas)} objetivo(s) medidos, {bajo} bajo {minimo} px")
+    for nombre, medidas in minimos.items():
+        falla, veredicto = _veredicto(nombre, medidas, minimo)
+        bajo += falla
+        if len(medidas) == 2:
+            print(
+                f"{nombre} mínimo {medidas['ancho']}×{medidas['alto']}  "
+                f"necesita {minimo}×{minimo}  {veredicto}"
+            )
+        else:
+            ((dimension, valor),) = medidas.items()
+            otra = "alto" if dimension == "ancho" else "ancho"
+            print(
+                f"{nombre} mínimo {dimension} {valor}  necesita {minimo}  {veredicto}"
+                f" — {otra} no declarado, no se midió"
+            )
+    print(f"{len(filas) + len(minimos)} objetivo(s) medidos, {bajo} bajo {minimo} px")
     return 1 if bajo else 0
 
 
