@@ -121,38 +121,68 @@ Respuesta propuesta. Una dimensión que el formato de `DESIGN.md` no lleva se de
 
 ### La rejilla
 
-Las celdas medibles son lo que cada regla produce: dicen `pending: measured when run` y se llenan corriendo la regla, sin tocar criterio ni parámetro.
+Corridas el 2026-09-23 hacia el scratchpad (`$S`), con los nombres de e5 (el renombre es posterior y no cambia valores):
+- Componentes de cada candidata de mínimo en `$S/comp-{A|B|C}.md`, y su `DESIGN.md` generado con `python3 $D/design-md.py --spec-version alpha --name Orquídea governance/identity/ui/semantics.md governance/identity/ui/type-scale.md governance/identity/ui/spacing.md $S/comp-{A|B|C}.md` (gemba-design 0.23.0).
+- Medidas con `scripts/comprobar-medidas.py objetivos --minimo 44`, `tokens.py targets` y `provenance`. Las cifras se copiaron de la salida vista; criterios y parámetros sin tocar desde el commit que abrió este registro.
 
 | Criterio | Estrato | Mínimo (A) fijo | Mínimo (B) solo mínimo | Mínimo (C) los dos |
 |---|---|---|---|---|
-| V2 · ≥ 44 × 44 | `mechanical` | pending: measured when run | pending: measured when run | pending: measured when run |
-| `target-size` (SC 2.5.8) | `mechanical` | pending: measured when run | pending: measured when run | pending: measured when run |
-| `provenance` | `mechanical` | pending: measured when run | pending: measured when run | pending: measured when run |
-| Propiedades fuera del vocabulario (stderr del generador) | medido | pending: measured when run | pending: measured when run | pending: measured when run |
+| V2 · ≥ 44 × 44 | `mechanical` | sí — 4 objetivos, 0 bajo 44 px (`ran:`) | sí — 4 objetivos (los mínimos), 0 bajo 44 px (`ran:`) | sí — 8 objetivos (4 cajas y 4 mínimos), 0 bajo 44 px (`ran:`) |
+| `target-size` (SC 2.5.8) | `mechanical` | sí — `targets: 4 target(s) judged, 0 below 24x24` (`ran:`) | **sin sujeto** — `targets: no subject — the file declares 0 targets`, exit 2 (`ran:`); lo cubre V2 | sí — 4, 0 (`ran:`) |
+| `provenance` | `mechanical` | sí — 12 tokens, 0 fuera de escala (`ran:`) | sí — 12, 0 (`ran:`) | sí — 20, 0 (`ran:`) |
+| Propiedades fuera del vocabulario (stderr del generador) | medido | 0 | 8 | 8 |
+
+La (A) declara un ancho fijo de 48 px que la hoja no aplica: `min-width` deja crecer el botón con su texto ("Agregar una planta…"). La (C) declara dos veces lo mismo.
 
 | Criterio | Estrato | Medida (A) sin tope | Medida (B) 34em | Medida (C) 40em |
 |---|---|---|---|---|
-| Caracteres por renglón a 1280 px (estimado, ancho medio de 0.5 em a 16 px) | medido, informativo | pending: measured when run | pending: measured when run | pending: measured when run |
+| Caracteres por renglón a 1280 px (estimado: ancho del texto entre 8 px, el ancho medio de 0.5 em a 16 px; el texto mide 1280 − 2 × 16 px de margen) | medido, informativo | 156 | 68 | 80 |
+| Caracteres por renglón a 360 px (mismo estimado; 328 px de texto) | medido, informativo | 41 | 41 | 41 |
 | V3 · el renglón no cruza la pantalla | `judgement` | pending | pending | pending |
 
 | Criterio | Estrato | Elevación (A) tono y borde | Elevación (B) solo tono | Elevación (C) solo borde |
 |---|---|---|---|---|
-| Contraste del borde sobre el plano vecino | medido, informativo | pending: measured when run | — sin borde | pending: measured when run |
-| Contraste `superficie` sobre `fondo` | medido, informativo | pending: measured when run | pending: measured when run | — sin tono |
+| Contraste del borde `línea` sobre el plano vecino (`contrast.py`) | medido, informativo | 3.34:1 sobre `fondo`, 3.70:1 sobre `superficie` | — sin borde | 3.34:1 sobre `fondo` |
+| Contraste `superficie` sobre `fondo` (`contrast.py`) | medido, informativo | 1.11:1 | 1.11:1 | — sin tono |
 | V4 · papel y tinta | `judgement` | pending | pending | pending |
+
+La tarjeta no es un componente interactivo, así que `component-contrast` (SC 1.4.11) no la obliga. Las cifras dicen lo que aparta cada plano, no un umbral. Con la (B), 1.11:1 es todo lo que separa la hoja del papel.
 
 | Criterio | Estrato | V1 · catorce dimensiones |
 |---|---|---|
-| Respondidas / sin respuesta | `mechanical` | pending: measured when run |
+| Respondidas / sin respuesta | `mechanical` | 14 juzgadas, 0 sin respuesta, sobre la tabla propuesta en `$S/dimensiones.md` contra `conventions/interface-dimensions.md` de 0.23.0 (`ran:`) |
 
 ### Contraejemplos
 
-Se escriben antes de producir, en la misma forma que ADR-014:
+- **V2 — rojo, visto, sobre la (B) con el mínimo de ancho de `enlace-navegacion` bajado a `{spacing.step-4}`:**
 
-- V2: un `DESIGN.md` de la (B) con un mínimo bajado a `spacing.step-4`;
-- V1: un `components.md` sin la respuesta de `measure`;
-- `provenance`: un `minWidth` editado a mano sin su escalón;
-- V3 y V4: no aplica, no hay oráculo.
+```
+$ uv run python scripts/comprobar-medidas.py objetivos $S/DESIGN-B-bajo.md --minimo 44
+…
+enlace-navegacion mínimo 32×48  necesita 44×44  NO — enlace-navegacion: ancho bajo 44
+4 objetivo(s) medidos, 1 bajo 44 px
+exit=1
+```
+
+- **`provenance` — rojo, visto, sobre un `DESIGN.md` de la (B) editado a mano (`boton.minWidth` a 40px):**
+
+```
+$ python3 $G/tokens.py provenance $S/DESIGN-amano.md
+provenance: 12 token(s) judged, 1 not from the declared scale
+  components.boton.minWidth 40px names spacing.step-6 = 48px  FAIL
+exit=1
+```
+
+- **V1 — rojo, visto, sobre la tabla propuesta sin la fila de `measure`:**
+
+```
+$ uv run python scripts/comprobar-dimensiones.py …/conventions/interface-dimensions.md $S/dimensiones-sin-measure.md
+measure: sin respuesta  NO
+14 dimensión(es) ui juzgada(s), 1 sin respuesta
+exit=1
+```
+
+- **V3 y V4 — no aplica: no hay oráculo.** Se juzgan en elección forzada sobre las láminas.
 
 ## Decision
 
