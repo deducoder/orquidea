@@ -202,6 +202,17 @@ def test_mi_coleccion_enlaza_al_formulario_de_plantas_fuera_del_catalogo(
     assert 'href="/coleccion/nuevo"' in client.get("/coleccion").text
 
 
+def test_el_titulo_de_mi_coleccion_es_texto_y_el_enlace_aparece_una_vez(
+    client: TestClient,
+) -> None:
+    html = client.get("/coleccion").text
+    titulo = re.search(r"<title>(.*?)</title>", html, re.S)
+
+    assert titulo is not None
+    assert titulo.group(1) == "Mi colección — Orquídea"
+    assert html.count('href="/coleccion/nuevo"') == 1
+
+
 def test_el_formulario_de_planta_propia_trae_los_campos_y_el_token(
     client: TestClient, sesion: Sesion
 ) -> None:
