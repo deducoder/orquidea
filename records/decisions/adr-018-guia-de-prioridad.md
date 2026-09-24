@@ -2,7 +2,7 @@
 type: adr
 id: ADR-018
 title: "La guía de prioridad de las pantallas de objeto de Orquídea"
-status: proposed
+status: accepted
 date: 2026-09-24
 epic: —
 published: no — el proyecto no tiene espacio de documentación externo; el ADR vive solo en el repositorio
@@ -12,7 +12,7 @@ published: no — el proyecto no tiene espacio de documentación externo; el ADR
 
 ## Status
 
-Proposed.
+Accepted, 2026-09-24.
 
 ## Context
 
@@ -121,10 +121,10 @@ EOF
 
 | Criterio | Estrato | A | B | C |
 |---|---|---|---|---|
-| G1 — rangos válidos, sin huecos, firma | `mechanical` | pending: measured when run | pending: measured when run | pending: measured when run |
-| G2 — cada tarea servida | `mechanical` | pending: measured when run | pending: measured when run | pending: measured when run |
-| G3 — foto antes que los registros en S3 y S4 | `judgement` | a la lectura, sí en las dos; juicio del dueño pendiente | a la lectura, no: en S3 el último riego (2) va antes que la miniatura (3), y en S4 la foto (4) va después de riegos y floraciones; juicio del dueño pendiente | a la lectura, sí en las dos (S3: miniatura 2 y riego 4; S4: foto 3 y riego 4); juicio del dueño pendiente |
-| G4 — sirve a las tareas; T6 en campo decide | `judgement` | pendiente del dueño | pendiente del dueño | pendiente del dueño |
+| G1 — rangos válidos, sin huecos, firma | `mechanical` | sí — `4 of 9 screens guided, signed by Daniel Efraín Domínguez Urbina, 2026-09-24`, exit 0 | sí — `4 of 9 screens guided, unsigned`, exit 0 | sí — `4 of 9 screens guided, unsigned`, exit 0 |
+| G2 — cada tarea servida | `mechanical` | sí — `7 tasks, 20 ranks, 7 served`, exit 0 | sí — `7 tasks, 20 ranks, 7 served`, exit 0 | sí — `7 tasks, 19 ranks, 7 served`, exit 0 |
+| G3 — foto antes que los registros en S3 y S4 | `judgement` | sí — Daniel Efraín Domínguez Urbina, 2026-09-24 | a la lectura, no: en S3 el último riego (2) va antes que la miniatura (3), y en S4 la foto (4) va después de riegos y floraciones; no juzgado: el dueño eligió A | a la lectura, sí en las dos (S3: miniatura 2 y riego 4; S4: foto 3 y riego 4); no juzgado: el dueño eligió A |
+| G4 — sirve a las tareas; T6 en campo decide | `judgement` | sí — Daniel Efraín Domínguez Urbina, 2026-09-24 | no juzgado: el dueño eligió A | no juzgado: el dueño eligió A |
 
 ### El rojo de los criterios medibles
 
@@ -146,12 +146,20 @@ Sondas en el scratchpad de la sesión, contra el inventario y el conjunto reales
 
 ## Decision
 
-Sin resolver.
+**La opción A, foto primero, en S3 y S4, con S1 y S2 comunes.** La eligió y firmó Daniel Efraín Domínguez Urbina el 2026-09-24. Está escrita en `governance/identity/ui/screens/priority-guide.md`: 20 rangos en 4 pantallas.
+
+La entrada del parking lot "la ficha repite fuentes largas por cada cuidado" no se promueve aquí: la guía dice qué lleva S2 y no cómo se cita la fuente. Decisión del dueño, en la misma fecha.
 
 ## Consequences
 
-Sin resolver.
+- La ficha del ejemplar de hoy sigue la opción C: nombre, notas, foto, riegos, floraciones. La guía pide foto, nombre, registrar un riego, historial, floraciones, cambiar la foto, notas y editar o quitar. La plantilla cambia en la composición, no aquí.
+- En Mi colección, hoy la miniatura ya va primero, pero editar y quitar van antes que las notas, y "Agregado el" no está en la guía porque no sirve a ninguna tarea. La composición decide si se queda.
+- La composición de S1 a S4 ya tiene su rango 1 firmado, que es la pregunta "¿qué es lo más importante aquí?" de la `survival-review` de una página.
+- S5 a S9 no tienen guía: cuando se compongan, primero necesitan una.
 
 ## Alternatives considered
 
-Sin resolver: las opciones A, B y C de arriba.
+- **B, cuidado primero:** registrar un riego en el rango 2 de S4. A la lectura no cumple G3, porque la foto va después de los registros en S3 y S4.
+- **C, identidad primero (el orden de hoy):** a la lectura cumple G3, pero pone las notas antes que la foto y registrar un riego en el rango 4 de S4. El dueño eligió A.
+
+Las dos, rango por rango, están arriba y en *What was tried and rejected* de la guía.
