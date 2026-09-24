@@ -23,6 +23,12 @@ Historia s5, standalone. Tiene dos piezas:
 - **Pesos**, del eslabón `ui`. `page.py` de gemba-design 0.24.0 rechaza todo paso tipográfico sin `fontWeight`. Con el `DESIGN.md` de s1 salen cuatro rechazos (sonda de la sesión). El peso ya está decidido en `governance/identity/specimen.md:26-27`: `text` 400 y `emphasis` 700 para `h1` y `h2`. En 0.23.0 el formato no lo componía (`type-scale.md:81`, y el `--gap` de ADR-016). En 0.24.0, `design-md.py` lee una columna `Font weight` en la escala. Aquí no se elige nada: el valor se lee del espécimen, y por eso no hay opciones.
 - **Composición de S1**, el quinto eslabón de la técnica `screens`, con la guía de ADR-018 (S1: rango 1 la búsqueda, rango 2 las especies que coinciden) y el patrón de ADR-019 (S1 `list-detail`). Hay dos candidatos declarados antes de producir el primero.
 
+**Lo que trajo producir los pesos**, en `c521f89`:
+
+- `derivar-medidas.py escala` acepta `--pesos` y emite `Font weight`. `comprobar-medidas.py piso` lee `Roles` por su encabezado. Los dos cambios tienen su prueba, que se vio en rojo primero.
+- `DESIGN.md`, regenerado con 0.24.0, trae además una tabla `Target` que el generador saca de los mínimos declarados (4 controles de 48 × 48). También quita el Known Gap que decía que un mínimo declarado nunca se medía. `comprobar-medidas.py objetivos` cuenta ahora 8: los mismos 4 controles como tabla y como mínimo, que cuentan juntos, como decidió s1. `test_identidad_ui.py` lo dice.
+- `identidad.css` declara los tres pesos en `:root`, porque la cadena hoja ↔ `DESIGN.md` de s1 lo exige, y `h1`/`h2` los citan con `var()`. Los `700` de `strong`, `dt` y el aviso siguen como literal admitido: son el rol `emphasis` del espécimen, no un paso de la escala. El render no cambia.
+
 S3 y S4 no se componen: `page.py` no dibuja imágenes, y su rango 1 es la foto. Está aparcado (`7602e44`).
 
 ### Criterios de supervivencia, aplicados
@@ -143,9 +149,9 @@ Dos, declarados antes de producir el primero. Los dos llevan `screen: S1`, `page
 
 | Criterio | Estrato | A | B |
 |---|---|---|---|
-| W1 — pesos del espécimen; ningún rechazo por `fontWeight` | `mechanical` | pending: measured when run | pending: measured when run |
-| K1 — 7:1 en cada texto | `mechanical` | pending: measured when run | pending: measured when run |
-| K2 — `page.py` exit 0 | `mechanical` | pending: measured when run | pending: measured when run |
+| W1 — pesos del espécimen; ningún rechazo por `fontWeight` | `mechanical` | sí — `c521f89`: `0` 400, `1` 700, `2` 700; ningún rechazo | sí — el mismo `DESIGN.md` |
+| K1 — 7:1 en cada texto | `mechanical` | sí — `7 par(es) de texto juzgado(s), 0 bajo el umbral`, exit 0 | sí — `7 par(es) de texto juzgado(s), 0 bajo el umbral`, exit 0 |
+| K2 — `page.py` exit 0 | `mechanical` | sí — `6 rows in 2 ranks, 4 components, 0 representative, 3 parameters, 0 literals outside a token; ranks 25 ≥ 16 px; 7 texts on their ground, all ≥ 4.5:1; 5 focusable, 0 ring …, 5 on the browser's focus, not measured` | sí — `8 rows in 2 ranks, 5 components, …; 7 texts on their ground, all ≥ 4.5:1; 5 focusable, … 5 on the browser's focus, not measured` |
 | K3 — lo más importante es la búsqueda; elección contra S1, S2 y S3 del concepto | `judgement` | pendiente del dueño | pendiente del dueño |
 
 ### El rojo de los criterios medibles
