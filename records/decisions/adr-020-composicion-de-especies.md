@@ -27,6 +27,7 @@ Historia s5, standalone. Tiene dos piezas:
 
 - `derivar-medidas.py escala` acepta `--pesos` y emite `Font weight`. `comprobar-medidas.py piso` lee `Roles` por su encabezado. Los dos cambios tienen su prueba, que se vio en rojo primero.
 - `DESIGN.md`, regenerado con 0.24.0, trae además una tabla `Target` que el generador saca de los mínimos declarados (4 controles de 48 × 48). También quita el Known Gap que decía que un mínimo declarado nunca se medía. `comprobar-medidas.py objetivos` cuenta ahora 8: los mismos 4 controles como tabla y como mínimo, que cuentan juntos, como decidió s1. `test_identidad_ui.py` lo dice.
+- `7053e36` hace lo mismo con la familia: `--familia` en `derivar-medidas.py`, con su prueba en rojo primero; la columna `Font family` (`specimen.md:19`); `DESIGN.md` regenerado, idéntico en dos corridas; y `--typography-step-N-font-family` en `:root`. `--familia`, la propiedad de `identidad.css` que pinta el cuerpo, se queda: la prueba del espécimen la lee. Los dos nombres tienen el mismo valor, y la cadena lo comprueba.
 - `identidad.css` declara los tres pesos en `:root`, porque la cadena hoja ↔ `DESIGN.md` de s1 lo exige, y `h1`/`h2` los citan con `var()`. Los `700` de `strong`, `dt` y el aviso siguen como literal admitido: son el rol `emphasis` del espécimen, no un paso de la escala. El render no cambia.
 
 S3 y S4 no se componen: `page.py` no dibuja imágenes, y su rango 1 es la foto. Está aparcado (`7602e44`).
@@ -149,7 +150,7 @@ Dos, declarados antes de producir el primero. Los dos llevan `screen: S1`, `page
 
 | Criterio | Estrato | A | B |
 |---|---|---|---|
-| W1 — peso y familia del espécimen; ningún rechazo por `fontWeight`; la página escribe la familia | `mechanical` | peso sí — `c521f89`: `0` 400, `1` 700, `2` 700, ningún rechazo; familia pending: measured when run | lo mismo |
+| W1 — peso y familia del espécimen; ningún rechazo por `fontWeight`; la página escribe la familia | `mechanical` | sí — peso en `c521f89` (`0` 400, `1` 700, `2` 700, ningún rechazo); familia en `7053e36`: la página escribe `font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Noto Sans", sans-serif` | sí — el mismo `DESIGN.md`, la misma `font-family` |
 | K1 — 7:1 en cada texto | `mechanical` | sí — `7 par(es) de texto juzgado(s), 0 bajo el umbral`, exit 0 | sí — `7 par(es) de texto juzgado(s), 0 bajo el umbral`, exit 0 |
 | K2 — `page.py` exit 0 | `mechanical` | sí — `6 rows in 2 ranks, 4 components, 0 representative, 3 parameters, 0 literals outside a token; ranks 25 ≥ 16 px; 7 texts on their ground, all ≥ 4.5:1; 5 focusable, 0 ring …, 5 on the browser's focus, not measured` | sí — `8 rows in 2 ranks, 5 components, …; 7 texts on their ground, all ≥ 4.5:1; 5 focusable, … 5 on the browser's focus, not measured` |
 | K3 — lo más importante es la búsqueda; elección contra S1, S2 y S3 del concepto | `judgement` | pendiente del dueño | pendiente del dueño |
