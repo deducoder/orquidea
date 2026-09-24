@@ -185,12 +185,21 @@ never leave it unresolved.
 <!-- /gemba:fragment gemba-code -->
 
 <!-- gemba:fragment gemba-design -->
-## Visual identity
+## User interface
 
-What this addon adds to the method, for work whose product is a visual
-identity — a palette, a typeface system, a logotype, the interface derived from them — its colour, type, spacing and components, generated as a DESIGN.md. The core above governs
+What this addon adds to the method, for work whose product is a user
+interface — its tokens, its components, the UI kit they make and the frontend
+that consumes it, generated as a DESIGN.md. The core above governs
 everything; this section governs how that method is practised when the thing
 being built is looked at rather than run.
+
+**The identity techniques are in transit.** Concept, colour, typography, the
+logotype and the commission that sequences them ship here until Gemba Brand, a
+plugin of their own, receives them in the next version. Until then they stay
+invocable and everything below governs them, but they are not what this addon
+is for: an interface is derived from a decided identity however that identity
+arrived — produced with them, extracted from one that already exists, or
+handed over.
 
 **The criterion comes first.** Before anything visual is produced, the
 criterion it will be judged against is written down and committed. Not a
