@@ -19,10 +19,13 @@
   --colors-foco: #1F3A5F;
   --typography-step-0-font-size: 16px;
   --typography-step-0-line-height: 24px;
+  --typography-step-0-font-weight: 400;
   --typography-step-1-font-size: 20px;
   --typography-step-1-line-height: 32px;
+  --typography-step-1-font-weight: 700;
   --typography-step-2-font-size: 25px;
   --typography-step-2-line-height: 36px;
+  --typography-step-2-font-weight: 700;
   --spacing-step-1: 8px;
   --spacing-step-2: 16px;
   --spacing-step-3: 24px;
@@ -87,14 +90,14 @@ header form {
 h1 {
   font-size: var(--typography-step-2-font-size);
   line-height: var(--typography-step-2-line-height);
-  font-weight: 700;
+  font-weight: var(--typography-step-2-font-weight);
   margin: var(--spacing-step-3) 0 var(--spacing-step-2);
 }
 
 h2 {
   font-size: var(--typography-step-1-font-size);
   line-height: var(--typography-step-1-line-height);
-  font-weight: 700;
+  font-weight: var(--typography-step-1-font-weight);
   margin: var(--spacing-step-4) 0 var(--spacing-step-1);
 }
 

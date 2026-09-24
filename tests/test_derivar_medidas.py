@@ -91,6 +91,37 @@ def test_la_escala_sale_en_la_tabla_que_lee_design_md(capsys: pytest.CaptureFixt
     )
 
 
+def test_con_pesos_la_escala_lleva_la_columna_font_weight_antes_de_roles(
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    codigo = medidas.main([*ESCALA_A, "--pesos", "0=400,1=700,2=700"])
+
+    assert codigo == 0
+    assert capsys.readouterr().out == (
+        "| Step | Size | Line height | Font weight | Roles |\n"
+        "|---|---|---|---|---|\n"
+        "| 0 | 16px | 24px | 400 | text, binomial, date |\n"
+        "| 1 | 20px | 32px | 700 | subtitulo |\n"
+        "| 2 | 25px | 36px | 700 | titulo |\n"
+    )
+
+
+@pytest.mark.parametrize(
+    "pesos",
+    [
+        "0=400,1=700",  # el escalón 2 sin peso
+        "0=400,1=700,2=700,3=700",  # un peso para un escalón que no existe
+        "0=400,1=700,2=1001",  # fuera de 1 a 1000
+        "0=400,1=700,2=negrita",  # no es un número
+    ],
+)
+def test_pesos_incompletos_o_ilegibles_no_derivan_nada(
+    capsys: pytest.CaptureFixture[str], pesos: str
+) -> None:
+    assert medidas.main([*ESCALA_A, "--pesos", pesos]) == 2
+    assert "no se derivó nada" in capsys.readouterr().out
+
+
 def test_un_escalon_negativo_y_uno_sin_roles_se_escriben(
     capsys: pytest.CaptureFixture[str],
 ) -> None:
@@ -197,8 +228,8 @@ def _tabla(texto: str, cabecera: str) -> list[str]:
         (
             "type-scale.md",
             "escala",
-            ("base", "razon", "escalones", "roles"),
-            "| Step | Size | Line height | Roles |",
+            ("base", "razon", "escalones", "roles", "pesos"),
+            "| Step | Size | Line height | Font weight | Roles |",
             1 + 3,
         ),
         (

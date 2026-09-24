@@ -19,12 +19,15 @@ typography:
   step-0:
     fontSize: 16px
     lineHeight: 24px
+    fontWeight: 400
   step-1:
     fontSize: 20px
     lineHeight: 32px
+    fontWeight: 700
   step-2:
     fontSize: 25px
     lineHeight: 36px
+    fontWeight: 700
 rounded:
   recto: "0px"
 spacing:
@@ -188,6 +191,13 @@ Generated from the same tokens as the frontmatter, for the instruments of the me
 | error | fondo | text |
 | texto-secundario | superficie | text |
 
+| Target | Width | Height |
+|--------|-------|--------|
+| boton | 48 | 48 |
+| boton-presionado | 48 | 48 |
+| campo | 48 | 48 |
+| enlace-navegacion | 48 | 48 |
+
 | Step | Value |
 |------|-------|
 | spacing.step-1 | 8px |
@@ -216,15 +226,15 @@ Generated from the same tokens as the frontmatter, for the instruments of the me
 - ADR-013: roles de color de la interfaz
 - ADR-014: escala tipográfica, espaciado y componentes
 - ADR-016: la identidad en el vocabulario de gemba-design 0.23.0
+- ADR-020: el peso de cada paso de la escala
 
 ## Known Gaps
 
 - Radius, elevation and motion are not derived: no rule from an attribute to a value is published.
 - Whatever needs a rendered interface is not measured: zoom, reflow, text spacing and focus.
-- A component property outside the closed vocabulary — a declared `minWidth`/`minHeight` among them — is accepted and resolved like any other, but the mechanical stratum measures a target only from a literal `height`/`width`: a component with no literal box has no target row, and a declared minimum is never checked against it.
 - Iconography has nowhere to declare a family or a style: neither `Dimension` nor `number`, the only types the spec gives a token, hold a name like "Material Symbols" or "outlined".
 - El anillo de foco (rol foco) no tiene componente: el formato no compone estados de foco.
-- El peso (700 en titulo y subtitulo) y las cifras tabulares de date viven en specimen.md: el formato no los compone en typography.
+- Las cifras tabulares de date viven en specimen.md: el formato no las compone en typography.
 - Los enlaces dentro de un párrafo se apoyan en la excepción inline de WCAG 2.2 SC 2.5.8 y 2.5.5; no son objetivos declarados.
 - Trazo: 1 px en el borde del campo y en los separadores, 2 px en el anillo de foco (components.md); el formato no tiene grosores.
 - Elevación: dos planos separados solo por tono, superficie sobre fondo (components.md); el formato no tiene elevación.

@@ -52,15 +52,25 @@ def _px(celda: str) -> int:
     return int(m.group(1))
 
 
+def _columna_de_roles(texto: str) -> int:
+    """La posición de `Roles` en el encabezado de la escala: otra columna puede ir antes."""
+    for linea in texto.splitlines():
+        celdas = [c.strip() for c in linea.strip().strip("|").split("|")]
+        if celdas and celdas[0] == "Step" and "Size" in celdas:
+            return next((i for i, c in enumerate(celdas) if c.startswith("Roles")), 3)
+    return 3
+
+
 def piso(texto: str, minimo: int, lectura: list[str]) -> int:
     filas = _filas(texto, "Step")
     if not filas:
         print("0 escalón(es) medidos — nada que juzgar")
         return 2
+    roles = _columna_de_roles(texto)
     for fila in filas:
-        if len(fila) < 4:
+        if len(fila) <= roles:
             raise ValueError(f"fila incompleta de la escala: {fila}")
-    escalones = [(f[0], _px(f[1]), [r.strip() for r in f[3].split(",")]) for f in filas]
+    escalones = [(f[0], _px(f[1]), [r.strip() for r in f[roles].split(",")]) for f in filas]
     bajo = 0
     for rol in lectura:
         donde = [(id_, tamano) for id_, tamano, roles in escalones if rol in roles]
