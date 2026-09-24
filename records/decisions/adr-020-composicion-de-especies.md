@@ -51,7 +51,7 @@ Aprobados por Daniel Efraín Domínguez Urbina el 2026-09-24.
 
 | # | Criterio | Pieza | De dónde | Estrato | Qué lo decide |
 |---|---|---|---|---|---|
-| W1 | Cada paso tipográfico declara el peso que le da `specimen.md` (`step-0` 400; `step-1` y `step-2` 700), y `page.py` deja de rechazar por `fontWeight` | pesos | commission 2, vía el espécimen | `mechanical` | `design-md.py`, y después `page.py` sobre el candidato A |
+| W1 | Cada paso tipográfico declara el peso y la familia que le da `specimen.md` (`step-0` 400; `step-1` y `step-2` 700; la pila de `specimen.md:19` en los tres), `page.py` deja de rechazar por `fontWeight` y la página generada escribe esa `font-family` | pesos y familia | commission 2, vía el espécimen | `mechanical` | `design-md.py`, después `page.py` sobre el candidato A, y `grep` de `font-family` en su página |
 | K1 | Cada texto que la página dibuja llega a 7:1 sobre el fondo donde cae | página | commission 2 | `mechanical` | el comando de K1 (abajo), cuya salida lee `scripts/contraste-de-lectura.py` |
 | K2 | `page.py` genera la página sin ningún rechazo: pesos por rango, contraste, literales y los rangos de la guía | página | de este eslabón | `mechanical` | `page.py`, exit 0, y su censo |
 | K3 | Lo más importante de la página es la búsqueda (rango 1 de la guía), y el candidato elegido gana contra S1, S2 y S3 de `concept.md` (ADR-010) | página | concepto | `judgement` | las dos preguntas del dueño, en orden. Él firmó la guía, así que ya conoce la respuesta de la primera |
@@ -149,7 +149,7 @@ Dos, declarados antes de producir el primero. Los dos llevan `screen: S1`, `page
 
 | Criterio | Estrato | A | B |
 |---|---|---|---|
-| W1 — pesos del espécimen; ningún rechazo por `fontWeight` | `mechanical` | sí — `c521f89`: `0` 400, `1` 700, `2` 700; ningún rechazo | sí — el mismo `DESIGN.md` |
+| W1 — peso y familia del espécimen; ningún rechazo por `fontWeight`; la página escribe la familia | `mechanical` | peso sí — `c521f89`: `0` 400, `1` 700, `2` 700, ningún rechazo; familia pending: measured when run | lo mismo |
 | K1 — 7:1 en cada texto | `mechanical` | sí — `7 par(es) de texto juzgado(s), 0 bajo el umbral`, exit 0 | sí — `7 par(es) de texto juzgado(s), 0 bajo el umbral`, exit 0 |
 | K2 — `page.py` exit 0 | `mechanical` | sí — `6 rows in 2 ranks, 4 components, 0 representative, 3 parameters, 0 literals outside a token; ranks 25 ≥ 16 px; 7 texts on their ground, all ≥ 4.5:1; 5 focusable, 0 ring …, 5 on the browser's focus, not measured` | sí — `8 rows in 2 ranks, 5 components, …; 7 texts on their ground, all ≥ 4.5:1; 5 focusable, … 5 on the browser's focus, not measured` |
 | K3 — lo más importante es la búsqueda; elección contra S1, S2 y S3 del concepto | `judgement` | pendiente del dueño | pendiente del dueño |
@@ -167,6 +167,7 @@ Sondas en el scratchpad de la sesión. Los candidatos se extrajeron de las tabla
   refused: step-0 (used by enlace-navegacion) declares no fontWeight — …
   ```
   exit 1.
+- **W1, la familia, rojo** (W1 creció el 2026-09-24, con la aprobación del dueño, cuando las capturas de los candidatos salieron en Times): la página del candidato A generada con el `DESIGN.md` de `c521f89` tiene **0** apariciones de `font-family`. El navegador pone su letra por defecto, una serif, y no la pila de sistema de `specimen.md:19`. Sonda: con una columna `Font family` en una copia de la escala, `design-md.py` sale 0 y la página escribe `font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Noto Sans", sans-serif`.
 - **K2, rojo:** el candidato A sin sus filas de rango 2: `refused: rank 2 of S1 has no row in the composition`, exit 1.
 - **K1, rojo:** una copia del `DESIGN.md` con un componente `tenue` (`textColor` `línea`), y el candidato A con una especie pintada con él: `#8C8475 sobre #F7F3EA (texto): 3.34:1 necesita 7:1 NO`, `7 par(es) de texto juzgado(s), 1 bajo el umbral`, exit 1. Control: el candidato A tal cual da `7 par(es) de texto juzgado(s), 0 bajo el umbral`, exit 0 (la etiqueta y el texto del campo cuentan por separado). Una composición sin filas da `0 par(es) de texto juzgado(s) — nada que juzgar`, exit 2.
 
