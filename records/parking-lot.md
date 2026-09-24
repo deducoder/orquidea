@@ -60,6 +60,9 @@ wrote it. Retirement moves an entry to `## Retired` with its reason.
 - **`work/epics/e5-visual-identity/docs.md` quedó desactualizado en dos puntos después de s1.** La línea 95 dice que `design-md.py` rechaza `{colors.acción-fondo}` (ASCII), y 0.23.0 lo acepta: los tokens ya van en español (ADR-016). La línea 93 dice que el gate no ata `semantics.md` a `primitives.md` ni `DESIGN.md` a sus tablas, y `test_la_cadena_de_colores_esta_atada` ya lo hace. El archivo es de `epic-close` de un epic cerrado, y la regla de un solo escritor impide corregirlo desde una historia.
   *Origin:* s1, `story-implement` T7 y T9 (barridos del parking lot), 2026-09-23.
   *Promotion:* la próxima vez que se genere documentación de desarrollador que cubra la identidad (el cierre de un epic que la toque, o una versión), o si alguien sigue esas dos líneas y pierde tiempo.
+- **`inventory-sources.py` de gemba-design 0.24.0 da OK con un conjunto de pantallas sin población.** Con un conjunto de 0 filas, o con su tabla bajo otro encabezado que `## The screens`, sale `OK (… 0 screens, each derived from an entry)` con exit 0. La técnica `screens` pide que un chequeo con población cero no sea verde, y el mismo script ya lo hace con el inventario vacío (exit 2). Aquí se rodea con la guarda de F2 en ADR-017: sin pantallas contadas no hay veredicto. Hallazgo del addon; no se parcha la copia.
+  *Origin:* s2, paso `counterexample`, 2026-09-24 — sondas escritas en ADR-017.
+  *Promotion:* al actualizar gemba-design, comprobar si el instrumento ya sale 2 con cero pantallas y quitar la guarda; o al reportar hallazgos al addon.
 
 ## Retired
 
