@@ -190,6 +190,10 @@ or of the core exactly as written, and a class:
 | typography | ## 2 · Propose the fitness criteria, then stop | decision |
 | logo | ## 2 · Propose the fitness criteria, then stop | decision |
 | ui | ## 2 · Propose the fitness criteria, then stop | decision |
+| screens | ## 2 · Propose the fitness criteria, then stop | decision |
+| screens | confirmation of the inventory and the choice of rule are judged | not a gate |
+| screens | **Confirmation.** Whoever commissions confirms the inventory | P5 |
+| screens | the confirmation is what covers both | not a gate |
 | core | show the work, explain the reasoning, let the human | not a gate |
 | core | stop on incoherence, ambiguity or drift | P5 |
 | core | ask before expensive | decision |
