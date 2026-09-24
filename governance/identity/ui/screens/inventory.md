@@ -4,7 +4,7 @@ commission: "Las pantallas de la interfaz web de Orquídea, derivadas de su inve
 read-at: "c9a8ea1"
 decision: ADR-017
 date: 2026-09-24
-confirmed-by: "pending — borrador leído, sin confirmar"
+confirmed-by: "Daniel Efraín Domínguez Urbina, 2026-09-24"
 ---
 
 # Orquídea — Inventory
@@ -19,7 +19,7 @@ Las citas se leyeron en `c9a8ea1`, relativas a la raíz del repositorio. Las acc
 
 ### Objects
 
-`Within`, en este borrador, es la propuesta del agente, leída de dónde se muestra hoy cada objeto: los cuidados en la ficha de especie; los riegos, las floraciones y la foto en la ficha del ejemplar. La confirma el dueño.
+`Within` lo propuso el agente, leído de dónde se muestra hoy cada objeto: los cuidados en la ficha de especie; los riegos, las floraciones y la foto en la ficha del ejemplar. El dueño lo confirmó tal cual el 2026-09-24.
 
 | Id | Object | Within | Source |
 |----|--------|--------|--------|
@@ -29,7 +29,6 @@ Las citas se leyeron en `c9a8ea1`, relativas a la raíz del repositorio. Las acc
 | O4 | Riego | O3 | src/orquidea/coleccion/modelo.py:59 |
 | O5 | Floración | O3 | src/orquidea/coleccion/modelo.py:65 |
 | O6 | Foto | O3 | src/orquidea/coleccion/modelo.py:16 |
-| O7 | Sesión | — | src/orquidea/datos/sesiones.py:11 |
 
 ### Actions
 
@@ -47,8 +46,6 @@ Las citas se leyeron en `c9a8ea1`, relativas a la raíz del repositorio. Las acc
 | A10 | registrar una floración | O5 | src/orquidea/web/rutas/cuidados.py:36 |
 | A11 | terminar una floración | O5 | src/orquidea/web/rutas/cuidados.py:52 |
 | A12 | quitar una floración | O5 | src/orquidea/web/rutas/cuidados.py:70 |
-| A13 | iniciar sesión | O7 | src/orquidea/web/rutas/acceso.py:42 |
-| A14 | cerrar sesión | O7 | src/orquidea/web/rutas/acceso.py:73 |
 
 ### Existing screens
 
@@ -66,7 +63,7 @@ Las citas se leyeron en `c9a8ea1`, relativas a la raíz del repositorio. Las acc
 
 ### Tasks
 
-Propuestas por el agente a partir del PRD, con la cita de cada requisito. Las confirma, cambia o declara el dueño.
+Las propuso el agente a partir del PRD, con la cita de cada requisito, y el dueño las confirmó tal cual el 2026-09-24, salvo T8, que salió con la Sesión (abajo).
 
 | Id | Task | Actions | Source |
 |----|------|---------|--------|
@@ -77,16 +74,17 @@ Propuestas por el agente a partir del PRD, con la cita de cada requisito. Las co
 | T5 | poner, cambiar o quitar la foto de un ejemplar | A6, A7 | governance/PRD.md:31 |
 | T6 | registrar un riego, o corregir uno mal anotado | A8, A9 | governance/PRD.md:36 |
 | T7 | registrar una floración y, después, su fin | A10, A11, A12 | governance/PRD.md:41 |
-| T8 | entrar y salir | A13, A14 | governance/PRD.md:46 |
 
 ## Removed at confirmation
 
-Pendiente de la confirmación.
-
 | Id | Entry | Why |
 |----|-------|-----|
+| O7 | Sesión — `src/orquidea/datos/sesiones.py:11` | infraestructura del acceso, no es un objeto que el usuario consulte; la pantalla Acceso (P9) se conserva como existente |
+| A13 | iniciar sesión — `src/orquidea/web/rutas/acceso.py:42` | actúa sobre O7, que se quitó; la hace la pantalla P9 |
+| A14 | cerrar sesión — `src/orquidea/web/rutas/acceso.py:73` | actúa sobre O7, que se quitó; es un botón de la plantilla base, no una pantalla |
+| T8 | entrar y salir — `governance/PRD.md:46` | sus dos acciones salieron con O7 |
 
-**Entries measured:** pendiente de la confirmación.
+**Entries measured:** 34 read, all found at `c9a8ea1`; 0 declared. 4 removed at confirmation.
 
 ## How it answers the survival criteria
 
@@ -106,14 +104,14 @@ Pendiente de la confirmación.
 
 | Criterion, as approved | From | Stratum | How this answers it |
 |------------------------|------|----------|----------|
-| F1 — cada entrada cita un `archivo:línea` que existe en `read-at`, o dice `declared — quién, fecha` | this link | `mechanical` | pendiente de la confirmación |
-| F3 — el inventario confirmado es el producto, y cada entrada quitada dice por qué | this link | `judgement` | pendiente de la confirmación |
+| F1 — cada entrada cita un `archivo:línea` que existe en `read-at`, o dice `declared — quién, fecha` | this link | `mechanical` | `inventory-sources: OK (34 entries: 34 read, all found at c9a8ea1; 0 declared, with who and when)`, exit 0 |
+| F3 — el inventario confirmado es el producto, y cada entrada quitada dice por qué | this link | `judgement` | confirmado por el dueño; las cuatro quitadas dicen por qué (abajo, lo juzgado) |
 
 ## What was judged, and by whom
 
 | Judged | Verdict | Judged by, and when |
 |--------|---------|---------------------|
-| si este inventario es el producto del que trata el encargo | pendiente | `unsigned` |
+| si este inventario es el producto del que trata el encargo: los `Within`, la Sesión quitada y las siete tareas | sí — confirmado en tres respuestas: `Within` como se propuso, Sesión quitada, tareas tal cual | Daniel Efraín Domínguez Urbina, 2026-09-24 |
 
 ## What was not measured
 
