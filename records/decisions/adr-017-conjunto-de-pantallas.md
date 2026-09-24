@@ -2,7 +2,7 @@
 type: adr
 id: ADR-017
 title: "El conjunto de pantallas de Orquídea, derivado de su inventario"
-status: proposed
+status: accepted
 date: 2026-09-24
 epic: —
 published: no — el proyecto no tiene espacio de documentación externo; el ADR vive solo en el repositorio
@@ -12,7 +12,7 @@ published: no — el proyecto no tiene espacio de documentación externo; el ADR
 
 ## Status
 
-Proposed.
+Accepted, 2026-09-24.
 
 ## Context
 
@@ -68,7 +68,7 @@ Lo que una regla produce no puede medirse hasta que corre: esas celdas quedan `p
 | F1 — cita o declaración en cada entrada | `mechanical` | común a las tres: `OK (34 entries: 34 read, all found at c9a8ea1; 0 declared …)`, exit 0 | común | común |
 | F2 — cada pantalla nombra entradas existentes | `mechanical` | sí — `9 screens, each derived from an entry`, exit 0; con el parámetro "sin pantallas de paso", `6 screens`, exit 0 | sí — `9 screens`, exit 0 | sí — `13 screens`, exit 0 |
 | F3 — el inventario es el producto | `judgement` | común a las tres: el inventario es el mismo | común | común |
-| F4 — cubre todas las tareas | `judgement` | pending: measured when run | pending: measured when run | pending: measured when run |
+| F4 — cubre todas las tareas | `judgement` | sí — firmado por Daniel Efraín Domínguez Urbina, 2026-09-24 | cubiertas sin decirlo: B no mira tareas | sí, pero pierde Mi colección, Inicio y Acceso |
 
 ### El rojo de los criterios medibles
 
@@ -92,12 +92,28 @@ Sondas en el scratchpad de la sesión, con `read-at: "50e5a26"` (el commit de es
 
 ## Decision
 
-Sin resolver.
+**La regla A, con pantallas de paso para las acciones que piden formulario propio o confirmación.** La eligió Daniel Efraín Domínguez Urbina el 2026-09-24.
+
+Parámetros:
+
+- lista y detalle para O1 Especie y O3 Ejemplar;
+- O2 como sección de O1, y O4, O5 y O6 como secciones de O3;
+- pantallas de paso para A3 (T3), A4 y A5 (T4);
+- Inicio y Acceso se conservan como `existing`.
+
+Deriva 9 pantallas: `governance/identity/ui/screens/screen-set.md`.
 
 ## Consequences
 
-Sin resolver.
+- El conjunto derivado es **exactamente** el que la aplicación ya muestra: ninguna pantalla que falte y ninguna sin derivar. Nada de esta historia cambia rutas ni plantillas.
+- "Mi colección" la deriva la lista del objeto, no una tarea. Si alguna vez se declara la tarea "revisar cómo va mi colección", el inventario cambia, se confirma de nuevo y el conjunto se deriva otra vez con esta regla, nunca se parcha.
+- La guía de prioridad, el patrón y la composición de estas 9 pantallas quedan por hacer, cada una con su propio criterio.
+- El instrumento sale 0 con un conjunto sin pantallas. Aquí se rodea con la guarda de F2, y queda aparcado como hallazgo del addon.
 
 ## Alternatives considered
 
-Sin resolver: las reglas B y C de arriba son las candidatas.
+- **A sin pantallas de paso** (6 pantallas): fundiría el alta sin especie, la edición y la baja en la lista y la ficha. El dueño eligió conservar esas tres pantallas.
+- **B, solo las existentes** (9 pantallas): el mismo conjunto, sin derivación; no dice por qué existe cada pantalla. Sirve de control.
+- **C, solo por tarea** (13 pantallas): pierde Mi colección, Inicio y Acceso, y convierte en siete páginas lo que hoy son secciones de la ficha del ejemplar.
+
+Cada una, pantalla por pantalla, está en *What was tried and rejected* de `screen-set.md`.
