@@ -2,7 +2,7 @@
 type: adr
 id: ADR-019
 title: "El patrón de cada pantalla de Orquídea"
-status: proposed
+status: accepted
 date: 2026-09-24
 epic: —
 published: no — el proyecto no tiene espacio de documentación externo; el ADR vive solo en el repositorio
@@ -12,7 +12,7 @@ published: no — el proyecto no tiene espacio de documentación externo; el ADR
 
 ## Status
 
-Proposed.
+Accepted, 2026-09-24.
 
 ## Context
 
@@ -80,8 +80,8 @@ Difieren en S3 y S4:
 |---|---|---|---|---|
 | P1 — un valor de la tabla, o `none` con razón | `mechanical` | sí — exit 0, sin fallos de S6 | sí — exit 0, sin fallos de S6 | sí — exit 0, sin fallos de S6 |
 | P2 — 9 de 9 con patrón | `mechanical` | sí — `9 of 9 screens with a pattern` | sí — `9 of 9` | sí — `9 of 9` |
-| P3 — cada contenido en su forma, según la fuente | `judgement` | pendiente del dueño | pendiente del dueño | pendiente del dueño |
-| P4 — sostiene la guía sin pedir contenido que no carga | `judgement` | pendiente del dueño | pendiente del dueño; a la lectura, S4 `none` no pide nada fuera de la guía | pendiente del dueño; a la lectura, el área de apoyo de S4 lleva los cuidados de la especie, que la guía de S4 no carga |
+| P3 — cada contenido en su forma, según la fuente | `judgement` | no juzgado: el dueño eligió B | sí — Daniel Efraín Domínguez Urbina, 2026-09-24 | no juzgado: el dueño eligió B |
+| P4 — sostiene la guía sin pedir contenido que no carga | `judgement` | no juzgado: el dueño eligió B | sí — Daniel Efraín Domínguez Urbina, 2026-09-24 | no juzgado: el dueño eligió B; a la lectura, el área de apoyo de S4 lleva los cuidados de la especie, que la guía de S4 no carga |
 
 ### El rojo de los criterios medibles
 
@@ -98,12 +98,16 @@ Sondas en el scratchpad de la sesión, contra el inventario, el conjunto y la gu
 
 ## Decision
 
-Sin resolver.
+**La opción B.** S1 y S2 `list-detail`; S3 Mi colección `feed`; S4 Ficha del ejemplar `none`; S5 a S9 `none`. La eligió Daniel Efraín Domínguez Urbina el 2026-09-24, y firmó P3 y P4. Está escrita en `governance/identity/ui/screens/screen-pattern.md`.
 
 ## Consequences
 
-Sin resolver.
+- Las especies y la colección toman formas distintas: las especies son una lista que revela una ficha, y la colección es un feed de tarjetas con la foto primero. Hoy la plantilla de Mi colección ya usa tarjetas (`<ul class="tarjetas">`) con la miniatura primero, así que la forma elegida está cerca de lo que existe.
+- S4 queda `none`: la ficha del ejemplar es una página propia a la que se llega desde el feed, y a ancho compacto nada cambia. La composición de S4 no parte de ningún layout canónico, sino de su guía.
+- La composición de S1 a S4 tiene ahora guía y patrón, que es lo que `page.py` necesita, además de la composición misma y del `DESIGN.md`.
+- La fuente se leyó en Android Developers y no en m3.material.io, que no entregó texto. Si se vuelve a leer y la regla cambia, este patrón se vuelve a derivar; no se parcha.
 
 ## Alternatives considered
 
-Sin resolver: las opciones A, B y C de arriba.
+- **A, `list-detail` en S3 y S4:** trata la colección igual que las especies. Midió igual que B. El dueño eligió B.
+- **C, S4 `supporting-pane` con los cuidados de la especie como apoyo:** midió igual, pero a la lectura pide contenido que la guía firmada de S4 no carga (P4).
