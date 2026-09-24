@@ -128,8 +128,21 @@ EOF
 
 ### El rojo de los criterios medibles
 
-- G1: pendiente.
-- G2: pendiente.
+Sondas en el scratchpad de la sesión, contra el inventario y el conjunto reales. El comando de G2 se extrajo con `awk` de este mismo archivo, así que lo que corrió es lo que está escrito arriba.
+
+- **G1, rojo:** una firma sin fecha, un rango que sirve a `T9` y los rangos 1 y 3 de S1.
+  ```
+  S5 FAIL: `signed-by` is `Daniel` — a guide is signed `{who}, {YYYY-MM-DD}` or `unsigned`
+  S5 FAIL: S1 rank 3 serves T9, which the inventory does not have as a task
+  S5 FAIL: S1 ranks are 1, 3 — a guide ranks from 1 with no gap
+  ```
+  exit 1. Control: una guía válida da `OK (… 3 of 9 screens guided, signed by …)`, exit 0. Una guía sin filas da `no row in the guide — an empty guide is not a checked one — no verdict`, exit 2.
+- **G2, rojo:** una guía válida para G1 en la que ningún rango sirve a T6.
+  ```
+  G2 FAIL: T6 is served by no rank
+  serves: 7 tasks, 4 ranks, 6 served
+  ```
+  exit 1. Control: la misma guía con un rango que sirve a T6 da `serves: 7 tasks, 5 ranks, 7 served`, exit 0. Una guía sin filas da `serves: no subject — 7 tasks, 0 ranks — no verdict`, exit 2.
 
 ## Decision
 
