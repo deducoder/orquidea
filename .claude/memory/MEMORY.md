@@ -32,3 +32,5 @@
 - [Promociones del parking lot al diseñar](revisar-promociones-del-parking-lot-al-disenar.md) — grep de Promotion en story-design; s1 descubrió dos en T7
 - [Verificar el efecto en el render](verificar-el-efecto-en-el-render.md) — la prueba de padding no vio el centrado de flex
 - [precedence.py juzga por creación](precedence-py-juzga-por-creacion.md) — eslabón ui recalculado sale FAIL; leer el orden a mano
+- [ADR de screens antes del diseño](screens-adr-antes-del-diseno.md) — el recorrido del diseño es la lectura del inventario
+- [Parámetros de regla con valor al abrir](parametros-de-regla-con-valor-al-abrir.md) — valores candidatos en la rejilla, no solo nombres
