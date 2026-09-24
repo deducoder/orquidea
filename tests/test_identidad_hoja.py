@@ -49,6 +49,7 @@ def tokens_de_design() -> dict[str, str]:
                 ("fontSize", "font-size"),
                 ("lineHeight", "line-height"),
                 ("fontWeight", "font-weight"),
+                ("fontFamily", "font-family"),
             ):
                 nombre = nombre.replace(camello, css)
             tokens["--" + nombre] = valor

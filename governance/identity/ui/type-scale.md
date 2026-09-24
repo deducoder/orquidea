@@ -10,7 +10,7 @@ date: 2026-09-22
 
 ## The criterion this answers
 
-No se repite aquí: vive en `ADR-014`, abierto antes de que existiera cualquiera de los valores de abajo, y en `ADR-020` para la columna `Font weight`. Esta sección nombra los registros y nada más.
+No se repite aquí: vive en `ADR-014`, abierto antes de que existiera cualquiera de los valores de abajo, y en `ADR-020` para las columnas `Font family` y `Font weight`. Esta sección nombra los registros y nada más.
 
 ## The rule
 
@@ -26,15 +26,16 @@ El escalón `n` mide la base por la razón a la `n`, redondeado al entero de px 
 | roles | `text=0,binomial=0,date=0,subtitulo=1,titulo=2` | `judgement` | `date` un escalón abajo: la costumbre de fechas pequeñas, que el piso prohíbe; la jerarquía de fechas la dan color (`texto-secundario`) y cifras tabulares |
 | altura de línea | múltiplo de 4 más cercano a 1.5 veces el tamaño | `judgement` | 1.4 veces sin rejilla: alturas como 22.4 que no caen en la unidad del espaciado; 1.5 exacto sin rejilla: 37.5 para el título |
 | redondeo | al entero más cercano, medio hacia arriba | `judgement` | redondeo al par (el de `round`): el mismo tamaño daría otra altura según la paridad; truncar: rebaja un tamaño en casi un px |
+| familia | `system-ui, -apple-system, "Segoe UI", Roboto, "Noto Sans", sans-serif` | `mechanical` | ninguna: no se elige aquí, se lee de `specimen.md:19`, la pila de sistema que el espécimen decidió (ADR-011); una fuente web contradiría a él y al criterio 1 de ADR-009 (ADR-020) |
 | pesos | `0=400,1=700,2=700` | `mechanical` | ninguna: no se elige aquí, se lee de `specimen.md:26-27` (`text` 400; `emphasis` 700 en `h1` y `h2`, que son `titulo` y `subtitulo`). Otro valor contradiría al espécimen (ADR-020) |
 
 ## The scale
 
-| Step | Size | Line height | Font weight | Roles |
-|---|---|---|---|---|
-| 0 | 16px | 24px | 400 | text, binomial, date |
-| 1 | 20px | 32px | 700 | subtitulo |
-| 2 | 25px | 36px | 700 | titulo |
+| Step | Size | Line height | Font family | Font weight | Roles |
+|---|---|---|---|---|---|
+| 0 | 16px | 24px | system-ui, -apple-system, "Segoe UI", Roboto, "Noto Sans", sans-serif | 400 | text, binomial, date |
+| 1 | 20px | 32px | system-ui, -apple-system, "Segoe UI", Roboto, "Noto Sans", sans-serif | 700 | subtitulo |
+| 2 | 25px | 36px | system-ui, -apple-system, "Segoe UI", Roboto, "Noto Sans", sans-serif | 700 | titulo |
 
 Cada valor se reproduce: correr la regla con los parámetros de arriba lo devuelve.
 
@@ -79,7 +80,7 @@ Cada valor se reproduce: correr la regla con los parámetros de arriba lo devuel
 
 ## What was not measured
 
-Que 16 px se lea en el teléfono bajo el sol lo mide el espécimen con sus parámetros declarados (35 cm, 160 px CSS por pulgada), y s5.7 lo revisa en el teléfono real. Aquí no se renderizó nada para probar un tamaño. El peso (700 en los títulos) lo fija `specimen.md`, y desde ADR-020 esta escala lo copia en `Font weight`, porque `DESIGN.md` de gemba-design 0.24.0 ya lo compone. Las cifras tabulares siguen solo en `specimen.md`: el formato no las compone.
+Que 16 px se lea en el teléfono bajo el sol lo mide el espécimen con sus parámetros declarados (35 cm, 160 px CSS por pulgada), y s5.7 lo revisa en el teléfono real. Aquí no se renderizó nada para probar un tamaño. La familia y el peso (700 en los títulos) los fija `specimen.md`, y desde ADR-020 esta escala los copia en `Font family` y `Font weight`, porque `DESIGN.md` de gemba-design 0.24.0 ya los compone. Las cifras tabulares siguen solo en `specimen.md`: el formato no las compone.
 
 ## What was tried and rejected
 

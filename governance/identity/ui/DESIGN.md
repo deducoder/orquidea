@@ -19,14 +19,17 @@ typography:
   step-0:
     fontSize: 16px
     lineHeight: 24px
+    fontFamily: system-ui, -apple-system, "Segoe UI", Roboto, "Noto Sans", sans-serif
     fontWeight: 400
   step-1:
     fontSize: 20px
     lineHeight: 32px
+    fontFamily: system-ui, -apple-system, "Segoe UI", Roboto, "Noto Sans", sans-serif
     fontWeight: 700
   step-2:
     fontSize: 25px
     lineHeight: 36px
+    fontFamily: system-ui, -apple-system, "Segoe UI", Roboto, "Noto Sans", sans-serif
     fontWeight: 700
 rounded:
   recto: "0px"
@@ -226,7 +229,7 @@ Generated from the same tokens as the frontmatter, for the instruments of the me
 - ADR-013: roles de color de la interfaz
 - ADR-014: escala tipográfica, espaciado y componentes
 - ADR-016: la identidad en el vocabulario de gemba-design 0.23.0
-- ADR-020: el peso de cada paso de la escala
+- ADR-020: el peso y la familia de cada paso de la escala
 
 ## Known Gaps
 

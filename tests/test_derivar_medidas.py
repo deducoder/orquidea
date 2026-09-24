@@ -106,6 +106,32 @@ def test_con_pesos_la_escala_lleva_la_columna_font_weight_antes_de_roles(
     )
 
 
+PILA = 'system-ui, -apple-system, "Segoe UI", Roboto, "Noto Sans", sans-serif'
+
+
+def test_con_familia_la_escala_lleva_font_family_antes_del_peso(
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    codigo = medidas.main([*ESCALA_A, "--familia", PILA, "--pesos", "0=400,1=700,2=700"])
+
+    assert codigo == 0
+    assert capsys.readouterr().out == (
+        "| Step | Size | Line height | Font family | Font weight | Roles |\n"
+        "|---|---|---|---|---|---|\n"
+        f"| 0 | 16px | 24px | {PILA} | 400 | text, binomial, date |\n"
+        f"| 1 | 20px | 32px | {PILA} | 700 | subtitulo |\n"
+        f"| 2 | 25px | 36px | {PILA} | 700 | titulo |\n"
+    )
+
+
+@pytest.mark.parametrize("familia", ["", "Arial | Helvetica"])
+def test_una_familia_vacia_o_con_barra_no_deriva_nada(
+    capsys: pytest.CaptureFixture[str], familia: str
+) -> None:
+    assert medidas.main([*ESCALA_A, "--familia", familia]) == 2
+    assert "no se derivó nada" in capsys.readouterr().out
+
+
 @pytest.mark.parametrize(
     "pesos",
     [
@@ -228,8 +254,8 @@ def _tabla(texto: str, cabecera: str) -> list[str]:
         (
             "type-scale.md",
             "escala",
-            ("base", "razon", "escalones", "roles", "pesos"),
-            "| Step | Size | Line height | Font weight | Roles |",
+            ("base", "razon", "escalones", "roles", "familia", "pesos"),
+            "| Step | Size | Line height | Font family | Font weight | Roles |",
             1 + 3,
         ),
         (
