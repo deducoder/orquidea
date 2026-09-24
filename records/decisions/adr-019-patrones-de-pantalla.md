@@ -78,15 +78,23 @@ Difieren en S3 y S4:
 
 | Criterio | Estrato | A | B | C |
 |---|---|---|---|---|
-| P1 — un valor de la tabla, o `none` con razón | `mechanical` | pending: measured when run | pending: measured when run | pending: measured when run |
-| P2 — 9 de 9 con patrón | `mechanical` | pending: measured when run | pending: measured when run | pending: measured when run |
+| P1 — un valor de la tabla, o `none` con razón | `mechanical` | sí — exit 0, sin fallos de S6 | sí — exit 0, sin fallos de S6 | sí — exit 0, sin fallos de S6 |
+| P2 — 9 de 9 con patrón | `mechanical` | sí — `9 of 9 screens with a pattern` | sí — `9 of 9` | sí — `9 of 9` |
 | P3 — cada contenido en su forma, según la fuente | `judgement` | pendiente del dueño | pendiente del dueño | pendiente del dueño |
 | P4 — sostiene la guía sin pedir contenido que no carga | `judgement` | pendiente del dueño | pendiente del dueño; a la lectura, S4 `none` no pide nada fuera de la guía | pendiente del dueño; a la lectura, el área de apoyo de S4 lleva los cuidados de la especie, que la guía de S4 no carga |
 
 ### El rojo de los criterios medibles
 
-- P1: pendiente.
-- P2: pendiente.
+Sondas en el scratchpad de la sesión, contra el inventario, el conjunto y la guía reales. En la misma pasada se midieron las tres opciones tal como están arriba, antes de producir la pieza. Por eso las celdas medidas de la rejilla se llenan en este commit.
+
+- **P1, rojo:** un valor fuera de la tabla, un `none` sin razón y una pantalla con dos patrones.
+  ```
+  S6 FAIL: S1 takes `carousel`, which is not a canonical layout — `list-detail`, `supporting-pane`, `feed`, or `none` with its reason
+  S6 FAIL: S2 takes `none` with no reason in its content shape
+  S6 FAIL: S3 takes two patterns — a screen takes one
+  ```
+  exit 1. Una tabla sin filas da `no row in the patterns — an empty table is not a checked one — no verdict`, exit 2.
+- **P2, rojo por la cuenta:** una tabla válida sin S4 da `OK (…; 8 of 9 screens with a pattern)`, **exit 0**. El script no reprueba una pantalla que falta, y por eso P2 se juzga por la cuenta, como se declaró arriba. Esto no es un hallazgo nuevo del addon: el propio script dice "Not every screen needs … a pattern: the line counts how many carry them".
 
 ## Decision
 
