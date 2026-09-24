@@ -150,9 +150,19 @@ Dos, declarados antes de producir el primero. Los dos llevan `screen: S1`, `page
 
 ### El rojo de los criterios medibles
 
-- W1: pendiente.
-- K1: pendiente.
-- K2: pendiente.
+Sondas en el scratchpad de la sesión. Los candidatos se extrajeron de las tablas de arriba y el comando de K1 de este archivo, así que lo que corrió es lo que está escrito. Una primera extracción del candidato A arrastró las filas de B (12 filas) y dio un rechazo de contención que no es el de W1. Se descartó, se corrigió la extracción (6 filas en A, 8 en B) y se repitió.
+
+- **W1, rojo:** el candidato A con el `DESIGN.md` de s1.
+  ```
+  refused: step-0 (used by pagina) declares no fontWeight — every step the page uses declares its weight
+  refused: step-2 (used by titulo) declares no fontWeight — every step the page uses declares its weight
+  refused: step-0 (used by campo) declares no fontWeight — …
+  refused: step-0 (used by boton) declares no fontWeight — …
+  refused: step-0 (used by enlace-navegacion) declares no fontWeight — …
+  ```
+  exit 1.
+- **K2, rojo:** el candidato A sin sus filas de rango 2: `refused: rank 2 of S1 has no row in the composition`, exit 1.
+- **K1, rojo:** una copia del `DESIGN.md` con un componente `tenue` (`textColor` `línea`), y el candidato A con una especie pintada con él: `#8C8475 sobre #F7F3EA (texto): 3.34:1 necesita 7:1 NO`, `7 par(es) de texto juzgado(s), 1 bajo el umbral`, exit 1. Control: el candidato A tal cual da `7 par(es) de texto juzgado(s), 0 bajo el umbral`, exit 0 (la etiqueta y el texto del campo cuentan por separado). Una composición sin filas da `0 par(es) de texto juzgado(s) — nada que juzgar`, exit 2.
 
 ## Decision
 
