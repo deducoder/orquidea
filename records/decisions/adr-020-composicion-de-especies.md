@@ -2,7 +2,7 @@
 type: adr
 id: ADR-020
 title: "El peso de la escala y la composición de la pantalla Especies"
-status: proposed
+status: accepted
 date: 2026-09-24
 epic: —
 published: no — el proyecto no tiene espacio de documentación externo; el ADR vive solo en el repositorio
@@ -12,7 +12,7 @@ published: no — el proyecto no tiene espacio de documentación externo; el ADR
 
 ## Status
 
-Proposed.
+Accepted, 2026-09-24.
 
 ## Context
 
@@ -153,7 +153,7 @@ Dos, declarados antes de producir el primero. Los dos llevan `screen: S1`, `page
 | W1 — peso y familia del espécimen; ningún rechazo por `fontWeight`; la página escribe la familia | `mechanical` | sí — peso en `c521f89` (`0` 400, `1` 700, `2` 700, ningún rechazo); familia en `7053e36`: la página escribe `font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Noto Sans", sans-serif` | sí — el mismo `DESIGN.md`, la misma `font-family` |
 | K1 — 7:1 en cada texto | `mechanical` | sí — `7 par(es) de texto juzgado(s), 0 bajo el umbral`, exit 0 | sí — `7 par(es) de texto juzgado(s), 0 bajo el umbral`, exit 0 |
 | K2 — `page.py` exit 0 | `mechanical` | sí — `6 rows in 2 ranks, 4 components, 0 representative, 3 parameters, 0 literals outside a token; ranks 25 ≥ 16 px; 7 texts on their ground, all ≥ 4.5:1; 5 focusable, 0 ring …, 5 on the browser's focus, not measured` | sí — `8 rows in 2 ranks, 5 components, …; 7 texts on their ground, all ≥ 4.5:1; 5 focusable, … 5 on the browser's focus, not measured` |
-| K3 — lo más importante es la búsqueda; elección contra S1, S2 y S3 del concepto | `judgement` | pendiente del dueño | pendiente del dueño |
+| K3 — lo más importante es la búsqueda; elección contra S1, S2 y S3 del concepto | `judgement` | pregunta 1: la búsqueda; **elegido** contra S1, S2 y S3 — Daniel Efraín Domínguez Urbina, 2026-09-24 | pregunta 1: la búsqueda; perdió la elección forzada — Daniel Efraín Domínguez Urbina, 2026-09-24 |
 
 ### El rojo de los criterios medibles
 
@@ -174,12 +174,21 @@ Sondas en el scratchpad de la sesión. Los candidatos se extrajeron de las tabla
 
 ## Decision
 
-Sin resolver.
+1. **La escala declara `Font family` y `Font weight`** tal como los da `specimen.md` (`c521f89`, `7053e36`), y `DESIGN.md` se genera con el comando de ADR-016 más `--decision "ADR-020: el peso y la familia de cada paso de la escala"` y sin el `--gap` del peso. Sale idéntico en dos corridas.
+2. **S1 Especies se compone con el candidato A**, en la página y sin cajas, en `governance/identity/ui/screens/composition-s1.md`. Su página generada es `composition-s1.html`. Lo eligió Daniel Efraín Domínguez Urbina el 2026-09-24:
+   - pregunta 1: la búsqueda, en los dos candidatos;
+   - elección forzada: A, con una razón por principio, redactadas por el agente y elegidas por el dueño;
+   - foco al tabular: se ve y nada lo tapa.
 
 ## Consequences
 
-Sin resolver.
+- `page.py` ya puede generar cualquier pantalla con este `DESIGN.md`: el peso y la familia dejan de ser un Known Gap. Las cifras tabulares siguen fuera del formato.
+- `derivar-medidas.py` y `comprobar-medidas.py` leen y escriben las columnas opcionales de la escala. El refactor de los lectores de tablas que está aparcado sigue abierto: aquí solo se tocó lo mínimo.
+- `identidad.css` cambia de nombres y no de render: los tokens de peso y familia en `:root`, y `h1`/`h2` con `var()`.
+- `especies.html` no cambia. La composición elegida es casi la plantilla de hoy (título, campo, botón y lista sobre el fondo), así que llevarla al producto es trabajo pequeño, para otra historia.
+- S2 falta componerla. S3 y S4 esperan a que el generador pueda dibujar la foto (parking lot).
 
 ## Alternatives considered
 
-Sin resolver: los candidatos A y B de arriba.
+- **Candidato B, en tarjetas:** mide igual (K1 7 de 7, `page.py` exit 0) y da la misma respuesta a la pregunta 1. Perdió la elección forzada: en S1, las tarjetas blancas ponen un plano más entre el fondo y la tinta; en S3, a 360 px se ajustan a su contenido y no usan todo el ancho.
+- **Juzgar con la letra por defecto del navegador:** rechazado por el dueño cuando las capturas salieron en Times. Por eso W1 creció a peso y familia.
