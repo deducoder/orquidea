@@ -66,6 +66,9 @@ wrote it. Retirement moves an entry to `## Retired` with its reason.
 - **`precedence.py` (gemba-design 0.24.0) cuenta como edición del criterio el llenado de una celda `pending: measured when run`.** El ciclo (`record-open`, "When the deliverable is a rule") pide dejar esas celdas como hueco declarado y llenarlas corriendo la regla, lo que por fuerza pasa después de que existe la pieza. El gate toma la última edición `update` del registro como su fecha. En s2, `6a7cadf` solo cambió las celdas F1 y F2 de ADR-017 de `pending` a lo medido, y `inventory.md` sale `FAIL — not before the piece first cites it: ADR-017`, aunque los criterios, sus estratos, las reglas y el rojo (`50e5a26`, `e3c1be3`) preceden a `3021953`. Leído a mano con `git log`. El arreglo es del addon: distinguir las celdas medidas de las ediciones del criterio.
   *Origin:* s2, `survival-review`, 2026-09-24 — `precedence.py check governance/identity/ui/screens/inventory.md`.
   *Promotion:* al actualizar gemba-design, o al reportar hallazgos al addon junto con la entrada de los eslabones recalculados.
+- **`page.py` de gemba-design 0.24.0 no dibuja imágenes.** Sus elementos son `h1`, `h2`, `h3`, `p`, `button`, `a`, `input` y `section`, sin `img`. El rango 1 de Mi colección (S3) y de la Ficha del ejemplar (S4) es la foto (ADR-018), así que su página generada tendría un texto en su lugar. Juzgar sobre esa página el criterio 3 de ADR-009 (la foto como protagonista) no tendría sentido. Además, la regla "un rango no pesa menos que el siguiente" obligaría a que la foto, como texto, pesara al menos lo que el `h1` del rango 2. Visto con sondas en s5; S3 y S4 no se componen hasta entonces.
+  *Origin:* s5, antes de proponer los criterios, 2026-09-24 — sondas de `page.py` con la guía de S4.
+  *Promotion:* cuando una versión de gemba-design dibuje imágenes en la página generada: componer S3 y S4. O al reportar hallazgos al addon.
 
 ## Retired
 
