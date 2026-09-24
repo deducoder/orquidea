@@ -1,10 +1,13 @@
 """Deriva la escala tipográfica y el espaciado por las reglas declaradas en ADR-014.
 
 Imprime en markdown las tablas que lee `design-md.py` (gemba-design): `Step | Size | Line height |
-Roles` para la escala y `Step | Value | Where it is used` para el espaciado.
+Roles` para la escala y `Step | Value | Where it is used` para el espaciado. Con `--familia` y
+`--pesos`, la escala lleva `Font family` y `Font weight`, en ese orden, antes de `Roles`: una pila
+para todos los escalones y un peso por escalón, leídos del espécimen, nunca derivados aquí.
 
     uv run python scripts/derivar-medidas.py escala --base 16 --razon 1.25 \\
-        --escalones 0,1,2 --roles text=0,binomial=0,date=0,subtitulo=1,titulo=2
+        --escalones 0,1,2 --roles text=0,binomial=0,date=0,subtitulo=1,titulo=2 \\
+        --familia 'system-ui, sans-serif' --pesos 0=400,1=700,2=700
     uv run python scripts/derivar-medidas.py espaciado --base 16 --divisor 3 \\
         --multiplicadores 1,2,3,4,6 --control 6
 
@@ -14,7 +17,8 @@ de px más cercano (medio hacia arriba); la altura de línea es el múltiplo de 
 el divisor, y tiene que ser entera; cada paso es `m · unidad`, nombrado por `m`.
 
 Sale con 0 al imprimir la tabla y con 2 si no derivó nada: un subcomando desconocido, un parámetro
-ilegible o ausente, un rol en un escalón que no existe, una unidad no entera o un control que no es
+ilegible o ausente, un rol en un escalón que no existe, un escalón sin peso o un peso fuera de 1 a
+1000 cuando se dan pesos, una familia vacía o con `|`, una unidad no entera o un control que no es
 uno de los pasos. No juzga nada: eso es de `comprobar-medidas.py` y de `tokens.py`.
 """
 
@@ -65,11 +69,28 @@ def espaciado(base: int, divisor: int, multiplicadores: list[int]) -> list[Paso]
     return [Paso(m, m * unidad) for m in multiplicadores]
 
 
-def tabla_escala(escalones: list[Escalon]) -> str:
-    lineas = ["| Step | Size | Line height | Roles |", "|---|---|---|---|"]
-    lineas += [
-        f"| {e.id} | {e.tamano}px | {e.altura}px | {', '.join(e.roles) or '—'} |" for e in escalones
-    ]
+def tabla_escala(
+    escalones: list[Escalon], pesos: dict[int, int] | None = None, familia: str | None = None
+) -> str:
+    cabecera, extra = ["Step", "Size", "Line height"], []
+    if familia is not None:
+        if not familia.strip() or "|" in familia:
+            raise ValueError("la familia no puede ir vacía ni llevar |")
+        cabecera.append("Font family")
+        extra.append(lambda e: familia)
+    if pesos is not None:
+        ids = {e.id for e in escalones}
+        if set(pesos) != ids:
+            raise ValueError(f"los pesos van a los escalones {sorted(pesos)}, no a {sorted(ids)}")
+        if not all(1 <= p <= 1000 for p in pesos.values()):
+            raise ValueError("un peso va de 1 a 1000")
+        cabecera.append("Font weight")
+        extra.append(lambda e: str(pesos[e.id]))
+    cabecera.append("Roles")
+    lineas = ["| " + " | ".join(cabecera) + " |", "|" + "---|" * len(cabecera)]
+    for e in escalones:
+        celdas = [str(e.id), f"{e.tamano}px", f"{e.altura}px", *(f(e) for f in extra)]
+        lineas.append("| " + " | ".join([*celdas, ", ".join(e.roles) or "—"]) + " |")
     return "\n".join(lineas) + "\n"
 
 
@@ -105,7 +126,15 @@ def main(argumentos: list[str]) -> int:
                 for rol, id_ in (par.split("=") for par in opciones["roles"].split(","))
             }
             ids = _enteros(opciones["escalones"])
-            salida = tabla_escala(escala(base, float(opciones["razon"]), ids, roles))
+            pesos = None
+            if "pesos" in opciones:
+                pesos = {
+                    int(id_): int(peso)
+                    for id_, peso in (par.split("=") for par in opciones["pesos"].split(","))
+                }
+            salida = tabla_escala(
+                escala(base, float(opciones["razon"]), ids, roles), pesos, opciones.get("familia")
+            )
         else:
             multiplicadores = _enteros(opciones["multiplicadores"])
             control = int(opciones["control"])

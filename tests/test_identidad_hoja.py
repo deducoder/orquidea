@@ -44,8 +44,15 @@ def tokens_de_design() -> dict[str, str]:
         ruta = [*ruta[:nivel], clave]
         valor = valor.strip().strip('"')
         if valor and ruta[0] in ("colors", "typography", "spacing", "rounded"):
-            nombre = "-".join(ruta).replace("fontSize", "font-size")
-            tokens["--" + nombre.replace("lineHeight", "line-height")] = valor
+            nombre = "-".join(ruta)
+            for camello, css in (
+                ("fontSize", "font-size"),
+                ("lineHeight", "line-height"),
+                ("fontWeight", "font-weight"),
+                ("fontFamily", "font-family"),
+            ):
+                nombre = nombre.replace(camello, css)
+            tokens["--" + nombre] = valor
     return tokens
 
 

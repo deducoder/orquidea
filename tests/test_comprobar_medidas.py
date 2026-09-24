@@ -64,6 +64,21 @@ def test_exactamente_en_el_piso_pasa(tmp_path: Path) -> None:
     assert comprobar.main(["piso", _sujeto(tmp_path, ESCALA), *PISO]) == 0
 
 
+def test_los_roles_se_leen_por_su_encabezado_aunque_haya_una_columna_de_peso(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    escala = (
+        "| Step | Size | Line height | Font weight | Roles |\n|---|---|---|---|---|\n"
+        "| 0 | 16px | 24px | 400 | text, binomial, date |\n"
+        "| 1 | 20px | 32px | 700 | subtitulo |\n"
+    )
+
+    codigo = comprobar.main(["piso", _sujeto(tmp_path, escala), *PISO])
+
+    assert codigo == 0
+    assert "2 escalón(es) y 3 rol(es) de lectura medidos, 0 bajo el piso" in capsys.readouterr().out
+
+
 def test_dos_escalones_con_el_mismo_tamano_colapsan(
     tmp_path: Path, capsys: pytest.CaptureFixture[str]
 ) -> None:

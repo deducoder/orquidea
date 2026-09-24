@@ -35,3 +35,4 @@
 - [ADR de screens antes del diseño](screens-adr-antes-del-diseno.md) — el recorrido del diseño es la lectura del inventario
 - [Parámetros de regla con valor al abrir](parametros-de-regla-con-valor-al-abrir.md) — valores candidatos en la rejilla, no solo nombres
 - [Medir opciones como sondas con el rojo](medir-opciones-como-sondas-con-el-rojo.md) — rejilla medible cerrada antes de la pieza
+- [Lectores del entregable al diseñar](buscar-lectores-del-entregable-al-disenar.md) — grep en scripts/ y tests/ antes de "ningún código cambia"

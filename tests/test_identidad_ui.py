@@ -24,8 +24,10 @@ def test_los_controles_de_design_md_miden_al_menos_44(capsys: pytest.CaptureFixt
     # M2 de ADR-014 sobre el DESIGN.md commiteado; no lo regenera, así que no depende del addon
     codigo = comprobar.main(["objetivos", str(UI / "DESIGN.md"), "--minimo", "44"])
 
+    # design-md.py de 0.24.0 escribe la tabla Target desde los mínimos declarados: los 4 controles
+    # se miden dos veces, como tabla y como mínimo (ADR-020); cuentan juntos, como decidió s1
     assert codigo == 0
-    assert "4 objetivo(s) medidos, 0 bajo 44 px" in capsys.readouterr().out
+    assert "8 objetivo(s) medidos, 0 bajo 44 px" in capsys.readouterr().out
 
 
 def test_ningun_rol_de_lectura_de_la_escala_baja_de_16(capsys: pytest.CaptureFixture[str]) -> None:
