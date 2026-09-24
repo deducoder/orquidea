@@ -65,8 +65,8 @@ Lo que una regla produce no puede medirse hasta que corre: esas celdas quedan `p
 
 | Criterio | Estrato | A | B | C |
 |---|---|---|---|---|
-| F1 — cita o declaración en cada entrada | `mechanical` | pending: measured when run | pending: measured when run | pending: measured when run |
-| F2 — cada pantalla nombra entradas existentes | `mechanical` | pending: measured when run | pending: measured when run | pending: measured when run |
+| F1 — cita o declaración en cada entrada | `mechanical` | común a las tres: `OK (34 entries: 34 read, all found at c9a8ea1; 0 declared …)`, exit 0 | común | común |
+| F2 — cada pantalla nombra entradas existentes | `mechanical` | sí — `9 screens, each derived from an entry`, exit 0; con el parámetro "sin pantallas de paso", `6 screens`, exit 0 | sí — `9 screens`, exit 0 | sí — `13 screens`, exit 0 |
 | F3 — el inventario es el producto | `judgement` | común a las tres: el inventario es el mismo | común | común |
 | F4 — cubre todas las tareas | `judgement` | pending: measured when run | pending: measured when run | pending: measured when run |
 
