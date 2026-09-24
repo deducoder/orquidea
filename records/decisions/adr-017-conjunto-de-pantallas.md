@@ -74,8 +74,21 @@ Lo que una regla produce no puede medirse hasta que corre: esas celdas quedan `p
 
 Se escribe aquí antes de producir: F1 y F2, con `inventory-sources.py` sobre un sujeto que los viola.
 
-- F1: pendiente.
-- F2: pendiente.
+Sondas en el scratchpad de la sesión, con `read-at: "50e5a26"` (el commit de este registro) y `--repo` en este repositorio. Ninguna lee una entrada real: las citas son a propósito inexistentes y el resto se declara como `sonda`.
+
+- **F1, rojo:** un objeto que cita `src/orquidea/web/app.py:99999` y otro sin fuente.
+  ```
+  S1 FAIL: O1 cites src/orquidea/web/app.py:99999 — the file has 83 lines at 50e5a26
+  S2 FAIL: O2 has no source, and is not `declared — {who}, {YYYY-MM-DD}`
+  ```
+  exit 1. Control: el mismo inventario con el objeto declarado da `OK (4 entries: 0 read, all found at 50e5a26; 4 declared, with who and when)`, exit 0; un inventario sin filas da `no entry to check — an empty inventory is not a verified one — no verdict`, exit 2.
+- **F2, rojo:** una pantalla que deriva de `O9` y otra que dice existir como `P7`; ninguna de las dos está en el inventario.
+  ```
+  S3 FAIL: S1 derives from O9, which the inventory does not have
+  S3 FAIL: S2 exists in code as P7, which the inventory does not have
+  ```
+  exit 1. Control: una pantalla que deriva de `O1` y existe como `P1` da `… 1 screens, each derived from an entry`, exit 0.
+- **Guarda de F2, por un hueco del instrumento:** un conjunto sin filas, o con la tabla bajo otro encabezado que `## The screens`, sale `OK (… 0 screens, each derived from an entry)` con exit 0, no con 2. Visto en las sondas: la primera versión de la de F2 usaba `###` y salió verde. Por eso F2 se da por cumplido solo si la salida cuenta **más de cero pantallas**. Si el conteo es cero, no hay veredicto.
 
 ## Decision
 
