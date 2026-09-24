@@ -34,3 +34,4 @@
 - [precedence.py juzga por creación](precedence-py-juzga-por-creacion.md) — eslabón recalculado sale FAIL; llenar celdas medidas en el accept
 - [ADR de screens antes del diseño](screens-adr-antes-del-diseno.md) — el recorrido del diseño es la lectura del inventario
 - [Parámetros de regla con valor al abrir](parametros-de-regla-con-valor-al-abrir.md) — valores candidatos en la rejilla, no solo nombres
+- [Medir opciones como sondas con el rojo](medir-opciones-como-sondas-con-el-rojo.md) — rejilla medible cerrada antes de la pieza
