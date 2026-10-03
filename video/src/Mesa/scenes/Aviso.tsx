@@ -108,9 +108,9 @@ export const Aviso: React.FC<{ props: MesaProps }> = ({ props }) => {
   return (
     <SceneLayout
       bg={colors.verde}
-      text={<Headline lines={d.lineas} size={vertical ? 180 : 170} color={colors.negro} />}
+      text={<Headline lines={d.lineas} size={vertical ? 150 : 170} color={colors.negro} />}
       visual={
-        <PhoneFrame variant="dark" tilt={{ x: 5, y: -12 }} delay={4} floatPeriod={3.3}>
+        <PhoneFrame scale={vertical ? 1.15 : 1} variant="dark" tilt={{ x: 5, y: -12 }} delay={4} floatPeriod={3.3}>
           <AvisoPhone d={d} />
         </PhoneFrame>
       }

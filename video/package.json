@@ -1,7 +1,7 @@
 {
-  "name": "video",
+  "name": "mesa-video",
   "version": "1.0.0",
-  "description": "My Remotion video",
+  "description": "Mesa presentation motion graphic (Remotion)",
   "repository": {},
   "license": "UNLICENSED",
   "private": true,
@@ -29,7 +29,9 @@
     "dev": "remotion studio",
     "build": "remotion bundle",
     "upgrade": "remotion upgrade",
-    "lint": "eslint src && tsc"
+    "lint": "eslint src && tsc",
+    "render:vertical": "remotion render src/index.ts MesaVertical out/mesa-vertical.mp4 --codec=h264",
+    "render:horizontal": "remotion render src/index.ts MesaHorizontal out/mesa-horizontal.mp4 --codec=h264"
   },
   "sideEffects": [
     "*.css"

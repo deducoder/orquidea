@@ -23,7 +23,6 @@ export const Cierre: React.FC<{ props: MesaProps }> = ({ props }) => {
             lines={d.lineas.map((text, i) => ({ text, color: i === 0 ? colors.crema : colors.negro }))}
             size={vertical ? 170 : 190}
             delay={8}
-            maxWidth={vertical ? 940 : 1500}
           />
           <div
             style={{

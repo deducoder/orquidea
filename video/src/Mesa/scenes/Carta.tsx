@@ -20,7 +20,7 @@ const Card: React.FC<{
   const frame = useCurrentFrame();
   const enter = useEnter(12 + index * 4);
   const Icon = ICONS[p.icono];
-  const added = ADD_AT[index] ?? Infinity;
+  const added = ADD_AT[index] ?? -1000;
   return (
     <div
       style={{
@@ -220,7 +220,7 @@ export const Carta: React.FC<{ props: MesaProps }> = ({ props }) => {
               fontSize: 42,
               lineHeight: 1,
               letterSpacing: "-0.03em",
-              maxWidth: vertical ? 760 : 620,
+              maxWidth: vertical ? 800 : 780,
               transform: `translateX(${(1 - labelIn) * -900}px)`,
             }}
           >
@@ -230,7 +230,7 @@ export const Carta: React.FC<{ props: MesaProps }> = ({ props }) => {
         </>
       }
       visual={
-        <PhoneFrame variant="light" tilt={{ x: 6, y: -12 }} delay={6} floatPeriod={3.6}>
+        <PhoneFrame scale={vertical ? 1.15 : 1} variant="light" tilt={{ x: 6, y: -12 }} delay={6} floatPeriod={3.6}>
           <CartaPhone d={d} brand={props.marca} />
         </PhoneFrame>
       }

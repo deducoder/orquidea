@@ -41,7 +41,7 @@ const Line: React.FC<{
         fontWeight: 800,
         fontSize: size,
         lineHeight: 0.92,
-        letterSpacing: "-0.045em",
+        letterSpacing: "-0.035em",
         color: line.color ?? color,
         whiteSpace: maxWidth ? "normal" : "nowrap",
         maxWidth,

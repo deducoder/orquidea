@@ -82,7 +82,7 @@ export const Cocina: React.FC<{ props: MesaProps }> = ({ props }) => {
         />
       }
       visual={
-        <PhoneFrame variant="dark" tilt={{ x: 6, y: 12 }} delay={6} from="right" floatPeriod={3.5} phase={0.6}>
+        <PhoneFrame scale={vertical ? 1.15 : 1} variant="dark" tilt={{ x: 6, y: 12 }} delay={6} from="right" floatPeriod={3.5} phase={0.6}>
           <CocinaPhone d={d} />
         </PhoneFrame>
       }

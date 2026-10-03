@@ -93,16 +93,17 @@ const PagoPhone: React.FC<{ d: MesaProps["pago"] }> = ({ d }) => {
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            gap: 18,
+            gap: 14,
             fontFamily: fonts.display,
             fontWeight: 800,
-            fontSize: 38,
+            fontSize: 32,
+            whiteSpace: "nowrap",
             letterSpacing: "-0.03em",
             transform: `scale(${confirm})`,
             opacity: Math.min(1, confirm * 3),
           }}
         >
-          <Check size={92} progress={check} />
+          <Check size={72} progress={check} />
           <span>{d.confirmado}</span>
         </div>
       </div>
@@ -123,7 +124,7 @@ export const Pago: React.FC<{ props: MesaProps }> = ({ props }) => {
         />
       }
       visual={
-        <PhoneFrame variant="light" tilt={{ x: 5, y: 12 }} delay={6} from="right" floatPeriod={3.2} phase={1}>
+        <PhoneFrame scale={vertical ? 1.15 : 1} variant="light" tilt={{ x: 5, y: 12 }} delay={6} from="right" floatPeriod={3.2} phase={1}>
           <PagoPhone d={d} />
         </PhoneFrame>
       }

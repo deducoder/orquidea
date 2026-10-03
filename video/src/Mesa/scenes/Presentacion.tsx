@@ -31,7 +31,7 @@ const Floating: React.FC<{
 export const Presentacion: React.FC<{ props: MesaProps }> = ({ props }) => {
   const { vertical } = useLayout();
   const { titulo, lineas } = props.presentacion;
-  const colorsByLine = [colors.crema, colors.negro, colors.amarillo];
+  const colorsByLine = [colors.crema, colors.negro, colors.crema];
   return (
     <SceneLayout
       bg={colors.tomate}

@@ -57,7 +57,7 @@ export const Problema: React.FC<{ props: MesaProps }> = ({ props }) => {
       bg={colors.negro}
       text={
         <>
-          <Headline lines={lines} size={vertical ? 190 : 200} maxWidth={vertical ? 940 : 1600} />
+          <Headline lines={lines} size={vertical ? 190 : 200} maxWidth={vertical ? 650 : 1600} />
           <Queue />
         </>
       }

@@ -106,11 +106,11 @@ export const Whatsapp: React.FC<{ props: MesaProps }> = ({ props }) => {
       text={<Headline lines={d.lineas} size={vertical ? 150 : 150} color={colors.negro} />}
       visual={
         <div style={{ position: "relative" }}>
-          <PhoneFrame variant="light" tilt={{ x: 6, y: -12 }} delay={6} floatPeriod={3.8}>
+          <PhoneFrame scale={vertical ? 1.15 : 1} variant="light" tilt={{ x: 6, y: -12 }} delay={6} floatPeriod={3.8}>
             <ChatPhone d={d} brand={props.marca} />
           </PhoneFrame>
-          <Chip bg={colors.negro} color={colors.crema} size={46} rotate={-8} delay={64} style={{ left: -60, top: 120 }}>
-            {d.pedido.replace(/^\D+/, "")}
+          <Chip bg={colors.negro} color={colors.crema} size={46} rotate={-8} delay={64} style={{ left: -110, top: 250 }}>
+            {d.pedido.split(" ").pop()}
           </Chip>
           <Chip bg={colors.amarillo} size={42} rotate={7} delay={74} phase={2} style={{ right: -70, bottom: 150 }}>
             {d.hora}

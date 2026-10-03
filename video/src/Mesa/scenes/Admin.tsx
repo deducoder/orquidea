@@ -133,8 +133,8 @@ const Planificador: React.FC<{ d: D["planificador"] }> = ({ d }) => {
 export const Admin: React.FC<{ props: MesaProps }> = ({ props }) => {
   const { vertical } = useLayout();
   const d = props.admin;
-  const s = vertical ? 0.7 : 0.62;
-  const dx = vertical ? 335 : 275;
+  const s = vertical ? 0.7 : 0.58;
+  const dx = vertical ? 335 : 250;
   const dy = vertical ? 80 : 60;
   const phones = [
     { x: -dx, y: -dy, node: <Productos d={d.productos} />, delay: 8, tilt: { x: 4, y: 10 } },
@@ -144,7 +144,7 @@ export const Admin: React.FC<{ props: MesaProps }> = ({ props }) => {
   return (
     <SceneLayout
       bg={colors.blanco}
-      text={<Headline lines={d.lineas} size={vertical ? 230 : 230} color={colors.negro} />}
+      text={<Headline lines={d.lineas} size={vertical ? 230 : 170} color={colors.negro} />}
       visual={
         <div style={{ position: "relative", width: 0, height: 0 }}>
           {phones.map((ph, i) => (

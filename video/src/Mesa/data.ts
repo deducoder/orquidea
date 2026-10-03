@@ -129,7 +129,7 @@ export const defaultProps: MesaProps = {
     pedido: "Pedido #A12",
     dia: "Jueves",
     hora: "13:30",
-    resumen: "1 Latte · 1 Bagel · 1 Galleta",
+    resumen: "Latte · Bagel · Galleta",
   },
   cocina: {
     lineas: ["Comandas", "en vivo."],
@@ -174,7 +174,7 @@ export const defaultProps: MesaProps = {
   },
   interno: {
     etiqueta: "Por dentro",
-    lineas: ["Sin inventario.", "Sin historial de ventas."],
+    lineas: ["Sin inventario.", "Sin historial", "de ventas."],
     cliente: "Cliente",
     mesa: "Mesa",
     mesaSub: "Supabase",
@@ -183,7 +183,7 @@ export const defaultProps: MesaProps = {
     personalSub: "comandas",
   },
   cierre: {
-    lineas: ["Tu pedido,", "antes de llegar."],
+    lineas: ["Tu pedido,", "antes de", "llegar."],
     contacto: "hola@mesa.mx",
   },
 };
